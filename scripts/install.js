@@ -41,16 +41,6 @@ const isProjectInstall = args.includes('--project') || args.includes('-p');
 const isForce = args.includes('--force') || args.includes('-f');
 const isHelp = args.includes('--help') || args.includes('-h');
 
-// When run as postinstall (npm install), only auto-install for global installs.
-// Project-level installs require explicit: node scripts/install.js --project
-const isPostinstall = process.env.npm_lifecycle_event === 'postinstall';
-const isGlobalInstall = process.env.npm_config_global === 'true';
-if (isPostinstall && !isGlobalInstall && !isProjectInstall) {
-  log('\nℹ️  Prompt Architect installed as a project dependency.', 'blue');
-  log('   To install the Claude Code skill for this project, run:', 'blue');
-  log('   node node_modules/@ckelsoe/claude-skill-prompt-architect/scripts/install.js --project\n', 'cyan');
-  process.exit(0);
-}
 
 // Show help
 if (isHelp) {
