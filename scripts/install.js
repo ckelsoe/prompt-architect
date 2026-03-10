@@ -104,24 +104,6 @@ const currentVersion = (() => {
   } catch { return 'unknown'; }
 })();
 
-// Get installed version (stored in .version file written at install time)
-const versionFile = path.join(installPath, '.version');
-const installedVersion = fs.existsSync(versionFile)
-  ? fs.readFileSync(versionFile, 'utf8').trim()
-  : null;
-
-// Check if skill already exists
-if (fs.existsSync(installPath) && !isForce) {
-  if (installedVersion === currentVersion) {
-    log(`\n✅ Prompt Architect ${currentVersion} is already up to date`, 'green');
-    log(`   Location: ${installPath}`, 'blue');
-    log('\n   To force reinstall, use: prompt-architect-install --force\n', 'cyan');
-    process.exit(0);
-  }
-  // Version mismatch — update automatically
-  log(`\n🔄 Updating Prompt Architect: ${installedVersion || 'unknown'} → ${currentVersion}\n`, 'cyan');
-}
-
 // Install the skill
 try {
   log('\n🚀 Installing Prompt Architect skill...\n', 'cyan');
@@ -135,9 +117,9 @@ try {
     fs.mkdirSync(skillsDir, { recursive: true });
   }
 
-  // Remove existing installation if force flag is used
-  if (fs.existsSync(installPath) && isForce) {
-    log('   Removing existing installation...', 'yellow');
+  // Remove any existing installation before copying fresh
+  if (fs.existsSync(installPath)) {
+    log('   Removing existing installation...', 'blue');
     fs.rmSync(installPath, { recursive: true, force: true });
   }
 
@@ -150,9 +132,6 @@ try {
   if (!fs.existsSync(skillFile)) {
     throw new Error('SKILL.md not found after installation');
   }
-
-  // Write version marker so future installs can detect updates
-  fs.writeFileSync(path.join(installPath, '.version'), currentVersion, 'utf8');
 
   log(`\n✅ Prompt Architect ${currentVersion} installed successfully!\n`, 'green');
   log('📍 Installation location:', 'cyan');

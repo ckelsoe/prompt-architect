@@ -5,6 +5,16 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2026-03-10
+
+### Fixed
+- **`scripts/install.js` — simplified to always install, no conditions**
+  - Removed all version-checking logic (unnecessary complexity)
+  - `prompt-architect-install` now always removes any existing installation and copies the current version fresh
+  - Running it multiple times is safe and always gives you the version from the npm package you installed
+
+---
+
 ## [2.1.1] - 2026-03-10
 
 ### Fixed
