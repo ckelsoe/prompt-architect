@@ -242,83 +242,73 @@ Framework templates in `assets/templates/` provide structure:
 4. **Be Iterative** - Start with analysis, refine progressively
 5. **Respect User Choices** - Adapt if user prefers different framework
 
+## When NOT to Use Frameworks
+
+Frameworks add structure — but structure has overhead. Skip them when:
+
+- **The prompt is already complete**: Clear goal, full context, defined format → just execute it.
+- **Purely factual lookups**: "What is the capital of France?" — no framework needed.
+- **Conversational exchanges**: Back-and-forth dialogue doesn't need a structured template.
+- **Very short one-off tasks**: "Translate this sentence to Spanish." APE would be overhead; just translate.
+- **User is in a hurry**: If someone explicitly says "just do it", don't pause for framework selection — deliver, then offer to structure if they want more.
+- **The task is fully specced by context**: When the codebase, existing docs, or prior messages already contain everything needed.
+
+**Rule of thumb**: Apply a framework when there's a gap between what the user *asked for* and what they *need*. If there's no gap, there's no job for a framework.
+
+---
+
 ## Example Interaction
 
-**User**: "Write about machine learning"
+This example shows the full intent-based flow — detecting intent, using the discriminating table, selecting a framework, asking questions, and delivering a structured result.
 
-**Assistant**: I'll analyze this prompt and help improve it.
+**User**: "Rewrite this job posting — it's too formal and isn't getting applicants."
 
-**Analysis**:
-- Clarity: 2/10 (vague goal)
-- Specificity: 1/10 (no details)
-- Context: 0/10 (no background)
-- Completeness: 2/10 (missing most elements)
-- Structure: 3/10 (single sentence)
+**Assistant**: I'll analyze this and identify the best approach.
 
-**Recommendation**: CO-STAR framework (best for content/writing tasks)
+**Intent detected**: TRANSFORM — improving existing content.
+
+**Discriminating question**: Is this iterative quality improvement, or a one-shot before-to-after rewrite?
+→ One-shot rewrite with a clear current state → **BAB** (Before, After, Bridge)
 
 **Questions**:
-1. What's the context? (blog post, documentation, presentation?)
-2. Who's your audience? (beginners, experts, executives?)
-3. What's your objective? (explain concepts, compare approaches, tutorial?)
-4. What tone? (academic, casual, professional?)
-5. What format/length? (word count, structure?)
+1. What's the role and target audience? (who should this attract?)
+2. What does "too formal" mean specifically? (stiff language, corporate jargon, passive voice?)
+3. What tone should the new version have? (casual-professional, startup-energy, warm?)
+4. Any constraints to preserve? (job requirements, company name, legal language?)
+5. How much can change? (light edits vs. full rewrite?)
 
-**User**: "Blog post for executives, not technical, 800 words, professional but approachable"
+**User**: "Software engineer, early-career devs. Too much corporate-speak. Want it to sound like real humans work there. Requirements must stay. Full rewrite OK."
 
-**Assistant**: Great! A few more details:
-6. What aspects to focus on? (applications, ROI, challenges, examples?)
-7. Preferred style? (narrative, listicle, case studies?)
-
-**User**: "Focus on business applications with real examples. Mix narrative and bullets."
-
-**Improved Prompt** (CO-STAR):
+**Improved Prompt** (BAB):
 
 ```
-CONTEXT:
-Creating content for business blog aimed at C-level executives exploring
-AI/ML for their organizations. Readers understand strategy but have limited
-technical ML knowledge. Part of emerging technologies series.
+BEFORE (current state):
+[Paste the current job posting here]
+This posting suffers from: corporate-speak, passive voice, overly formal tone,
+and generic language that doesn't reflect actual team culture.
 
-OBJECTIVE:
-Create engaging article helping executives understand practical ML applications
-relevant to their companies. Demonstrate tangible business value and real-world
-implementation without overwhelming technical details.
+AFTER (desired state):
+A job posting that sounds like it was written by engineers, for engineers.
+Early-career developers should read it and think "I want to work there."
+It should feel honest, direct, and human — not like legal boilerplate.
 
-STYLE:
-Professional blog combining narrative with bullet points. Include 2-3 real-world
-case studies. Clear subheadings every 150-200 words. Balance storytelling with
-concrete information. Avoid jargon; explain technical terms in plain language.
-
-TONE:
-Professional yet approachable and conversational. Confident and authoritative
-without condescension. Practical and business-focused rather than theoretical.
-
-AUDIENCE:
-C-suite executives and senior managers at mid-to-large enterprises who:
-- Make strategic technology investment decisions
-- Understand business metrics and ROI
-- Have limited technical ML knowledge
-- Value practical examples over theory
-
-RESPONSE FORMAT:
-800-word article with:
-- Compelling headline (10 words max)
-- Brief hook (2-3 sentences)
-- 3-4 sections with subheadings
-- Mix of paragraphs and bullet points
-- Clear call-to-action conclusion
+BRIDGE (transformation rules):
+1. Replace all passive constructions with active voice
+2. Convert corporate jargon to plain English (e.g., "leverage" → "use")
+3. Add one specific, concrete detail about the team/culture per section
+4. Keep all technical requirements and must-haves verbatim
+5. Target reading level: conversational, not academic
+6. Length: same or shorter than original — cut fluff, don't add it
 ```
 
 **Changes Made**:
-1. Added rich context about blog, audience, series
-2. Specified clear objective focusing on business value
-3. Defined style with formatting guidance
-4. Set appropriate tone for executive audience
-5. Detailed audience characteristics and needs
-6. Structured response format with specific sections
+1. Locked the current state so the AI understands the starting point
+2. Defined the target state in terms the AI can evaluate against
+3. Made transformation rules explicit and prioritized
+4. Protected non-negotiable elements (requirements) from being changed
+5. Gave a concrete length/tone constraint to prevent over-engineering
 
-Does this align with your intent?
+Does this match what you need, or should we adjust the tone target or constraints?
 
 ---
 

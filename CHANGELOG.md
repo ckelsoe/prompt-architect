@@ -5,6 +5,28 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-03-10
+
+### Breaking Changes
+- **SKILL.md completely restructured** with intent-based framework selection replacing the flat 20-item use-case list. Seven intent categories (Recover, Clarify, Create, Transform, Reason, Critique, Agentic) now route to frameworks with discriminating tables within each category. Downstream tooling that parsed the old flat list format must be updated.
+
+### Added
+- **Intent-based framework selection system**: 7 categories with discriminating tables replace the flat list
+- **"When NOT to use frameworks" guidance**: Explicit conditions for skipping framework overhead
+- **Updated example interaction**: Demonstrates full intent-detection → framework-selection → delivery flow using BAB (not just CO-STAR)
+- **27-framework `hybrid_template.txt`**: Updated with 6 named combination patterns (Reverse Role → CREATE, BAB + Self-Refine, Devil's Advocate + Pre-Mortem, Step-Back + Chain of Thought, RPEF + Self-Refine, CO-STAR/RISEN + CAI Critique-Revise)
+- **Rewritten `framework_analyzer.py`**: Intent-based 27-framework system with two-phase scoring (detect intent → score within category)
+- **Updated `package.json`**: v2.0.0, 27 frameworks, expanded keywords, `intentCategories` and `frameworkCombinations` metadata fields
+- **Framework quick-reference taxonomy** in SKILL.md grouping all 27 by family
+
+### Changed
+- `package.json` version: 1.0.8 → 2.0.0
+- `package.json` description: updated to reference 27 frameworks across 7 intent categories
+- `framework_analyzer.py`: Rewritten from 8-framework flat scoring to 27-framework intent-based system
+- `hybrid_template.txt`: Updated from 4-framework references to all 7 framework family sections + 6 named combination patterns
+
+---
+
 ## [1.3.0] - 2026-03-10
 
 ### Added
