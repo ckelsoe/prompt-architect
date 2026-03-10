@@ -185,8 +185,8 @@ function validateSkill() {
 function validateSkillFile() {
   const content = fs.readFileSync(SKILL_FILE, 'utf8');
   
-  // Check for YAML frontmatter
-  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+  // Check for YAML frontmatter (handle both LF and CRLF line endings)
+  const frontmatterMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!frontmatterMatch) {
     error('SKILL.md missing YAML frontmatter (---\\n...\\n---)');
     errorCount++;
