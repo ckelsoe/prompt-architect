@@ -1,6 +1,6 @@
 # Claude Code Skill: Prompt Architect
 
-Transform vague prompts into expert-level, structured prompts using 7 research-backed frameworks.
+Transform vague prompts into expert-level, structured prompts using 13 research-backed frameworks.
 
 A comprehensive skill that analyzes, architects, and iteratively refines prompts through systematic framework application and guided dialogue.
 
@@ -45,7 +45,7 @@ Prompt Architect is a production-ready Claude Code Skill that elevates your prom
 
 ## Key Features
 
-### 7 Research-Backed Frameworks
+### 13 Research-Backed Frameworks
 
 | Framework | Best For | Complexity |
 |-----------|----------|------------|
@@ -54,7 +54,13 @@ Prompt Architect is a production-ready Claude Code Skill that elevates your prom
 | **RISE-IE** | Data analysis, transformations (Input-Expectation) | Medium |
 | **RISE-IX** | Content creation with examples (Instructions-Examples) | Medium |
 | **TIDD-EC** | High-precision tasks with explicit dos/don'ts | Medium |
-| **RTF** | Simple, focused tasks | Low |
+| **RACE** | Expert tasks requiring role + context + outcome clarity | Medium |
+| **CTF** | Simple tasks where situational context drives the prompt | Low |
+| **RTF** | Simple, focused tasks where expertise framing matters | Low |
+| **APE** | Ultra-minimal one-off prompts | Low |
+| **BAB** | Rewriting, refactoring, transforming existing content | Low |
+| **Tree of Thought** | Decisions requiring exploration of multiple approaches | Medium |
+| **ReAct** | Agentic / tool-use tasks with iterative reasoning | Medium |
 | **Chain of Thought** | Reasoning, problem-solving | Medium |
 | **Chain of Density** | Iterative refinement, summarization | Medium |
 
@@ -227,9 +233,22 @@ RESPONSE FORMAT:
 
 ---
 
+### CTF (Context, Task, Format)
+
+**Best for:** Simple tasks where situational background matters more than expertise framing
+
+**Components:**
+- **Context** - Situation and background
+- **Task** - What needs to be done
+- **Format** - Output structure
+
+**Example Use Cases:** Handoff documents, mid-project updates, situation-driven requests
+
+---
+
 ### RTF (Role, Task, Format)
 
-**Best for:** Simple, well-defined tasks
+**Best for:** Simple, well-defined tasks where expertise framing drives output quality
 
 **Components:**
 - **Role** - Expertise required
@@ -237,6 +256,74 @@ RESPONSE FORMAT:
 - **Format** - Output structure
 
 **Example Use Cases:** Quick conversions, simple formatting, straightforward requests
+
+---
+
+### APE (Action, Purpose, Expectation)
+
+**Best for:** Ultra-minimal prompts — the simplest structured framework
+
+**Components:**
+- **Action** - What to do (one clear verb-driven instruction)
+- **Purpose** - Why it's needed (one sentence)
+- **Expectation** - What a good result looks like
+
+**Example Use Cases:** Quick summaries, single-function code, one-off requests, rapid iteration
+
+---
+
+### BAB (Before, After, Bridge)
+
+**Best for:** Transforming, rewriting, or refactoring existing content
+
+**Components:**
+- **Before** - Current state and what's wrong
+- **After** - Desired end state
+- **Bridge** - Transformation rules and constraints
+
+**Example Use Cases:** Code refactoring, copy rewrites, tone changes, document restructuring, version migrations
+
+---
+
+### RACE (Role, Action, Context, Expectation)
+
+**Best for:** Medium-complexity tasks needing expertise + background + explicit success criteria
+
+**Components:**
+- **Role** - Expertise or persona
+- **Action** - What needs to be done
+- **Context** - Situational background and constraints
+- **Expectation** - What a good result looks like
+
+**Example Use Cases:** Technical reviews, expert analysis, contextual recommendations, documentation with standards
+
+---
+
+### Tree of Thought
+
+**Best for:** Decisions where multiple approaches need systematic comparison
+
+**Approach:**
+- Defines the problem and constraints
+- Explores 2-5 distinct solution branches in parallel
+- Evaluates each branch against defined criteria
+- Synthesizes into a reasoned recommendation
+
+**Example Use Cases:** Architecture decisions, debugging with multiple hypotheses, technology selection, strategic trade-offs
+
+---
+
+### ReAct (Reasoning + Acting)
+
+**Best for:** Agentic tasks that interleave reasoning with tool use
+
+**Approach:**
+- Defines goal, available tools, and constraints
+- Alternates Thought → Action → Observation cycles
+- Each observation informs the next thought
+- Continues until goal is reached
+
+**Example Use Cases:** Agentic workflows, multi-step research, debugging with tools, data investigation
 
 ---
 
@@ -527,29 +614,51 @@ Skill: Perfect! Let me apply the RISEN framework...
 ### Decision Tree
 
 ```
-Is it content/writing focused?
-├─ YES → CO-STAR (if audience/tone matter)
+Are you transforming existing content (rewrite, refactor, convert)?
+├─ YES → BAB (Before, After, Bridge)
 └─ NO ↓
 
-Is it a multi-step process?
-├─ YES → RISEN (if methodology/constraints important)
+Is it an agentic/tool-use task?
+├─ YES → ReAct (Thought-Action-Observation cycles)
 └─ NO ↓
 
-Is it data transformation?
-├─ YES → RISE-IE (input → output)
+Is it a decision between multiple approaches?
+├─ YES → Tree of Thought (branching exploration)
 └─ NO ↓
 
-Does it need examples?
-├─ YES → RISE-IX (content with samples)
+Is it content/writing focused with audience and tone?
+├─ YES → CO-STAR
+└─ NO ↓
+
+Is it a multi-step process with methodology?
+├─ YES → RISEN
+└─ NO ↓
+
+Is it a data transformation (input → output)?
+├─ YES → RISE-IE
+└─ NO ↓
+
+Does it need reference examples?
+├─ YES → RISE-IX
 └─ NO ↓
 
 Does it need explicit dos/don'ts?
-├─ YES → TIDD-EC (high-precision tasks)
+├─ YES → TIDD-EC
 └─ NO ↓
 
-Is it reasoning/problem-solving?
+Is it complex reasoning (one clear path)?
 ├─ YES → Chain of Thought
-└─ NO → RTF (simple tasks) or Chain of Density (refinement)
+└─ NO ↓
+
+Does it need iterative refinement?
+├─ YES → Chain of Density
+└─ NO ↓
+
+Is it a simple task? Choose by primary driver:
+├─ Expert role matters most → RTF
+├─ Situational context matters most → CTF
+├─ Need role + context + outcome bar → RACE
+└─ Ultra-minimal, one-off → APE
 ```
 
 ### Quick Reference
@@ -563,7 +672,15 @@ Is it reasoning/problem-solving?
 | Generate secure code | TIDD-EC | Explicit dos/don'ts needed |
 | Debug logic error | Chain of Thought | Requires reasoning steps |
 | Compress explanation | Chain of Density | Iterative refinement |
-| Simple conversion | RTF | Straightforward task |
+| Simple conversion | RTF | Straightforward, expertise-driven |
+| Mid-project update | CTF | Background is the key driver |
+| Summarize a meeting | APE | Ultra-minimal, one-off |
+| Refactor existing code | BAB | Clear before/after transformation |
+| Rewrite copy for new audience | BAB | Current content → desired state |
+| Architecture decision | Tree of Thought | Multiple approaches to compare |
+| Choose database tech | Tree of Thought | Trade-offs need systematic analysis |
+| Agentic research task | ReAct | Tool use with iterative reasoning |
+| Expert review with context | RACE | Role + background + outcome bar |
 
 ---
 
@@ -588,7 +705,13 @@ prompt-architect/
     │       ├── risen.md               # RISEN reference (600+ lines)
     │       ├── rise.md                # RISE (IE/IX) reference (700+ lines)
     │       ├── tidd-ec.md             # TIDD-EC reference (600+ lines)
+    │       ├── ctf.md                 # CTF reference
     │       ├── rtf.md                 # RTF reference (500+ lines)
+    │       ├── ape.md                 # APE reference
+    │       ├── bab.md                 # BAB reference
+    │       ├── race.md                # RACE reference
+    │       ├── tree-of-thought.md     # Tree of Thought reference
+    │       ├── react.md               # ReAct reference
     │       ├── chain-of-thought.md    # CoT reference (500+ lines)
     │       └── chain-of-density.md    # CoD reference (500+ lines)
     │
@@ -599,16 +722,20 @@ prompt-architect/
             ├── rise-ie_template.txt
             ├── rise-ix_template.txt
             ├── tidd-ec_template.txt
+            ├── ctf_template.txt
             ├── rtf_template.txt
+            ├── ape_template.txt
+            ├── bab_template.txt
+            ├── race_template.txt
+            ├── tree-of-thought_template.txt
+            ├── react_template.txt
             └── hybrid_template.txt
 ```
 
-**Total Size:** ~200 KB
-
 **Core Components:**
 - **SKILL.md** - Main skill logic and instructions
-- **7 Framework Docs** - Complete references with examples
-- **7 Templates** - Ready-to-use structures
+- **13 Framework Docs** - Complete references with examples
+- **13 Templates** - Ready-to-use structures
 - **2 Python Scripts** - Analysis and scoring utilities
 
 ---
@@ -623,7 +750,13 @@ Detailed documentation for each framework in `prompt-architect/references/framew
 - **risen.md** - Role, Instructions, Steps, End goal, Narrowing
 - **rise.md** - Dual variants (IE & IX)
 - **tidd-ec.md** - Task, Instructions, Do, Don't, Examples, Context
+- **ctf.md** - Context, Task, Format
 - **rtf.md** - Role, Task, Format
+- **ape.md** - Action, Purpose, Expectation
+- **bab.md** - Before, After, Bridge
+- **race.md** - Role, Action, Context, Expectation
+- **tree-of-thought.md** - Branching multi-path exploration
+- **react.md** - Reasoning + Acting (agentic tool use)
 - **chain-of-thought.md** - Step-by-step reasoning
 - **chain-of-density.md** - Iterative refinement
 

@@ -1,6 +1,6 @@
 ---
 name: prompt-architect
-description: Analyzes and transforms prompts using 8 research-backed frameworks (CO-STAR, RISEN, RISE-IE, RISE-IX, TIDD-EC, CTF, RTF, Chain of Thought, Chain of Density). Provides framework recommendations, asks targeted questions, and structures prompts for maximum effectiveness. Use when users need expert prompt engineering guidance.
+description: Analyzes and transforms prompts using 13 research-backed frameworks (CO-STAR, RISEN, RISE-IE, RISE-IX, TIDD-EC, CTF, RTF, APE, BAB, RACE, Tree of Thought, ReAct, Chain of Thought, Chain of Density). Provides framework recommendations, asks targeted questions, and structures prompts for maximum effectiveness. Use when users need expert prompt engineering guidance.
 ---
 
 # Prompt Architect
@@ -24,7 +24,11 @@ Identify the use case type:
 - Data transformation → likely **RISE-IE** (Input-Expectation)
 - Content creation with examples → likely **RISE-IX** (Instructions-Examples)
 - Tasks with explicit dos/don'ts → likely **TIDD-EC**
-- Simple focused task → likely **RTF** or **CTF**
+- Simple focused task → likely **APE**, **RTF**, or **CTF**
+- Transforming existing content → likely **BAB**
+- Expert task with context + outcome bar → likely **RACE**
+- Decision between multiple approaches → likely **Tree of Thought**
+- Agentic / tool-use task → likely **ReAct**
 - Complex reasoning → likely **Chain of Thought**
 - Iterative refinement → likely **Chain of Density**
 
@@ -39,11 +43,18 @@ Recommend 1-2 frameworks with clear reasoning:
 - **TIDD-EC**: High-precision tasks requiring explicit dos/don'ts and clear boundaries
 - **CTF**: Simple tasks where situational context drives the prompt more than AI persona
 - **RTF**: Simple, well-defined tasks where expertise framing is primary concern
+- **APE**: Ultra-minimal — action, why it matters, and success bar; for one-off quick prompts
+- **BAB**: Transformation tasks — rewriting, refactoring, converting existing content
+- **RACE**: Medium complexity — role + action + context + explicit expectation of success
+- **Tree of Thought**: Decision-making requiring exploration of multiple solution branches
+- **ReAct**: Agentic tasks interleaving reasoning and tool/action use
 - **Chain of Thought**: Reasoning tasks requiring step-by-step logic
 - **Chain of Density**: Tasks benefiting from iterative refinement
 
 **Note**: RISE has two variants - choose RISE-IE for data processing, RISE-IX for content creation
 **Note**: TIDD-EC excels when you need explicit positive/negative guidance and error prevention
+**Note**: Simple task ladder (least to most structure): APE → CTF/RTF → RACE → RISEN/CO-STAR
+**Note**: Reasoning ladder: Chain of Thought (linear) → Tree of Thought (branching) → ReAct (agentic)
 
 ### 3. Clarification Questions
 
@@ -56,6 +67,11 @@ Ask targeted questions (3-5 at a time) based on identified gaps:
 **For TIDD-EC**: Task type, exact steps, what to include (dos), what to avoid (don'ts), examples, context?
 **For CTF**: What is the situation/background, exact task, output format?
 **For RTF**: Expertise needed, exact task, output format?
+**For APE**: Core action, why it's needed, what success looks like?
+**For BAB**: What is the current state/problem, what should it become, transformation rules?
+**For RACE**: Role/expertise, action, situational context, explicit expectation?
+**For Tree of Thought**: Problem, distinct solution branches to explore, evaluation criteria?
+**For ReAct**: Goal, available tools, constraints and stop condition?
 **For Chain of Thought**: Problem, reasoning steps, verification?
 **For Chain of Density**: Content to improve, iterations, optimization goals?
 
@@ -91,6 +107,11 @@ Detailed framework docs in `references/frameworks/`:
 - `tidd-ec.md` - Task type, Instructions, Do, Don't, Examples, Context
 - `ctf.md` - Context, Task, Format
 - `rtf.md` - Role, Task, Format
+- `ape.md` - Action, Purpose, Expectation (ultra-minimal)
+- `bab.md` - Before, After, Bridge (transformation/rewrite tasks)
+- `race.md` - Role, Action, Context, Expectation (medium complexity)
+- `tree-of-thought.md` - Branching exploration of multiple solution paths
+- `react.md` - Reasoning + Acting (agentic tool-use cycles)
 - `chain-of-thought.md` - Step-by-step reasoning techniques
 - `chain-of-density.md` - Iterative refinement through compression
 
@@ -106,6 +127,11 @@ Framework templates in `assets/templates/` provide structure:
 - `tidd-ec_template.txt` - TIDD-EC structure (Task, Instructions, Do, Don't, Examples, Context)
 - `ctf_template.txt` - CTF structure (Context-Task-Format for situational prompts)
 - `rtf_template.txt` - Full RTF structure
+- `ape_template.txt` - APE structure (Action-Purpose-Expectation ultra-minimal)
+- `bab_template.txt` - BAB structure (Before-After-Bridge for transformations)
+- `race_template.txt` - RACE structure (Role-Action-Context-Expectation)
+- `tree-of-thought_template.txt` - Tree of Thought branching exploration structure
+- `react_template.txt` - ReAct Thought-Action-Observation cycle structure
 - `hybrid_template.txt` - Combined framework approach
 
 ## Key Principles

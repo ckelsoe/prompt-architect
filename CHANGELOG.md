@@ -5,6 +5,28 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-10
+
+### Added
+- **6 New Frameworks** (total now 13):
+  - **CTF** (Context, Task, Format) — Simple tasks where situational context drives the prompt more than AI persona framing
+  - **APE** (Action, Purpose, Expectation) — Ultra-minimal framework for one-off quick prompts
+  - **BAB** (Before, After, Bridge) — Transformation tasks: rewriting, refactoring, converting existing content
+  - **RACE** (Role, Action, Context, Expectation) — Medium complexity with role + background + explicit success bar
+  - **Tree of Thought** — Decision-making via systematic exploration of multiple solution branches
+  - **ReAct** (Reasoning + Acting) — Agentic tasks interleaving reasoning with tool/action use
+- **6 New Framework Reference Docs** in `references/frameworks/`
+- **6 New Templates** in `assets/templates/`
+- Updated framework selection decision tree in SKILL.md and README
+- Added complexity ladder notes: simple task ladder and reasoning ladder
+
+### Changed
+- SKILL.md description updated to reflect 13 frameworks
+- README framework table, decision tree, quick reference, project structure, and documentation sections updated
+- Framework count references updated throughout documentation
+
+---
+
 ## [1.0.0] - 2025-01-24
 
 ### Added

@@ -1,0 +1,15 @@
+BEFORE:
+[Describe the current state — what exists now, what's wrong with it, what needs to change.
+Be specific: quote actual content, describe current problems, name limitations.]
+
+AFTER:
+[Describe the desired end state — what it should look like once transformed.
+Include: qualities it should have, audience/consumer of the result, success criteria.]
+
+BRIDGE:
+[Define the transformation rules — how to get from Before to After.
+Include:
+- What must be preserved (do not change)
+- What should change
+- Any constraints on approach or style
+- Tone, length, or format requirements for the result]

@@ -1,0 +1,30 @@
+PROBLEM:
+[Define what needs to be solved:
+- What decision or problem are we addressing?
+- What constraints apply?
+- What does a good solution need to achieve?]
+
+EXPLORE THESE BRANCHES:
+Branch 1: [Name of approach/strategy]
+Branch 2: [Name of approach/strategy]
+Branch 3: [Name of approach/strategy]
+[Add or remove branches as needed — 2 to 5 is optimal]
+
+For each branch, analyze:
+- Describe the approach
+- Work through the core reasoning
+- Identify key strengths
+- Identify key weaknesses or risks
+- Note any edge cases or assumptions
+
+EVALUATION CRITERIA:
+[Define how branches will be compared:
+- What matters most? (list in priority order)
+- Any hard constraints that eliminate certain branches?
+- Is there one best answer, or does it depend on context?]
+
+CONCLUSION:
+[Synthesize the analysis:
+- Select the best branch with clear reasoning
+- OR explain trade-offs if the answer is context-dependent
+- State the single biggest assumption that could change the recommendation]

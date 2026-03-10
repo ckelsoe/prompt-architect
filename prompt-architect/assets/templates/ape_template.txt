@@ -1,0 +1,5 @@
+ACTION: [What to do — one clear verb-driven instruction]
+
+PURPOSE: [Why it's needed — one sentence on how it will be used or who needs it]
+
+EXPECTATION: [What a good result looks like — format, length, quality bar, or tone]

@@ -1,0 +1,27 @@
+GOAL:
+[Define the end state to achieve — what does success look like?]
+
+AVAILABLE TOOLS:
+- [tool_name]: [What it does and how to invoke it]
+- [tool_name]: [What it does and how to invoke it]
+- [tool_name]: [What it does and how to invoke it]
+
+CONSTRAINTS:
+- [Rules, limits, or guardrails on actions]
+- [Stop condition: when to stop and deliver Final Answer]
+- [Optional: max iterations or tool call limit]
+
+APPROACH:
+Use the Thought → Action → Observation cycle until the goal is reached:
+
+Thought: [Reason about current state and what to do next]
+Action: [tool_name] — [specific query or operation]
+Observation: [Result of the action]
+
+Thought: [Reason about the observation — what does it mean? what to do next?]
+Action: [tool_name] — [next operation]
+Observation: [Result]
+
+[Continue cycling until goal is achieved or stop condition is met]
+
+Final Answer: [Deliver the result once goal is reached]

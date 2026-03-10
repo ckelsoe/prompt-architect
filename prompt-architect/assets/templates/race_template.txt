@@ -1,0 +1,19 @@
+ROLE:
+[Define the expertise or persona needed — who should do this task and at what level]
+
+ACTION:
+[State clearly what needs to be done — the task and deliverable]
+
+CONTEXT:
+[Provide the situational background:
+- What's the current state / situation?
+- Who is the audience or recipient of the output?
+- Any relevant constraints or prior decisions?
+- What has already been done?]
+
+EXPECTATION:
+[Define what a successful output looks like:
+- Format and structure requirements
+- Quality bar or success criteria
+- What should be prioritized
+- Length or scope constraints]
