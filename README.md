@@ -540,6 +540,39 @@ RESPONSE FORMAT:
 
 ---
 
+## Use with Other AI Tools
+
+Prompt Architect works with Claude Code out of the box. For other tools, use the adapter files in the [`adapters/`](adapters/) folder.
+
+| Tool | Adapter file | Where to put it |
+|------|-------------|-----------------|
+| **OpenAI Codex CLI** | `adapters/for-openai-codex-cli.md` | Append to `AGENTS.md` in project root |
+| **Cursor** | `adapters/for-cursor.mdc` | Copy to `.cursor/rules/prompt-architect.mdc` |
+| **GitHub Copilot** | `adapters/for-github-copilot.md` | Append to `.github/copilot-instructions.md` |
+| **Windsurf** | `adapters/for-windsurf.md` | Append to `.windsurfrules` in project root |
+| **Any LLM API / ChatGPT** | `adapters/system-prompt.md` | Paste into system prompt / instructions field |
+
+**Quick install examples:**
+```bash
+# OpenAI Codex CLI
+cat node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-openai-codex-cli.md >> AGENTS.md
+
+# Cursor
+mkdir -p .cursor/rules
+cp node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-cursor.mdc .cursor/rules/prompt-architect.mdc
+
+# GitHub Copilot
+mkdir -p .github
+cat node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-github-copilot.md >> .github/copilot-instructions.md
+
+# Windsurf
+cat node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-windsurf.md >> .windsurfrules
+```
+
+See [`adapters/README.md`](adapters/README.md) for full documentation, limitations, and troubleshooting for each platform.
+
+---
+
 ## Quick Start
 
 ### 1. Install via npm (Recommended)

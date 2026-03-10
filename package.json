@@ -55,6 +55,7 @@
   },
   "files": [
     "prompt-architect/",
+    "adapters/",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
