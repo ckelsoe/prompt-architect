@@ -1,0 +1,16 @@
+CONTEXT:
+[Who you are, the situation you're in, and why this task exists]
+
+ASK:
+[The specific request and deliverable]
+
+RULES:
+[Explicit constraints governing the output:
+- What must be included
+- What must be avoided
+- Format and length requirements
+- Tone and reading level standards
+- Quality bar or compliance requirements]
+
+EXAMPLES:
+[1-3 examples showing the desired output format, tone, or quality standard]

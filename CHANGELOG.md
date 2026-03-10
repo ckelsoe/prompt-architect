@@ -5,6 +5,29 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-10
+
+### Added
+- **7 New Frameworks** (total now 20):
+  - **Skeleton of Thought (SoT)** — Generate skeleton outline first, expand each point (ICLR 2024, Microsoft Research)
+  - **Step-Back Prompting** — Abstract to underlying principles before answering (Google DeepMind, ICLR 2024)
+  - **Least-to-Most (LtM)** — Decompose into ordered subproblems, solve sequentially (Google Brain, ICLR 2023)
+  - **Plan-and-Solve (PS+)** — Zero-shot: plan + extract variables + calculate step by step (ACL 2023)
+  - **CRISPE** — Capacity+Role, Insight, Instructions, Personality, Experiment (multiple variants)
+  - **BROKE** — Background, Role, Objective, Key Results, Evolve (business OKR-style with self-critique)
+  - **CARE** — Context, Ask, Rules, Examples (Nielsen Norman Group, constraint-driven)
+- **7 New Framework Reference Docs** in `references/frameworks/`
+- **7 New Templates** in `assets/templates/`
+- Updated reasoning ladder notes in SKILL.md
+- Expanded decision tree and quick reference in README
+
+### Changed
+- SKILL.md updated to 20 frameworks
+- README framework table, decision tree, quick reference, and project structure updated
+- Framework count references updated throughout
+
+---
+
 ## [1.1.0] - 2026-03-10
 
 ### Added

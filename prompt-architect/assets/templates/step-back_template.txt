@@ -1,0 +1,10 @@
+ORIGINAL QUESTION:
+[The specific question you want answered]
+
+STEP-BACK:
+Before answering directly, first answer this higher-level question:
+[Rephrase the original into a more abstract question about underlying principles, concepts, or rules]
+
+PRINCIPLE APPLICATION:
+Using the principles/concepts you just described, now answer the original question:
+[Restate original question here]

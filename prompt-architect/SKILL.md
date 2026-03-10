@@ -1,6 +1,6 @@
 ---
 name: prompt-architect
-description: Analyzes and transforms prompts using 13 research-backed frameworks (CO-STAR, RISEN, RISE-IE, RISE-IX, TIDD-EC, CTF, RTF, APE, BAB, RACE, Tree of Thought, ReAct, Chain of Thought, Chain of Density). Provides framework recommendations, asks targeted questions, and structures prompts for maximum effectiveness. Use when users need expert prompt engineering guidance.
+description: Analyzes and transforms prompts using 20 research-backed frameworks (CO-STAR, RISEN, RISE-IE, RISE-IX, TIDD-EC, CTF, RTF, APE, BAB, RACE, CRISPE, BROKE, CARE, Tree of Thought, ReAct, Skeleton of Thought, Step-Back, Least-to-Most, Plan-and-Solve, Chain of Thought, Chain of Density). Provides framework recommendations, asks targeted questions, and structures prompts for maximum effectiveness. Use when users need expert prompt engineering guidance.
 ---
 
 # Prompt Architect
@@ -27,8 +27,15 @@ Identify the use case type:
 - Simple focused task → likely **APE**, **RTF**, or **CTF**
 - Transforming existing content → likely **BAB**
 - Expert task with context + outcome bar → likely **RACE**
+- Comprehensive task needing multiple output variants → likely **CRISPE**
+- Business deliverable with measurable KPIs → likely **BROKE**
+- Task with explicit rules and examples → likely **CARE**
 - Decision between multiple approaches → likely **Tree of Thought**
 - Agentic / tool-use task → likely **ReAct**
+- Structured long-form content → likely **Skeleton of Thought**
+- Principle-grounded reasoning → likely **Step-Back**
+- Compositional multi-hop problem → likely **Least-to-Most**
+- Zero-shot numerical/calculation reasoning → likely **Plan-and-Solve**
 - Complex reasoning → likely **Chain of Thought**
 - Iterative refinement → likely **Chain of Density**
 
@@ -46,15 +53,23 @@ Recommend 1-2 frameworks with clear reasoning:
 - **APE**: Ultra-minimal — action, why it matters, and success bar; for one-off quick prompts
 - **BAB**: Transformation tasks — rewriting, refactoring, converting existing content
 - **RACE**: Medium complexity — role + action + context + explicit expectation of success
+- **CRISPE**: Comprehensive — capacity/role, insight, instructions, personality, experiment (multiple variants)
+- **BROKE**: Business-oriented — background, role, objective, key results, evolve (self-critique loop)
+- **CARE**: Constraint-driven — context, ask, rules, examples (NNg framework)
 - **Tree of Thought**: Decision-making requiring exploration of multiple solution branches
 - **ReAct**: Agentic tasks interleaving reasoning and tool/action use
+- **Skeleton of Thought**: Generate structure/skeleton first, then expand each point
+- **Step-Back**: Abstract to underlying principles first, then apply to specific question
+- **Least-to-Most**: Decompose into ordered subproblems, solve sequentially (simplest first)
+- **Plan-and-Solve (PS+)**: Zero-shot — plan first, extract variables, calculate step by step
 - **Chain of Thought**: Reasoning tasks requiring step-by-step logic
 - **Chain of Density**: Tasks benefiting from iterative refinement
 
 **Note**: RISE has two variants - choose RISE-IE for data processing, RISE-IX for content creation
 **Note**: TIDD-EC excels when you need explicit positive/negative guidance and error prevention
-**Note**: Simple task ladder (least to most structure): APE → CTF/RTF → RACE → RISEN/CO-STAR
-**Note**: Reasoning ladder: Chain of Thought (linear) → Tree of Thought (branching) → ReAct (agentic)
+**Note**: Simple task ladder (least to most structure): APE → CTF/RTF → RACE → CRISPE/BROKE → RISEN/CO-STAR
+**Note**: Reasoning ladder: Plan-and-Solve (zero-shot) → Chain of Thought (linear) → Least-to-Most (compositional) → Step-Back (principled) → Tree of Thought (branching) → ReAct (agentic)
+**Note**: Content structure ladder: APE → SoT (skeleton) → RISEN (methodology) → CO-STAR (full)
 
 ### 3. Clarification Questions
 
@@ -70,8 +85,15 @@ Ask targeted questions (3-5 at a time) based on identified gaps:
 **For APE**: Core action, why it's needed, what success looks like?
 **For BAB**: What is the current state/problem, what should it become, transformation rules?
 **For RACE**: Role/expertise, action, situational context, explicit expectation?
+**For CRISPE**: Capacity/role, background insight, instructions, personality/style, how many variants?
+**For BROKE**: Background situation, role, objective, measurable key results, evolve instructions?
+**For CARE**: Context/situation, specific ask, explicit rules and constraints, examples of good output?
 **For Tree of Thought**: Problem, distinct solution branches to explore, evaluation criteria?
 **For ReAct**: Goal, available tools, constraints and stop condition?
+**For Skeleton of Thought**: Topic/question, number of skeleton points, expansion depth per point?
+**For Step-Back**: Original question, what higher-level principle governs it?
+**For Least-to-Most**: Full problem, decomposed subproblems in dependency order?
+**For Plan-and-Solve**: Problem with all relevant numbers/variables?
 **For Chain of Thought**: Problem, reasoning steps, verification?
 **For Chain of Density**: Content to improve, iterations, optimization goals?
 
@@ -110,8 +132,15 @@ Detailed framework docs in `references/frameworks/`:
 - `ape.md` - Action, Purpose, Expectation (ultra-minimal)
 - `bab.md` - Before, After, Bridge (transformation/rewrite tasks)
 - `race.md` - Role, Action, Context, Expectation (medium complexity)
+- `crispe.md` - Capacity+Role, Insight, Instructions, Personality, Experiment
+- `broke.md` - Background, Role, Objective, Key Results, Evolve
+- `care.md` - Context, Ask, Rules, Examples (constraint-driven)
 - `tree-of-thought.md` - Branching exploration of multiple solution paths
 - `react.md` - Reasoning + Acting (agentic tool-use cycles)
+- `skeleton-of-thought.md` - Skeleton-first then expand (parallel generation)
+- `step-back.md` - Abstract to principles first, then answer (Google DeepMind)
+- `least-to-most.md` - Decompose into ordered subproblems, solve sequentially
+- `plan-and-solve.md` - Zero-shot: plan + extract variables + calculate (PS+)
 - `chain-of-thought.md` - Step-by-step reasoning techniques
 - `chain-of-density.md` - Iterative refinement through compression
 
@@ -130,8 +159,15 @@ Framework templates in `assets/templates/` provide structure:
 - `ape_template.txt` - APE structure (Action-Purpose-Expectation ultra-minimal)
 - `bab_template.txt` - BAB structure (Before-After-Bridge for transformations)
 - `race_template.txt` - RACE structure (Role-Action-Context-Expectation)
+- `crispe_template.txt` - CRISPE structure (with Experiment/variants)
+- `broke_template.txt` - BROKE structure (with Key Results + Evolve)
+- `care_template.txt` - CARE structure (with Rules + Examples)
 - `tree-of-thought_template.txt` - Tree of Thought branching exploration structure
 - `react_template.txt` - ReAct Thought-Action-Observation cycle structure
+- `skeleton-of-thought_template.txt` - Skeleton + expand structure
+- `step-back_template.txt` - Step-back question + principle application
+- `least-to-most_template.txt` - Decompose + sequential solving
+- `plan-and-solve_template.txt` - PS+ trigger phrase structure
 - `hybrid_template.txt` - Combined framework approach
 
 ## Key Principles

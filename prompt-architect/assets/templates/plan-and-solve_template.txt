@@ -1,0 +1,7 @@
+PROBLEM:
+[Your question, calculation, or reasoning problem]
+
+Let's first understand the problem, extract relevant variables and their
+corresponding numerals, and devise a complete plan. Then, let's carry out
+the plan, calculate intermediate values, pay attention to computation,
+and solve the problem step by step.

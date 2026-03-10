@@ -1,0 +1,15 @@
+BACKGROUND:
+[Current situation, why this task exists, relevant history and constraints]
+
+ROLE:
+[Professional persona and expertise to embody]
+
+OBJECTIVE:
+[The specific task and deliverable]
+
+KEY RESULTS:
+[Measurable outcomes this output should help achieve — how success is defined in business terms]
+
+EVOLVE:
+After completing your response, provide 3 specific suggestions for improving
+this output or approach in a follow-up iteration.

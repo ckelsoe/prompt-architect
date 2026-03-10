@@ -1,6 +1,6 @@
 # Claude Code Skill: Prompt Architect
 
-Transform vague prompts into expert-level, structured prompts using 13 research-backed frameworks.
+Transform vague prompts into expert-level, structured prompts using 20 research-backed frameworks.
 
 A comprehensive skill that analyzes, architects, and iteratively refines prompts through systematic framework application and guided dialogue.
 
@@ -45,22 +45,29 @@ Prompt Architect is a production-ready Claude Code Skill that elevates your prom
 
 ## Key Features
 
-### 13 Research-Backed Frameworks
+### 20 Research-Backed Frameworks
 
 | Framework | Best For | Complexity |
 |-----------|----------|------------|
 | **CO-STAR** | Content creation, writing tasks | High |
 | **RISEN** | Multi-step processes, procedures | High |
+| **CRISPE** | Comprehensive prompts with multiple output variants | High |
+| **BROKE** | Business deliverables with OKR-style measurable outcomes | Medium |
 | **RISE-IE** | Data analysis, transformations (Input-Expectation) | Medium |
 | **RISE-IX** | Content creation with examples (Instructions-Examples) | Medium |
 | **TIDD-EC** | High-precision tasks with explicit dos/don'ts | Medium |
 | **RACE** | Expert tasks requiring role + context + outcome clarity | Medium |
+| **CARE** | Constraint-driven tasks with explicit rules and examples | Medium |
 | **CTF** | Simple tasks where situational context drives the prompt | Low |
 | **RTF** | Simple, focused tasks where expertise framing matters | Low |
 | **APE** | Ultra-minimal one-off prompts | Low |
 | **BAB** | Rewriting, refactoring, transforming existing content | Low |
 | **Tree of Thought** | Decisions requiring exploration of multiple approaches | Medium |
 | **ReAct** | Agentic / tool-use tasks with iterative reasoning | Medium |
+| **Skeleton of Thought** | Structured long-form content (outline-first) | Medium |
+| **Step-Back** | Principle-grounded reasoning (abstract first, then specific) | Medium |
+| **Least-to-Most** | Compositional multi-hop problems (simplest first) | Medium |
+| **Plan-and-Solve (PS+)** | Zero-shot numerical/calculation reasoning | Low |
 | **Chain of Thought** | Reasoning, problem-solving | Medium |
 | **Chain of Density** | Iterative refinement, summarization | Medium |
 
@@ -296,6 +303,100 @@ RESPONSE FORMAT:
 - **Expectation** - What a good result looks like
 
 **Example Use Cases:** Technical reviews, expert analysis, contextual recommendations, documentation with standards
+
+---
+
+### CRISPE (Capacity+Role, Insight, Instructions, Personality, Experiment)
+
+**Best for:** Comprehensive prompts where you want multiple output variants to compare
+
+**Components:**
+- **Capacity & Role** - Expertise level and professional persona
+- **Insight** - Background context and situational knowledge
+- **Instructions** - The specific task
+- **Personality** - Tone, voice, communication style
+- **Experiment** - Request N variants to compare (the defining differentiator)
+
+**Example Use Cases:** Marketing campaigns (A/B variants), content with tone options, strategic analysis needing multiple angles
+
+---
+
+### BROKE (Background, Role, Objective, Key Results, Evolve)
+
+**Best for:** Business deliverables with measurable outcomes and built-in self-improvement
+
+**Components:**
+- **Background** - Situation and context
+- **Role** - Professional persona
+- **Objective** - The task
+- **Key Results** - Measurable business outcomes (OKR-style)
+- **Evolve** - AI self-critiques and suggests 3 improvements
+
+**Example Use Cases:** Sales process improvements, content strategy with KPIs, product decisions tied to metrics
+
+---
+
+### CARE (Context, Ask, Rules, Examples)
+
+**Best for:** Tasks with explicit constraints, compliance requirements, or quality standards
+
+**Components:**
+- **Context** - Situation and background
+- **Ask** - The specific request
+- **Rules** - Explicit constraints, dos/don'ts, standards
+- **Examples** - Reference samples showing the quality bar
+
+**Example Use Cases:** Healthcare/legal content, UI error messages, interview questions with bias constraints, brand-compliant copy
+
+---
+
+### Skeleton of Thought (SoT)
+
+**Best for:** Structured long-form content — generate outline first, then expand
+
+**Approach:**
+- Phase 1: Generate a concise skeleton/outline (key points only)
+- Phase 2: Expand each skeleton point independently (parallelizable)
+- SoT-R variant: Route non-suitable questions to standard generation
+
+**Example Use Cases:** Technical documentation, structured reports, tutorials, any multi-section content
+
+---
+
+### Step-Back Prompting
+
+**Best for:** Principle-grounded reasoning — abstract to the underlying concept first
+
+**Approach:**
+- Generate a higher-level "step-back" question about underlying principles
+- Answer the abstract question to retrieve principles
+- Use those principles as context to answer the original specific question
+
+**Example Use Cases:** STEM problems, architecture decisions, debugging, any task where first-principles reasoning matters
+
+---
+
+### Least-to-Most (LtM)
+
+**Best for:** Compositional multi-hop problems with ordered dependencies
+
+**Approach:**
+- Decompose the complex problem into ordered subproblems (simplest first)
+- Solve each subproblem sequentially, feeding each answer into the next
+- Use accumulated answers to solve the original problem
+
+**Example Use Cases:** Multi-domain questions (legal + technical), complex calculations, architecture problems with prerequisites
+
+---
+
+### Plan-and-Solve (PS+)
+
+**Best for:** Zero-shot numerical and calculation reasoning
+
+**Approach:**
+- "Let's first understand the problem, extract relevant variables and their corresponding numerals, and devise a complete plan. Then, let's carry out the plan, calculate intermediate values, pay attention to computation, and solve the problem step by step."
+
+**Example Use Cases:** Financial calculations (MRR, CAC, payback), math word problems, resource estimation, any zero-shot reasoning task
 
 ---
 
@@ -654,10 +755,29 @@ Does it need iterative refinement?
 ├─ YES → Chain of Density
 └─ NO ↓
 
+Is it a numerical/calculation problem (zero-shot)?
+├─ YES → Plan-and-Solve PS+
+└─ NO ↓
+
+Is it compositional / multi-hop (answer A needed before B)?
+├─ YES → Least-to-Most
+└─ NO ↓
+
+Does it need first-principles reasoning?
+├─ YES → Step-Back Prompting
+└─ NO ↓
+
+Is it structured long-form content (multiple semi-independent sections)?
+├─ YES → Skeleton of Thought
+└─ NO ↓
+
 Is it a simple task? Choose by primary driver:
 ├─ Expert role matters most → RTF
 ├─ Situational context matters most → CTF
 ├─ Need role + context + outcome bar → RACE
+├─ Business deliverable with KPIs → BROKE
+├─ Want multiple variants to compare → CRISPE
+├─ Have explicit rules/constraints → CARE
 └─ Ultra-minimal, one-off → APE
 ```
 
@@ -681,6 +801,13 @@ Is it a simple task? Choose by primary driver:
 | Choose database tech | Tree of Thought | Trade-offs need systematic analysis |
 | Agentic research task | ReAct | Tool use with iterative reasoning |
 | Expert review with context | RACE | Role + background + outcome bar |
+| Financial calculation | Plan-and-Solve (PS+) | Zero-shot + variable extraction |
+| Multi-hop technical question | Least-to-Most | Dependencies must be solved in order |
+| Architecture principle question | Step-Back | Abstract to first principles first |
+| Write structured docs/report | Skeleton of Thought | Outline first, expand second |
+| Marketing copy A/B options | CRISPE | Experiment component generates variants |
+| Business strategy with KPIs | BROKE | Key Results + Evolve self-critique |
+| Healthcare/compliance content | CARE | Explicit rules and quality standards |
 
 ---
 
@@ -710,8 +837,15 @@ prompt-architect/
     │       ├── ape.md                 # APE reference
     │       ├── bab.md                 # BAB reference
     │       ├── race.md                # RACE reference
+    │       ├── crispe.md              # CRISPE reference
+    │       ├── broke.md               # BROKE reference
+    │       ├── care.md                # CARE reference
     │       ├── tree-of-thought.md     # Tree of Thought reference
     │       ├── react.md               # ReAct reference
+    │       ├── skeleton-of-thought.md # Skeleton of Thought reference (ICLR 2024)
+    │       ├── step-back.md           # Step-Back Prompting reference (Google DeepMind)
+    │       ├── least-to-most.md       # Least-to-Most reference (Google Brain)
+    │       ├── plan-and-solve.md      # Plan-and-Solve PS+ reference (ACL 2023)
     │       ├── chain-of-thought.md    # CoT reference (500+ lines)
     │       └── chain-of-density.md    # CoD reference (500+ lines)
     │
@@ -727,15 +861,22 @@ prompt-architect/
             ├── ape_template.txt
             ├── bab_template.txt
             ├── race_template.txt
+            ├── crispe_template.txt
+            ├── broke_template.txt
+            ├── care_template.txt
             ├── tree-of-thought_template.txt
             ├── react_template.txt
+            ├── skeleton-of-thought_template.txt
+            ├── step-back_template.txt
+            ├── least-to-most_template.txt
+            ├── plan-and-solve_template.txt
             └── hybrid_template.txt
 ```
 
 **Core Components:**
 - **SKILL.md** - Main skill logic and instructions
-- **13 Framework Docs** - Complete references with examples
-- **13 Templates** - Ready-to-use structures
+- **20 Framework Docs** - Complete references with examples
+- **20 Templates** - Ready-to-use structures
 - **2 Python Scripts** - Analysis and scoring utilities
 
 ---
@@ -755,8 +896,15 @@ Detailed documentation for each framework in `prompt-architect/references/framew
 - **ape.md** - Action, Purpose, Expectation
 - **bab.md** - Before, After, Bridge
 - **race.md** - Role, Action, Context, Expectation
+- **crispe.md** - Capacity+Role, Insight, Instructions, Personality, Experiment
+- **broke.md** - Background, Role, Objective, Key Results, Evolve
+- **care.md** - Context, Ask, Rules, Examples
 - **tree-of-thought.md** - Branching multi-path exploration
 - **react.md** - Reasoning + Acting (agentic tool use)
+- **skeleton-of-thought.md** - Skeleton-first parallel expansion (ICLR 2024)
+- **step-back.md** - Abstract to principles first (Google DeepMind, ICLR 2024)
+- **least-to-most.md** - Sequential subproblem solving (Google Brain, ICLR 2023)
+- **plan-and-solve.md** - Zero-shot PS+ trigger (ACL 2023)
 - **chain-of-thought.md** - Step-by-step reasoning
 - **chain-of-density.md** - Iterative refinement
 

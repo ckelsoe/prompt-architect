@@ -1,0 +1,15 @@
+PHASE 1 — SKELETON:
+Generate a skeleton outline for the following topic or question.
+List only the key points — one per line — in this format:
+N. [Point name] | [One-sentence description of what this point covers]
+Do not expand yet. Skeleton only.
+
+TOPIC / QUESTION:
+[Your topic or question]
+
+---
+
+PHASE 2 — EXPAND:
+Now expand each skeleton point into [2-4 sentences / a paragraph / detailed coverage].
+Each point should be self-contained and complete.
+[Optional: expand points in parallel by sending each as a separate API call]

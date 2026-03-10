@@ -1,0 +1,14 @@
+CAPACITY AND ROLE:
+[Define the expertise level and professional role to embody — be specific about domain and level]
+
+INSIGHT:
+[Background context, relevant data, constraints, and situational knowledge the AI needs]
+
+INSTRUCTIONS:
+[What exactly needs to be done — the specific task and deliverable]
+
+PERSONALITY (STYLE):
+[Tone, voice, communication style, persona — how the output should sound and feel]
+
+EXPERIMENT:
+[Request N variants along a specific dimension — e.g., "Provide 3 versions: one [X], one [Y], one [Z]"]
