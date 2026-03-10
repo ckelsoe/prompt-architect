@@ -1,6 +1,6 @@
 {
   "name": "@ckelsoe/claude-skill-prompt-architect",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Claude Code skill for analyzing and improving prompts using 27 research-backed frameworks across 7 intent categories. Intent-based selection system routes to the right framework — from ultra-minimal (APE) to agentic (ReAct), with create, transform, reason, critique, recover, and clarify categories.",
   "main": "prompt-architect/SKILL.md",
   "keywords": [

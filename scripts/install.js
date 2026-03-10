@@ -96,12 +96,30 @@ const installPath = isProjectInstall
   ? path.join(process.cwd(), '.claude', 'skills', SKILL_NAME)
   : path.join(os.homedir(), '.claude', 'skills', SKILL_NAME);
 
+// Get current package version
+const currentVersion = (() => {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+    return pkg.version || 'unknown';
+  } catch { return 'unknown'; }
+})();
+
+// Get installed version (stored in .version file written at install time)
+const versionFile = path.join(installPath, '.version');
+const installedVersion = fs.existsSync(versionFile)
+  ? fs.readFileSync(versionFile, 'utf8').trim()
+  : null;
+
 // Check if skill already exists
 if (fs.existsSync(installPath) && !isForce) {
-  log('\n⚠️  Prompt Architect skill is already installed', 'yellow');
-  log(`   Location: ${installPath}`, 'yellow');
-  log('\n   To reinstall, use: prompt-architect-install --force\n', 'cyan');
-  process.exit(0);
+  if (installedVersion === currentVersion) {
+    log(`\n✅ Prompt Architect ${currentVersion} is already up to date`, 'green');
+    log(`   Location: ${installPath}`, 'blue');
+    log('\n   To force reinstall, use: prompt-architect-install --force\n', 'cyan');
+    process.exit(0);
+  }
+  // Version mismatch — update automatically
+  log(`\n🔄 Updating Prompt Architect: ${installedVersion || 'unknown'} → ${currentVersion}\n`, 'cyan');
 }
 
 // Install the skill
@@ -133,7 +151,10 @@ try {
     throw new Error('SKILL.md not found after installation');
   }
 
-  log('\n✅ Installation successful!\n', 'green');
+  // Write version marker so future installs can detect updates
+  fs.writeFileSync(path.join(installPath, '.version'), currentVersion, 'utf8');
+
+  log(`\n✅ Prompt Architect ${currentVersion} installed successfully!\n`, 'green');
   log('📍 Installation location:', 'cyan');
   log(`   ${installPath}\n`);
   
