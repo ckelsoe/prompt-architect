@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires no external dependencies. Works with any Agent Skills compatible tool.
 metadata:
   author: ckelsoe
-  version: "3.0.0"
+  version: "3.2.0"
   homepage: https://github.com/ckelsoe/prompt-architect
 ---
 
@@ -163,11 +163,25 @@ Using gathered information:
 
 ### 5. Present Improvements
 
-Show improved prompt with:
-- Clear before/after comparison
-- Explanation of changes made
+Structure your output in this exact order:
+
+**A. Analysis section** (comes first):
+- Framework selected and why
+- Changes made and reasoning
 - Framework components applied
-- Reasoning for improvements
+
+**B. Usage instructions** (transition block, immediately before the prompt):
+
+> **Your revised prompt is ready.**
+> - **New chat**: Copy the prompt below and paste it as your first message in a new conversation.
+> - **Same chat**: Tell the assistant: *"Use the revised prompt you just provided as a new instruction and execute it."*
+
+**C. The revised prompt** (comes last, in a fenced code block):
+- Present as a clean, flat-text block inside triple backticks
+- **No framework section headers** (no "BEFORE:", "BRIDGE:", "CONTEXT:", etc.) — these are scaffolding, not part of the deliverable
+- **No indentation** beyond what the prompt itself genuinely requires
+- **No markdown formatting** inside the block unless the prompt explicitly needs it (e.g., it asks for tables)
+- The user must be able to copy the entire block contents and paste it verbatim with zero editing
 
 ### 6. Iterate
 
@@ -287,34 +301,32 @@ This example shows the full intent-based flow — detecting intent, using the di
 
 **User**: "Software engineer, early-career devs. Too much corporate-speak. Want it to sound like real humans work there. Requirements must stay. Full rewrite OK."
 
-**Improved Prompt** (BAB):
-
-```
-BEFORE (current state):
-[Paste the current job posting here]
-This posting suffers from: corporate-speak, passive voice, overly formal tone,
-and generic language that doesn't reflect actual team culture.
-
-AFTER (desired state):
-A job posting that sounds like it was written by engineers, for engineers.
-Early-career developers should read it and think "I want to work there."
-It should feel honest, direct, and human — not like legal boilerplate.
-
-BRIDGE (transformation rules):
-1. Replace all passive constructions with active voice
-2. Convert corporate jargon to plain English (e.g., "leverage" → "use")
-3. Add one specific, concrete detail about the team/culture per section
-4. Keep all technical requirements and must-haves verbatim
-5. Target reading level: conversational, not academic
-6. Length: same or shorter than original — cut fluff, don't add it
-```
-
-**Changes Made**:
+**Analysis (BAB framework applied)**:
 1. Locked the current state so the AI understands the starting point
 2. Defined the target state in terms the AI can evaluate against
 3. Made transformation rules explicit and prioritized
 4. Protected non-negotiable elements (requirements) from being changed
 5. Gave a concrete length/tone constraint to prevent over-engineering
+
+> **Your revised prompt is ready.**
+> - **New chat**: Copy the prompt below and paste it as your first message in a new conversation.
+> - **Same chat**: Tell the assistant: *"Use the revised prompt you just provided as a new instruction and execute it."*
+
+```
+Rewrite the following job posting. The current version suffers from corporate-speak, passive voice, overly formal tone, and generic language that doesn't reflect actual team culture.
+
+[Paste the current job posting here]
+
+The rewritten version should sound like it was written by engineers, for engineers. Early-career developers should read it and think "I want to work there." It should feel honest, direct, and human — not like legal boilerplate.
+
+Follow these rules:
+- Replace all passive constructions with active voice.
+- Convert corporate jargon to plain English (e.g., "leverage" → "use").
+- Add one specific, concrete detail about the team or culture per section.
+- Keep all technical requirements and must-haves verbatim — do not change these.
+- Target reading level: conversational, not academic.
+- Length: same or shorter than the original. Cut fluff, don't add it.
+```
 
 Does this match what you need, or should we adjust the tone target or constraints?
 

@@ -12,7 +12,7 @@
       "name": "prompt-architect",
       "source": "./",
       "description": "Analyzes and improves prompts using 27 research-backed frameworks. Intent-based selection routes to the right framework — from ultra-minimal (APE) to agentic (ReAct).",
-      "version": "3.1.1",
+      "version": "3.2.0",
       "keywords": ["prompt-engineering", "prompt-frameworks", "agent-skills"],
       "category": "productivity"
     }
