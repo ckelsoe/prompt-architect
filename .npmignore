@@ -3,6 +3,9 @@
 .gitignore
 .gitattributes
 
+# Build artifacts
+*.skill
+
 # GitHub
 .github/
 

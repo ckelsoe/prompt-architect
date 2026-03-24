@@ -45,7 +45,7 @@ function info(message) {
 }
 
 // Configuration
-const SKILL_DIR = path.join(__dirname, '..', 'prompt-architect');
+const SKILL_DIR = path.join(__dirname, '..', 'skills', 'prompt-architect');
 const SKILL_FILE = path.join(SKILL_DIR, 'SKILL.md');
 
 const REQUIRED_DIRS = [
@@ -168,18 +168,6 @@ function validateSkill() {
     validatePackageJson();
   }
 
-  // Summary
-  log('\n' + '='.repeat(50), 'blue');
-  if (errorCount === 0 && warningCount === 0) {
-    success('\n✨ All validation checks passed! Ready to publish. ✨\n');
-    process.exit(0);
-  } else if (errorCount === 0) {
-    warning(`\n⚠️  Validation passed with ${warningCount} warning(s)\n`);
-    process.exit(0);
-  } else {
-    error(`\n❌ Validation failed with ${errorCount} error(s) and ${warningCount} warning(s)\n`);
-    process.exit(1);
-  }
 }
 
 function validateSkillFile() {
@@ -279,9 +267,82 @@ function validatePackageJson() {
   }
 }
 
+function validatePluginManifest() {
+  info('\nValidating Claude plugin manifest...');
+  const pluginJsonPath = path.join(__dirname, '..', '.claude-plugin', 'plugin.json');
+  const marketplacePath = path.join(__dirname, '..', '.claude-plugin', 'marketplace.json');
+
+  if (!fs.existsSync(pluginJsonPath)) {
+    error('.claude-plugin/plugin.json not found');
+    errorCount++;
+    return;
+  }
+  success('.claude-plugin/plugin.json found');
+
+  try {
+    const plugin = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
+    const requiredFields = ['name', 'description', 'version'];
+    requiredFields.forEach(field => {
+      if (!plugin[field]) {
+        error(`plugin.json missing required field: ${field}`);
+        errorCount++;
+      } else {
+        success(`plugin.json has ${field}`);
+      }
+    });
+
+    // Cross-check version with package.json
+    const packageJsonPath = path.join(__dirname, '..', 'package.json');
+    if (fs.existsSync(packageJsonPath)) {
+      const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      if (plugin.version !== pkg.version) {
+        error(`Version mismatch: plugin.json=${plugin.version}, package.json=${pkg.version}`);
+        errorCount++;
+      } else {
+        success('plugin.json version matches package.json');
+      }
+    }
+  } catch (err) {
+    error(`plugin.json parse error: ${err.message}`);
+    errorCount++;
+  }
+
+  if (!fs.existsSync(marketplacePath)) {
+    warning('.claude-plugin/marketplace.json not found (optional for plugins)');
+    warningCount++;
+  } else {
+    try {
+      const mkt = JSON.parse(fs.readFileSync(marketplacePath, 'utf8'));
+      if (!mkt.name || !mkt.owner || !mkt.plugins) {
+        error('marketplace.json missing required fields (name, owner, plugins)');
+        errorCount++;
+      } else {
+        success(`marketplace.json valid: ${mkt.plugins.length} plugin(s) defined`);
+      }
+    } catch (err) {
+      error(`marketplace.json parse error: ${err.message}`);
+      errorCount++;
+    }
+  }
+}
+
 // Run validation
 try {
   validateSkill();
+  validatePluginManifest();
+
+  // Final summary
+  log('\n' + '='.repeat(50), 'blue');
+  if (errorCount === 0 && warningCount === 0) {
+    success('\n✨ All validation checks passed! Ready to publish. ✨\n');
+    process.exit(0);
+  } else if (errorCount === 0) {
+    warning(`\n⚠️  Validation passed with ${warningCount} warning(s)\n`);
+    process.exit(0);
+  } else {
+    error(`\n❌ Validation failed with ${errorCount} error(s) and ${warningCount} warning(s)\n`);
+    process.exit(1);
+  }
 } catch (err) {
   error(`Validation error: ${err.message}`);
   console.error(err);

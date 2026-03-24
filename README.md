@@ -1,10 +1,10 @@
-# Claude Code Skill: Prompt Architect
+# Prompt Architect
 
 Transform vague prompts into expert-level, structured prompts using 27 research-backed frameworks across 7 intent categories.
 
-A comprehensive skill that analyzes, architects, and iteratively refines prompts through systematic framework application and guided dialogue.
+Works with **Claude Code, ChatGPT, Gemini CLI, Cursor, GitHub Copilot, Windsurf, OpenAI Codex**, and [30+ Agent Skills compatible tools](https://agentskills.io).
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![npm](https://img.shields.io/npm/v/@ckelsoe/prompt-architect)](https://www.npmjs.com/package/@ckelsoe/prompt-architect) [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-blue)](https://agentskills.io)
 
 ---
 
@@ -27,7 +27,7 @@ A comprehensive skill that analyzes, architects, and iteratively refines prompts
 
 ## Overview
 
-Prompt Architect is a production-ready Claude Code Skill that elevates your prompting capabilities through:
+Prompt Architect is an [Agent Skills](https://agentskills.io) compatible skill that elevates your prompting capabilities through:
 
 - **Intelligent Analysis** - Evaluates prompts across 5 quality dimensions (clarity, specificity, context, completeness, structure)
 - **Framework Recommendation** - Suggests the best framework(s) for your specific use case with clear reasoning
@@ -36,7 +36,7 @@ Prompt Architect is a production-ready Claude Code Skill that elevates your prom
 - **Iterative Refinement** - Continues improving based on feedback until perfect
 
 **Target Audience:**
-- Developers using Claude Code for software engineering tasks
+- Developers using AI coding agents (Claude Code, Gemini CLI, Cursor, Copilot, etc.)
 - Prompt engineers optimizing LLM interactions
 - AI practitioners seeking systematic prompt improvement
 - Teams wanting consistent, high-quality prompts
@@ -540,70 +540,81 @@ RESPONSE FORMAT:
 
 ---
 
-## Use with Other AI Tools
+## Installation
 
-Prompt Architect works with Claude Code out of the box. For other tools, use the adapter files in the [`adapters/`](adapters/) folder.
+Choose the method that matches your AI tool:
 
-| Tool | Adapter file | Where to put it |
-|------|-------------|-----------------|
-| **OpenAI Codex CLI** | `adapters/for-openai-codex-cli.md` | Append to `AGENTS.md` in project root |
-| **Cursor** | `adapters/for-cursor.mdc` | Copy to `.cursor/rules/prompt-architect.mdc` |
-| **GitHub Copilot** | `adapters/for-github-copilot.md` | Append to `.github/copilot-instructions.md` |
-| **Windsurf** | `adapters/for-windsurf.md` | Append to `.windsurfrules` in project root |
-| **Any LLM API / ChatGPT** | `adapters/system-prompt.md` | Paste into system prompt / instructions field |
+### Claude Code
 
-**Quick install examples:**
-```bash
-# OpenAI Codex CLI
-cat node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-openai-codex-cli.md >> AGENTS.md
-
-# Cursor
-mkdir -p .cursor/rules
-cp node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-cursor.mdc .cursor/rules/prompt-architect.mdc
-
-# GitHub Copilot
-mkdir -p .github
-cat node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-github-copilot.md >> .github/copilot-instructions.md
-
-# Windsurf
-cat node_modules/@ckelsoe/claude-skill-prompt-architect/adapters/for-windsurf.md >> .windsurfrules
+**Option A: Plugin system (recommended)**
+```
+/plugin marketplace add ckelsoe/prompt-architect
+/plugin install prompt-architect@prompt-architect-marketplace
 ```
 
-See [`adapters/README.md`](adapters/README.md) for full documentation, limitations, and troubleshooting for each platform.
+**Option B: npm**
+```bash
+npm install -g @ckelsoe/prompt-architect
+```
+The installer runs automatically and copies the skill to `~/.claude/skills/`. Restart Claude Code to load it.
+
+**Option C: Interactive multi-agent installer**
+```bash
+npx @ckelsoe/prompt-architect
+```
+Detects all installed AI agents and lets you choose where to install.
+
+### ChatGPT
+
+ChatGPT natively supports [Agent Skills](https://agentskills.io). Available on Business, Enterprise, Edu, Teachers, and Healthcare plans.
+
+1. Download [`prompt-architect.skill`](https://github.com/ckelsoe/prompt-architect/releases/latest) from GitHub Releases
+2. In ChatGPT, click your profile icon → **Skills**
+3. Click **New skill** → **Upload from your computer**
+4. Upload the `.skill` file
+
+### Gemini CLI
+
+```bash
+gemini skills install https://github.com/ckelsoe/prompt-architect.git
+```
+
+Or manually: copy `skills/prompt-architect/` to `~/.gemini/skills/prompt-architect/`
+
+### Cursor, Copilot, Windsurf, Codex CLI
+
+Use the interactive installer to auto-detect and install:
+```bash
+npx @ckelsoe/prompt-architect
+```
+
+Or copy `skills/prompt-architect/` to your tool's skills directory. All of these tools support the [Agent Skills standard](https://agentskills.io) natively:
+
+| Tool | Skills directory |
+|------|----------------|
+| **Cursor** | `.agents/skills/` or `.cursor/skills/` (project) |
+| **GitHub Copilot** | `.github/skills/` or `~/.copilot/skills/` |
+| **OpenAI Codex** | `.agents/skills/` (project) or `~/.agents/skills/` |
+| **VS Code, Roo Code, Kiro, Amp, Junie, Goose, 30+ others** | `~/.agents/skills/` (universal) |
+
+### Windsurf
+
+Windsurf does not yet support Agent Skills natively:
+```bash
+cat adapters/for-windsurf.md >> .windsurfrules
+```
+
+### Any LLM API or Chat Interface
+
+Paste the contents of [`adapters/system-prompt.md`](https://raw.githubusercontent.com/ckelsoe/prompt-architect/main/adapters/system-prompt.md) into your system prompt field. Works with OpenAI API, Anthropic API, Google Gemini API, Custom GPTs, or any tool with a system prompt.
+
+See [`adapters/README.md`](adapters/README.md) for detailed instructions for each platform.
 
 ---
 
 ## Quick Start
 
-### 1. Install via npm (Recommended)
-
-```bash
-# Install globally
-npm install -g @ckelsoe/claude-skill-prompt-architect
-
-# Run installation script
-prompt-architect-install
-```
-
-**Alternative: Manual Installation**
-
-If you prefer not to use npm:
-
-**macOS/Linux:**
-```bash
-cp -r prompt-architect ~/.claude/skills/
-```
-
-**Windows (PowerShell):**
-```powershell
-Copy-Item -Path "prompt-architect" -Destination "$env:USERPROFILE\.claude\skills\prompt-architect" -Recurse
-```
-
-### 2. Restart Claude Code
-
-Close and reopen Claude Code to load the skill.
-
-### 3. Try It Out
+After installing, test with:
 
 ```
 "Help me improve this prompt: write a technical blog post"
@@ -618,151 +629,20 @@ The skill will automatically:
 
 ---
 
-## Installation
-
-### Method 1: npm (Recommended)
-
-**Option A: Global Installation (User-Wide)**
-
-```bash
-# Install globally
-npm install -g @ckelsoe/claude-skill-prompt-architect
-
-# Run installation script
-prompt-architect-install
-
-# Restart Claude Code
-```
-
-**Option B: Local Installation (Without Global)**
-
-```bash
-# Install package
-npm install @ckelsoe/claude-skill-prompt-architect
-
-# Run installation script using npx
-npx prompt-architect-install
-
-# Restart Claude Code
-```
-
-**Option C: Project-Specific Installation**
-
-```bash
-# Install as dev dependency
-npm install --save-dev @ckelsoe/claude-skill-prompt-architect
-
-# Install to project .claude/skills/ folder
-npx prompt-architect-install --project
-
-# Restart Claude Code
-```
-
-### Method 2: Manual Installation
-
-If you prefer not to use npm:
-
-#### Prerequisites
-
-- Claude Code installed and configured
-- Python 3.7+ (optional, for analysis scripts)
-
-#### Installation Steps
-
-1. **Clone or Download this Repository**
-
-```bash
-git clone https://github.com/ckelsoe/claude-skill-prompt-architect.git
-cd claude-skill-prompt-architect
-```
-
-2. **Copy Skill to Claude Code Directory**
-
-The skill needs to be in your Claude Code skills folder.
-
-**Default Locations:**
-- Windows: `C:\Users\<YourName>\.claude\skills\`
-- macOS: `~/.claude/skills/`
-- Linux: `~/.claude/skills/`
-
-**Installation Commands:**
-
-```bash
-# macOS/Linux
-cp -r prompt-architect ~/.claude/skills/
-
-# Windows (PowerShell)
-Copy-Item -Path "prompt-architect" -Destination "$env:USERPROFILE\.claude\skills\prompt-architect" -Recurse
-
-# Windows (Command Prompt)
-xcopy prompt-architect %USERPROFILE%\.claude\skills\prompt-architect /E /I
-```
-
-3. **Verify Installation**
-
-Check that all files are present:
-
-```bash
-# macOS/Linux
-ls ~/.claude/skills/prompt-architect/
-
-# Windows (PowerShell)
-ls $env:USERPROFILE\.claude\skills\prompt-architect\
-
-# Should see:
-# - SKILL.md (required)
-# - references/ (framework docs)
-# - assets/ (templates)
-# - scripts/ (analysis tools)
-```
-
-4. **Restart Claude Code**
-
-The skill will be automatically loaded on restart.
-
-### Verification
-
-Test the skill with:
-```
-"Help me improve this prompt: analyze some data"
-```
-
-You should see the skill activate with prompt analysis and framework recommendations.
-
----
-
 ## Updating
 
-### Update via npm
-
-**If installed globally:**
 ```bash
-# Update to latest version
-npm update -g @ckelsoe/claude-skill-prompt-architect
+# npm
+npm update -g @ckelsoe/prompt-architect
 
-# Or reinstall
-npm install -g @ckelsoe/claude-skill-prompt-architect@latest
+# Check version
+npm list -g @ckelsoe/prompt-architect
 
-# Restart Claude Code
+# Claude Code plugin
+/plugin update prompt-architect@prompt-architect-marketplace
 ```
 
-**If installed locally:**
-```bash
-# Update package
-npm update @ckelsoe/claude-skill-prompt-architect
-
-# Reinstall skill
-npx prompt-architect-install
-
-# Restart Claude Code
-```
-
-**Check current version:**
-```bash
-npm list -g @ckelsoe/claude-skill-prompt-architect
-```
-
-**Note:** npm packages do not auto-update. You must manually run the update command to get the latest version.
+> **Migrating from v2.x?** The package was renamed from `@ckelsoe/claude-skill-prompt-architect`. See [MIGRATION.md](MIGRATION.md) for details.
 
 ---
 

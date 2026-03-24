@@ -5,6 +5,32 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-03-24
+
+### Breaking Changes
+- **Package renamed**: `@ckelsoe/claude-skill-prompt-architect` → `@ckelsoe/prompt-architect`
+- **Directory restructured**: `prompt-architect/` moved to `skills/prompt-architect/` for Claude Code plugin system compatibility
+
+### Added
+- **Claude Code Plugin System support**: `.claude-plugin/plugin.json` and `marketplace.json` — install via `/plugin marketplace add` and `/plugin install`
+- **Gemini CLI support**: Native Agent Skills compatibility. Install via `gemini skills install`
+- **Agent Skills standard compliance** (agentskills.io): Added `license`, `compatibility`, and `metadata` fields to SKILL.md frontmatter. Works with 30+ compatible agents including Cursor, Copilot, Kiro, Roo Code, Amp, OpenHands, and more
+- **Interactive multi-agent installer**: Detects installed AI agents (Claude Code, Gemini CLI, Cursor, Copilot, Windsurf, Codex) and presents a selection UI using @clack/prompts
+- **Universal install path**: `~/.agents/skills/` for Agent Skills standard compatible tools
+- **CLI flags**: `--all`, `--claude`, `--gemini`, `--agents`, `--cursor`, `--copilot`, `--windsurf`, `--codex`, `--yes`
+- **Gemini CLI adapter**: `adapters/for-gemini-cli.md` with installation instructions
+- **Append-mode safety**: Marker comments prevent duplicate content when appending adapters to existing files
+- **MIGRATION.md**: Step-by-step guide for migrating from the old package name
+
+### Changed
+- `scripts/install.js` fully rewritten as multi-agent installer with @clack/prompts UI
+- `scripts/test.js` expanded from 11 to 19 tests (plugin manifests, Agent Skills compliance, all adapters)
+- `scripts/validate-skill.js` now validates plugin manifest and cross-checks version consistency
+- Added `@clack/prompts` as a runtime dependency (previously zero dependencies)
+- Non-interactive postinstall still defaults to Claude Code only for backwards compatibility
+
+---
+
 ## [2.1.3] - 2026-03-10
 
 ### Fixed

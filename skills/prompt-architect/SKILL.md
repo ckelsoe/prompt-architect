@@ -1,6 +1,12 @@
 ---
 name: prompt-architect
 description: Analyzes and improves prompts using 27 research-backed frameworks across 7 intent categories. Use when a user wants to improve, rewrite, structure, or engineer a prompt — including requests like "help me write a better prompt", "improve this prompt", "what framework should I use", "make this prompt more effective", or any prompt engineering task. Recommends the right framework based on intent (create, transform, reason, critique, recover, clarify, agentic), asks targeted questions, and delivers a structured, high-quality result.
+license: MIT
+compatibility: Requires no external dependencies. Works with any Agent Skills compatible tool.
+metadata:
+  author: ckelsoe
+  version: "3.0.0"
+  homepage: https://github.com/ckelsoe/prompt-architect
 ---
 
 # Prompt Architect

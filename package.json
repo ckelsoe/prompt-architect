@@ -1,11 +1,13 @@
 {
-  "name": "@ckelsoe/claude-skill-prompt-architect",
-  "version": "2.1.4",
-  "description": "Claude Code skill for analyzing and improving prompts using 27 research-backed frameworks across 7 intent categories. Intent-based selection system routes to the right framework — from ultra-minimal (APE) to agentic (ReAct), with create, transform, reason, critique, recover, and clarify categories.",
-  "main": "prompt-architect/SKILL.md",
+  "name": "@ckelsoe/prompt-architect",
+  "version": "3.1.0",
+  "description": "Agent skill for analyzing and improving prompts using 27 research-backed frameworks across 7 intent categories. Works with Claude Code, Gemini CLI, Cursor, Copilot, and 30+ Agent Skills compatible tools.",
+  "main": "skills/prompt-architect/SKILL.md",
   "keywords": [
     "claude-code",
     "claude-skill",
+    "agent-skills",
+    "gemini-cli",
     "prompt-engineering",
     "prompt-improvement",
     "prompt-frameworks",
@@ -44,22 +46,27 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ckelsoe/claude-skill-prompt-architect.git"
+    "url": "https://github.com/ckelsoe/prompt-architect.git"
   },
   "bugs": {
-    "url": "https://github.com/ckelsoe/claude-skill-prompt-architect/issues"
+    "url": "https://github.com/ckelsoe/prompt-architect/issues"
   },
-  "homepage": "https://github.com/ckelsoe/claude-skill-prompt-architect#readme",
+  "homepage": "https://github.com/ckelsoe/prompt-architect#readme",
+  "bin": {
+    "prompt-architect": "scripts/install.js"
+  },
   "engines": {
     "node": ">=14.0.0"
   },
   "files": [
-    "prompt-architect/",
+    "skills/",
+    ".claude-plugin/",
     "adapters/",
     "scripts/",
     "README.md",
     "LICENSE",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "MIGRATION.md"
   ],
   "scripts": {
     "test": "node scripts/test.js",
@@ -67,13 +74,14 @@
     "install-user": "node scripts/install.js",
     "install-project": "node scripts/install.js --project",
     "postinstall": "node scripts/install.js",
+    "build:skill": "node scripts/build-skill.js",
     "prepublishOnly": "npm run validate"
   },
   "claudeCode": {
     "type": "skill",
     "skillName": "prompt-architect",
-    "skillPath": "prompt-architect",
-    "version": "2.0.0",
+    "skillPath": "skills/prompt-architect",
+    "version": "3.1.0",
     "compatibility": {
       "claudeCode": ">=1.0.0"
     },
@@ -125,6 +133,7 @@
       "frameworkCombinations": true
     }
   },
-  "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "@clack/prompts": "^1.1.0"
+  }
 }
