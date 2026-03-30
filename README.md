@@ -558,23 +558,33 @@ Choose the method that matches your AI tool:
 
 ### Claude Code
 
-**Option A: Plugin system (recommended)**
+```
+/install-skill https://github.com/ckelsoe/prompt-architect/tree/main/skills/prompt-architect
+```
+
+**Plugin system (enables updates):**
 ```
 /plugin marketplace add ckelsoe/prompt-architect
 /plugin install prompt-architect@prompt-architect-marketplace
 ```
 
-**Option B: npm**
-```bash
-npm install -g @ckelsoe/prompt-architect
-```
-The installer runs automatically and copies the skill to `~/.claude/skills/`. Restart Claude Code to load it.
+### Codex CLI
 
-**Option C: Interactive multi-agent installer**
+```
+$skill-installer install https://github.com/ckelsoe/prompt-architect/tree/main/skills/prompt-architect
+```
+
+### Other Agents (Gemini, Cursor, Copilot, Cline, Roo Code, etc.)
+
+Copy `skills/prompt-architect/` from this repo to `~/.agents/skills/prompt-architect/`
+
+### npm (alternative)
+
 ```bash
 npx @ckelsoe/prompt-architect
 ```
-Detects all installed AI agents and lets you choose where to install.
+
+Installs to both `.claude/skills/` and `.agents/skills/` in one step.
 
 ### ChatGPT
 
@@ -584,30 +594,6 @@ ChatGPT natively supports [Agent Skills](https://agentskills.io). Available on B
 2. In ChatGPT, click your profile icon → **Skills**
 3. Click **New skill** → **Upload from your computer**
 4. Upload the `.skill` file
-
-### Gemini CLI
-
-```bash
-gemini skills install https://github.com/ckelsoe/prompt-architect.git
-```
-
-Or manually: copy `skills/prompt-architect/` to `~/.gemini/skills/prompt-architect/`
-
-### Cursor, Copilot, Windsurf, Codex CLI
-
-Use the interactive installer to auto-detect and install:
-```bash
-npx @ckelsoe/prompt-architect
-```
-
-Or copy `skills/prompt-architect/` to your tool's skills directory. All of these tools support the [Agent Skills standard](https://agentskills.io) natively:
-
-| Tool | Skills directory |
-|------|----------------|
-| **Cursor** | `.agents/skills/` or `.cursor/skills/` (project) |
-| **GitHub Copilot** | `.github/skills/` or `~/.copilot/skills/` |
-| **OpenAI Codex** | `.agents/skills/` (project) or `~/.agents/skills/` |
-| **VS Code, Roo Code, Kiro, Amp, Junie, Goose, 30+ others** | `~/.agents/skills/` (universal) |
 
 ### Windsurf
 
