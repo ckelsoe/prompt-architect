@@ -4,7 +4,7 @@ Transform vague prompts into expert-level, structured prompts using 27 research-
 
 Works with **Claude Code, ChatGPT, Gemini CLI, Cursor, GitHub Copilot, Windsurf, OpenAI Codex**, and [30+ Agent Skills compatible tools](https://agentskills.io).
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![npm](https://img.shields.io/npm/v/@ckelsoe/prompt-architect)](https://www.npmjs.com/package/@ckelsoe/prompt-architect) [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-blue)](https://agentskills.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![npm](https://img.shields.io/npm/v/@ckelsoe/prompt-architect)](https://www.npmjs.com/package/@ckelsoe/prompt-architect) [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-blue)](https://agentskills.io) [![Available on CodeGuilds](https://img.shields.io/badge/Available_on-CodeGuilds-6366f1)](https://codeguilds.dev/packages/prompt-architect)
 
 ## Quick Start
 
