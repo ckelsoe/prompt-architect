@@ -19,7 +19,7 @@ These tools read `SKILL.md` natively. No adapter needed — just install to thei
 | **GitHub Copilot** | Copy `skills/prompt-architect/` to `.github/skills/` or `~/.copilot/skills/` |
 | **OpenAI Codex** | Copy `skills/prompt-architect/` to `.agents/skills/` in your project |
 | **VS Code** | Copy `skills/prompt-architect/` to `.agents/skills/` in your project |
-| **Roo Code** | Copy `skills/prompt-architect/` to `.agents/skills/` or `~/.agents/skills/` |
+| **Zoo Code** | Copy `skills/prompt-architect/` to `.agents/skills/` or `~/.agents/skills/` |
 | **Kiro, Amp, Junie, Goose, OpenHands, etc.** | Copy to `~/.agents/skills/` (universal path) |
 
 Or use the interactive installer to auto-detect and install:
