@@ -574,7 +574,7 @@ Choose the method that matches your AI tool:
 $skill-installer install https://github.com/ckelsoe/prompt-architect/tree/main/skills/prompt-architect
 ```
 
-### Other Agents (Gemini, Cursor, Copilot, Cline, Roo Code, etc.)
+### Other Agents (Gemini, Cursor, Copilot, Cline, Roo Code, [Zoo Code](https://zoocode.dev/), etc.)
 
 Copy `skills/prompt-architect/` from this repo to `~/.agents/skills/prompt-architect/`
 
