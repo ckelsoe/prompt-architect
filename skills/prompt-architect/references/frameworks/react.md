@@ -6,7 +6,7 @@ ReAct (Reasoning + Acting) is an agentic prompting framework that interleaves re
 
 ReAct is the framework of choice when the task requires using tools, querying external sources, writing and executing code, or navigating a multi-step process where each step's result informs the next.
 
-**Research basis:** Introduced in "ReAct: Synergizing Reasoning and Acting in Language Models" (Yao et al., 2022).
+**Research basis:** Introduced in "ReAct: Synergizing Reasoning and Acting in Language Models" (Yao et al., arXiv 2210.03629, 2022; ICLR 2023).
 
 ## Components
 

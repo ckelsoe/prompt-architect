@@ -4,7 +4,7 @@
 
 Skeleton of Thought (SoT) is a two-phase framework that first generates a concise structural outline ("skeleton") of the answer, then expands each skeleton point — either sequentially or in parallel — into full content. It improves both output quality (by forcing upfront structure) and can dramatically reduce latency when expansion is done in parallel API calls.
 
-**Research basis:** "Skeleton-of-Thought: Prompting LLMs for Efficient Parallel Generation" (Ning et al., Microsoft Research, arXiv:2307.15337, ICLR 2024). Demonstrated 2x+ speedup on 8 of 12 tested models with maintained or improved quality.
+**Research basis:** "Skeleton-of-Thought: Prompting LLMs for Efficient Parallel Generation" (Ning et al., Microsoft Research, arXiv:2307.15337, ICLR 2024). Demonstrated 2x+ speedup (up to 2.39x) on 8 of 12 tested models, with quality parity in roughly 60% of cases; quality degrades on writing, math, and coding tasks.
 
 ## Components
 

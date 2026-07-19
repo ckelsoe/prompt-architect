@@ -1,0 +1,59 @@
+=== ITERATIVE COMPRESSION TEMPLATE ===
+
+Use when: text needs to get tighter and shorter through successive passes —
+          trimming to a word limit, cutting filler, sharpening explanations.
+
+NOT for: summarization at a FIXED length with rising information density —
+         that is Chain of Density (chain-of-density_template.txt), a distinct
+         published method. Use this template when the text should SHRINK.
+         Use Self-Refine when the goal is multi-dimensional quality
+         (accuracy + tone + completeness), not compression.
+
+─────────────────────────────────────────────
+SOURCE CONTENT:
+[Paste the content to be compressed here]
+
+─────────────────────────────────────────────
+OPTIMIZATION GOAL:
+[What should improve with each pass?]
+Examples:
+- "Reduce word count by 20% each pass while retaining all key information"
+- "Increase information density — remove filler, make every sentence earn its place"
+- "Improve clarity — each pass should be more direct and easier to understand"
+
+─────────────────────────────────────────────
+TARGET:
+[Where should this end up? A word count, a reading level, a single paragraph.]
+
+─────────────────────────────────────────────
+NUMBER OF ITERATIONS:
+[How many refinement passes? Typical: 2-4]
+Iteration 1: [First pass — initial improvement]
+Iteration 2: [Second pass — tighten further]
+Iteration 3: [Optional — final polish]
+
+─────────────────────────────────────────────
+ITERATION INSTRUCTIONS:
+For each iteration:
+1. Identify what can be cut, compressed, or clarified
+2. Apply the changes
+3. Verify: does this version better meet the optimization goal than the previous?
+4. Confirm nothing essential was lost — compression must not drop content that
+   the goal requires keeping
+5. Stop when: [define your stopping criterion]
+   Examples: "length < 150 words", "no filler words remain", "3 iterations complete"
+
+─────────────────────────────────────────────
+OUTPUT FORMAT:
+[What format should the final result be in?]
+Examples: paragraph, bullet list, 1-sentence summary, structured sections
+
+─────────────────────────────────────────────
+OPTIONAL — SHOW INTERMEDIATE VERSIONS:
+Set to YES if you want to see each iteration's output.
+Set to NO if you only want the final result.
+
+─────────────────────────────────────────────
+NOTE: Compression has a floor. Past a point, further passes strip meaning rather
+than filler. If an iteration removes something a reader would need, stop at the
+previous version.

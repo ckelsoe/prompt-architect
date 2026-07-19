@@ -1,46 +1,76 @@
 === CHAIN OF DENSITY (CoD) TEMPLATE ===
 
-Use when: iterative compression or quality improvement is the goal —
-          summarization, explanation optimization, content densification.
+Use when: summarizing a document and you want maximum information in a fixed
+          length — articles, papers, reports, executive summaries, abstracts.
+
+NOT for: general rewriting (use Self-Refine), or progressive shortening to a
+         target word count (use Iterative Compression). CoD holds length FIXED
+         and raises density. If your text is getting shorter, this is the
+         wrong template.
+
+Based on Adams et al., "From Sparse to Dense: GPT-4 Summarization with Chain of
+Density Prompting" (arXiv 2309.04269, NewSum @ EMNLP 2023).
 
 ─────────────────────────────────────────────
-SOURCE CONTENT:
-[Paste the content to be refined/compressed here]
+SOURCE ARTICLE:
+[Paste the full document to be summarized here]
 
 ─────────────────────────────────────────────
-OPTIMIZATION GOAL:
-[What should improve with each pass?]
-Examples:
-- "Reduce word count by 20% each pass while retaining all key information"
-- "Increase information density — remove filler, make every sentence earn its place"
-- "Improve clarity — each pass should be more direct and easier to understand"
+TARGET LENGTH:
+[The fixed word budget every summary must hit. Paper uses ~80 words.]
 
 ─────────────────────────────────────────────
 NUMBER OF ITERATIONS:
-[How many refinement passes? Typical: 2-4]
-Iteration 1: [First pass — initial improvement]
-Iteration 2: [Second pass — tighten further]
-Iteration 3: [Optional — final polish]
+[Paper uses 5. Fewer works; more gives diminishing returns.]
 
 ─────────────────────────────────────────────
-ITERATION INSTRUCTIONS:
-For each iteration:
-1. Identify what can be cut, compressed, or clarified
-2. Apply the changes
-3. Verify: does this version better meet the optimization goal than the previous?
-4. Stop when: [define your stopping criterion]
-   Examples: "length < 150 words", "no filler words remain", "3 iterations complete"
+THE PROMPT — copy from here down, with the fields above filled in:
+
+You will generate increasingly concise, entity-dense summaries of the above
+article.
+
+Repeat the following 2 steps [N] times.
+
+Step 1. Identify 1-3 informative entities (";" delimited) from the article which
+are missing from the previously generated summary.
+Step 2. Write a new, denser summary of identical length which covers every entity
+and detail from the previous summary plus the missing entities.
+
+A missing entity is:
+- Relevant: to the main story.
+- Specific: descriptive yet concise (5 words or fewer).
+- Novel: not in the previous summary.
+- Faithful: present in the article.
+- Anywhere: located anywhere in the article.
+
+Guidelines:
+- The first summary should be long (4-5 sentences, ~[TARGET] words) yet highly
+  non-specific, containing little information beyond the entities marked as
+  missing. Use overly verbose language and fillers (e.g., "this article
+  discusses") to reach ~[TARGET] words.
+- Make every word count: re-write the previous summary to improve flow and make
+  space for additional entities.
+- Make space with fusion, compression, and removal of uninformative phrases like
+  "the article discusses".
+- The summaries should become highly dense and concise yet self-contained, e.g.,
+  easily understood without the article.
+- Missing entities can appear anywhere in the new summary.
+- Never drop entities from the previous summary. If space cannot be made, add
+  fewer new entities.
+
+Remember, use the exact same number of words for each summary.
+
+Answer in JSON. The JSON should be a list (length [N]) of dictionaries whose keys
+are "Missing_Entities" and "Denser_Summary".
 
 ─────────────────────────────────────────────
-OUTPUT FORMAT:
-[What format should the final result be in?]
-Examples: paragraph, bullet list, 1-sentence summary, structured sections
+CHOOSING THE OUTPUT:
+Do not automatically take the last summary. In the paper's human evaluation,
+step 2 (30.8% of first-place votes) and step 3 (23.0%) were preferred over the
+sparse step 1 (8.3%). Past a point, density costs readability. Compare the steps
+and pick deliberately.
 
 ─────────────────────────────────────────────
-OPTIONAL — SHOW INTERMEDIATE VERSIONS:
-Set to YES if you want to see each iteration's output.
-Set to NO if you only want the final result.
-
-─────────────────────────────────────────────
-NOTE: Use Self-Refine when the improvement goal is multi-dimensional quality
-(e.g., accuracy + tone + completeness). CoD is specifically for density/compression.
+NOTE: The deliberately padded first summary is intentional, not a mistake. The
+filler is the slack that later iterations convert into entities. A dense first
+summary leaves no room and the chain stalls.

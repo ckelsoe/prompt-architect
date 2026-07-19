@@ -4,6 +4,8 @@
 
 APE (Action, Purpose, Expectation) is the most minimal structured prompt framework — even simpler than RTF or CTF. It is designed for ultra-quick, single-sentence or two-sentence prompts where adding more structure would be overkill. APE answers three essential questions in the fewest possible words: what to do, why it matters, and what success looks like.
 
+**Origin:** No single documented originator. Action-Purpose-Expectation is a community prompt-engineering convention, documented in practitioner guides from 2024 onward (earliest found: fvivas.com, 15 March 2024) with no attributed creator. It does not appear in any peer-reviewed prompting survey, including The Prompt Report (arXiv 2406.06608). **Not to be confused with** APE = "Automatic Prompt Engineer" from Zhou et al., "Large Language Models Are Human-Level Prompt Engineers" (arXiv 2211.01910, ICLR 2023) — an unrelated automated method that searches over LLM-generated candidate instructions and selects the highest-scoring one. That APE is an algorithm, not a prompt template; the two share only the acronym.
+
 ## Components
 
 ### A - Action

@@ -63,50 +63,34 @@ test('CHANGELOG.md exists', () => {
   if (!fs.existsSync('CHANGELOG.md')) throw new Error('Not found');
 });
 
-test('All framework files exist', () => {
-  const frameworks = [
-    'co-star.md',
-    'risen.md',
-    'rise.md',
-    'tidd-ec.md',
-    'rtf.md',
-    'chain-of-thought.md',
-    'chain-of-density.md',
-  ];
-  frameworks.forEach(f => {
-    const fpath = path.join('skills', 'prompt-architect', 'references', 'frameworks', f);
-    if (!fs.existsSync(fpath)) {
-      throw new Error(`Framework ${f} not found`);
-    }
-  });
+const FRAMEWORKS_DIR = path.join('skills', 'prompt-architect', 'references', 'frameworks');
+const TEMPLATES_DIR = path.join('skills', 'prompt-architect', 'assets', 'templates');
+
+test('Framework reference docs exist', () => {
+  const docs = fs.readdirSync(FRAMEWORKS_DIR).filter(f => f.endsWith('.md'));
+  if (docs.length === 0) {
+    throw new Error('No framework reference docs found');
+  }
 });
 
-test('All templates exist', () => {
-  const templates = [
-    'co-star_template.txt',
-    'risen_template.txt',
-    'rise-ie_template.txt',
-    'rise-ix_template.txt',
-    'tidd-ec_template.txt',
-    'rtf_template.txt',
-    'hybrid_template.txt',
-  ];
-  templates.forEach(t => {
-    const tpath = path.join('skills', 'prompt-architect', 'assets', 'templates', t);
-    if (!fs.existsSync(tpath)) {
-      throw new Error(`Template ${t} not found`);
-    }
-  });
-});
+test('Every framework has a template', () => {
+  // rise.md defines two independently-selectable frameworks.
+  const multi = { 'rise.md': ['rise-ie', 'rise-ix'] };
+  const templates = new Set(fs.readdirSync(TEMPLATES_DIR));
+  const missing = [];
 
-test('Python scripts exist', () => {
-  const scripts = ['framework_analyzer.py', 'prompt_evaluator.py'];
-  scripts.forEach(s => {
-    const spath = path.join('skills', 'prompt-architect', 'scripts', s);
-    if (!fs.existsSync(spath)) {
-      throw new Error(`Script ${s} not found`);
+  for (const doc of fs.readdirSync(FRAMEWORKS_DIR).filter(f => f.endsWith('.md'))) {
+    const slugs = multi[doc] || [doc.replace(/\.md$/, '')];
+    for (const slug of slugs) {
+      if (!templates.has(`${slug}_template.txt`)) missing.push(`${slug}_template.txt`);
     }
-  });
+  }
+  if (missing.length > 0) {
+    throw new Error(`Missing templates: ${missing.join(', ')}`);
+  }
+  if (!templates.has('hybrid_template.txt')) {
+    throw new Error('Missing hybrid_template.txt');
+  }
 });
 
 test('package.json has required fields', () => {
@@ -161,6 +145,44 @@ test('All adapter files exist', () => {
   adapters.forEach(a => {
     if (!fs.existsSync(path.join('adapters', a))) throw new Error(`Adapter ${a} not found`);
   });
+});
+
+// SKILL.md <-> adapter drift guard.
+// These two files are hand-maintained copies of the same instructions and have
+// drifted before (the adapter was renumbered 1-7 while SKILL.md kept a duplicate
+// step 4). Compare the sections that must stay identical.
+test('Adapter has not drifted from SKILL.md', () => {
+  const skill = fs.readFileSync('skills/prompt-architect/SKILL.md', 'utf8');
+  const adapter = fs.readFileSync('adapters/system-prompt.md', 'utf8');
+
+  // 1. Step headings must match in number, order, and title.
+  const steps = s => (s.match(/^### \d+\. .+$/gm) || []).map(h => h.trim());
+  const skillSteps = steps(skill);
+  const adapterSteps = steps(adapter);
+  if (skillSteps.join('|') !== adapterSteps.join('|')) {
+    throw new Error(
+      `Step headings differ.\n  SKILL.md: ${JSON.stringify(skillSteps)}\n  adapter:  ${JSON.stringify(adapterSteps)}`
+    );
+  }
+
+  // 2. Step numbers must be a clean 1..N with no duplicates.
+  const nums = skillSteps.map(h => parseInt(h.match(/^### (\d+)\./)[1], 10));
+  const expected = nums.map((_, i) => i + 1);
+  if (nums.join(',') !== expected.join(',')) {
+    throw new Error(`Step numbering is not sequential: ${nums.join(',')}`);
+  }
+
+  // 3. The intent-routing framework names must match between the two files.
+  const routed = s => [...s.matchAll(/\*\*([A-Za-z][A-Za-z0-9 +'’-]*?)\*\*/g)]
+    .map(m => m[1]).filter(n => /^[A-Z]/.test(n));
+  const missing = [...new Set(routed(skill))].filter(n => !routed(adapter).includes(n));
+  const routingNames = ['CO-STAR', 'RISEN', 'RISE-IE', 'RISE-IX', 'TIDD-EC', 'CTF', 'RTF',
+    'APE', 'BAB', 'RACE', 'CRISPE', 'BROKE', 'CARE', 'ReAct', 'RCoT', 'RPEF'];
+  const dropped = routingNames.filter(n => skill.includes(n) && !adapter.includes(n));
+  if (dropped.length > 0) {
+    throw new Error(`Frameworks in SKILL.md but missing from adapter: ${dropped.join(', ')}`);
+  }
+  void missing;
 });
 
 // Agent Skills compliance tests

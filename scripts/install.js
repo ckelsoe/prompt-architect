@@ -46,18 +46,24 @@ const AGENTS = [
         return true;
       } catch { return false; }
     },
-    installPath: () => path.join(os.homedir(), '.gemini', 'skills', SKILL_NAME),
+    installPath: (project) => project
+      ? path.join(process.cwd(), '.gemini', 'skills', SKILL_NAME)
+      : path.join(os.homedir(), '.gemini', 'skills', SKILL_NAME),
     format: 'skill',
-    hint: () => '~/.gemini/skills/',
+    hint: (project) => project ? '.gemini/skills/ (project)' : '~/.gemini/skills/',
   },
   {
     id: 'agents',
     name: 'Agent Skills (universal)',
     detect: () => true, // Always available
     alwaysShow: true,
-    installPath: () => path.join(os.homedir(), '.agents', 'skills', SKILL_NAME),
+    installPath: (project) => project
+      ? path.join(process.cwd(), '.agents', 'skills', SKILL_NAME)
+      : path.join(os.homedir(), '.agents', 'skills', SKILL_NAME),
     format: 'skill',
-    hint: () => '~/.agents/skills/ (30+ compatible agents)',
+    hint: (project) => project
+      ? '.agents/skills/ (project, 30+ compatible agents)'
+      : '~/.agents/skills/ (30+ compatible agents)',
   },
   {
     id: 'windsurf',
@@ -66,6 +72,7 @@ const AGENTS = [
       return fs.existsSync(path.join(process.cwd(), '.windsurfrules')) ||
              fs.existsSync(path.join(os.homedir(), '.windsurf'));
     },
+    // .windsurfrules is inherently project-scoped, so --project is a no-op here.
     installPath: () => path.join(process.cwd(), '.windsurfrules'),
     format: 'adapter',
     adapterFile: 'for-windsurf.md',
@@ -128,12 +135,24 @@ function copyRecursive(src, dest) {
 const MARKER_START = '<!-- prompt-architect-start -->';
 const MARKER_END = '<!-- prompt-architect-end -->';
 
-function installSkillDir(sourcePath, destPath) {
+function installSkillDir(sourcePath, destPath, force = false) {
   const parentDir = path.dirname(destPath);
   if (!fs.existsSync(parentDir)) fs.mkdirSync(parentDir, { recursive: true });
 
+  // A symlink here almost always means the user has pointed this path at a
+  // working copy they are actively editing. rmSync would silently delete the
+  // link, so refuse unless they explicitly opt in with --force.
+  let linkStat = null;
+  try { linkStat = fs.lstatSync(destPath); } catch { /* does not exist */ }
+  if (linkStat && linkStat.isSymbolicLink() && !force) {
+    throw new Error(
+      `${destPath} is a symlink — refusing to replace it. ` +
+      `Remove it first, or re-run with --force if you meant to overwrite.`
+    );
+  }
+
   // Remove existing installation
-  if (fs.existsSync(destPath)) fs.rmSync(destPath, { recursive: true, force: true });
+  if (fs.existsSync(destPath) || linkStat) fs.rmSync(destPath, { recursive: true, force: true });
 
   copyRecursive(sourcePath, destPath);
 
@@ -154,16 +173,19 @@ function installAdapter(adaptersPath, agent, destPath) {
 
   if (agent.appendMode && fs.existsSync(destPath)) {
     const existing = fs.readFileSync(destPath, 'utf8');
-    // Remove old content if present
+    // Strip every previously-installed block, not just the first — without the
+    // `g` flag an older duplicate would survive and accumulate on each run.
     const cleaned = existing.replace(
-      new RegExp(`\\n?${escapeRegex(MARKER_START)}[\\s\\S]*?${escapeRegex(MARKER_END)}\\n?`),
+      new RegExp(`\\n?${escapeRegex(MARKER_START)}[\\s\\S]*?${escapeRegex(MARKER_END)}\\n?`, 'g'),
       ''
     );
     fs.writeFileSync(destPath, cleaned + markedContent, 'utf8');
   } else {
     const parentDir = path.dirname(destPath);
     if (!fs.existsSync(parentDir)) fs.mkdirSync(parentDir, { recursive: true });
-    fs.writeFileSync(destPath, adapterContent, 'utf8');
+    // Must write the *marked* content — an unmarked first copy is invisible to
+    // the strip above and could never be reclaimed on reinstall.
+    fs.writeFileSync(destPath, markedContent, 'utf8');
   }
 }
 
@@ -227,15 +249,19 @@ function showHelp() {
   Options:
     -a, --all      Install to all detected agents
     -p, --project  Use project-local paths where applicable
-    -f, --force    Overwrite existing installations
+    -f, --force    Also replace a symlinked install path (refused by default)
     -y, --yes      Accept defaults (all detected agents)
     -h, --help     Show this help
+
+  Note: installing always overwrites an existing skill directory. --force is
+  only needed when the target path is a symlink, which usually means you have
+  pointed it at a working copy on purpose.
 `);
 }
 
 // ─── Non-Interactive Install ─────────────────────────────────────
 
-function installNonInteractive(agentIds, sourcePath, adaptersPath, isProject) {
+function installNonInteractive(agentIds, sourcePath, adaptersPath, isProject, force) {
   const version = getVersion();
   const results = [];
 
@@ -245,7 +271,7 @@ function installNonInteractive(agentIds, sourcePath, adaptersPath, isProject) {
     const destPath = agent.installPath(isProject);
     try {
       if (agent.format === 'skill') {
-        installSkillDir(sourcePath, destPath);
+        installSkillDir(sourcePath, destPath, force);
       } else {
         installAdapter(adaptersPath, agent, destPath);
       }
@@ -278,7 +304,7 @@ function installNonInteractive(agentIds, sourcePath, adaptersPath, isProject) {
 
 // ─── Interactive Install ─────────────────────────────────────────
 
-async function installInteractive(sourcePath, adaptersPath, isProject) {
+async function installInteractive(sourcePath, adaptersPath, isProject, force) {
   const p = require('@clack/prompts');
   const version = getVersion();
 
@@ -352,7 +378,7 @@ async function installInteractive(sourcePath, adaptersPath, isProject) {
 
     try {
       if (agent.format === 'skill') {
-        installSkillDir(sourcePath, destPath);
+        installSkillDir(sourcePath, destPath, force);
       } else {
         installAdapter(adaptersPath, agent, destPath);
       }
@@ -405,27 +431,27 @@ async function main() {
 
   // Mode 1: Specific agent flags provided
   if (specificAgents.length > 0) {
-    installNonInteractive(specificAgents, sourcePath, adaptersPath, isProject);
+    installNonInteractive(specificAgents, sourcePath, adaptersPath, isProject, flags.force);
     return;
   }
 
   // Mode 2: --all flag
   if (flags.all) {
     const detected = AGENTS.filter(a => a.detect()).map(a => a.id);
-    installNonInteractive(detected, sourcePath, adaptersPath, isProject);
+    installNonInteractive(detected, sourcePath, adaptersPath, isProject, flags.force);
     return;
   }
 
   // Mode 3: --yes flag (accept defaults = all detected, non-interactive)
   if (flags.yes) {
-    const detected = AGENTS.filter(a => a.detect() && !a.alwaysShow).map(a => a.id);
-    installNonInteractive(detected.length > 0 ? detected : ['claude'], sourcePath, adaptersPath, isProject);
+    const detected = AGENTS.filter(a => a.detect()).map(a => a.id);
+    installNonInteractive(detected, sourcePath, adaptersPath, isProject, flags.force);
     return;
   }
 
   // Mode 4: Interactive
   if (isInteractive) {
-    await installInteractive(sourcePath, adaptersPath, isProject);
+    await installInteractive(sourcePath, adaptersPath, isProject, flags.force);
     return;
   }
 
@@ -435,12 +461,16 @@ async function main() {
   const version = getVersion();
   const results = [];
 
-  for (const agent of AGENTS) {
-    if (agent.id !== 'claude') continue;
+  // Install to every detected agent — this is the path most users hit via the
+  // postinstall hook, so restricting it to one agent would silently defeat the
+  // package's multi-agent support.
+  for (const agent of AGENTS.filter(a => a.detect())) {
     const destPath = agent.installPath(isProject);
     try {
       if (agent.format === 'skill') {
-        installSkillDir(sourcePath, destPath);
+        installSkillDir(sourcePath, destPath, flags.force);
+      } else {
+        installAdapter(adaptersPath, agent, destPath);
       }
       results.push({ agent: agent.name, path: destPath, success: true });
     } catch (err) {

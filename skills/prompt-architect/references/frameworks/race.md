@@ -4,6 +4,8 @@
 
 RACE (Role, Action, Context, Expectation) is a medium-complexity framework that sits between RTF's simplicity and CO-STAR's richness. It adds two critical improvements over RTF: situational context (missing from RTF) and an explicit expectation of success (missing from both RTF and CTF). RACE is ideal when you need all four pillars — expertise framing, task clarity, background, and a defined success bar — without the full overhead of CO-STAR or RISEN.
 
+**Origin:** No single documented originator. RACE is a community prompt-engineering convention documented in practitioner guides (e.g. fvivas.com, 20 April 2025) with no attributed creator, and does not appear in any peer-reviewed prompting survey. **Not to be confused with** the RACE digital-marketing planning model (Reach, Act, Convert, Engage), created by Dave Chaffey of Smart Insights in 2010 — an unrelated marketing framework that shares only the acronym.
+
 ## Components
 
 ### R - Role

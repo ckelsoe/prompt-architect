@@ -2,9 +2,28 @@
 
 ## Overview
 
-RISE is a streamlined 4-component framework that exists in **two legitimate variants**, each serving different use cases. Both versions are well-documented in authoritative sources and provide effective prompt structuring.
+RISE is a streamlined 4-component framework for structuring prompts around a role, the material to work from, a process, and a target output. This skill supports two variants, described below.
 
-**Important**: This skill supports BOTH variants. Selection guidance is provided below to help choose the right version for your task.
+**Origin:** Community convention with no identifiable originator and no academic basis. The dominant documented expansion is **Role, Input, Steps, Expectation** — Fabio Vivas (fvivas.com); Juuzt.ai; Damien Griffin, "AI Quick Tips 111: Prompt Framework — R.I.S.E." (Thoughts Brewing, 17 December 2024). RISE's first appearance and original author could not be established. Not research-backed. Distinct from **RISEN** (Role, Instructions, Steps, End goal, Narrowing), which is a separate framework.
+
+---
+
+## Naming note — read before using this file
+
+**"RISE-IE" and "RISE-IX" are this skill's internal shorthand.** They are not established terminology, and no external source uses either term. Do not present them to users as standard vocabulary — say "the Input-Expectation form of RISE" instead.
+
+Verified published expansions of RISE:
+
+| Expansion | Sources | Status |
+|---|---|---|
+| Role, **Input**, Steps, **Expectation** | fvivas.com; juuzt.ai; thoughtsbrewing.com; promptfoundry.me | **Dominant form** — 4+ independent sources |
+| Role, **Instructions**, Steps, **Expectations** | promptwizz.com | Minority variant |
+| Role, **Instruction**, **Specifics**, **Examples** | aipromptsx.com | Minority variant — note S = Specifics, not Steps |
+| Role, Instructions, Steps, **Examples** | *none found* | **Unverified** — the pattern this file calls "RISE-IX" |
+
+**RISE-IX is this skill's own composition, not a documented variant.** It remains a sound prompt pattern — role + directive + method + worked examples is good practice — but it is presented here as our construction, not as an established framework.
+
+*Correction:* an earlier version of this file described both variants as "well-documented in authoritative sources." That was incorrect for RISE-IX. Of its three previously-cited sources: AiPromptsX defines S as "Specifics" rather than "Steps"; The Prompt Warrior documents RISEN and contains no RISE framework at all; and Thoughts Brewing documents the Input-Expectation form, making it a RISE-IE source. None supports Role/Instructions/Steps/Examples.
 
 ---
 
@@ -15,14 +34,14 @@ RISE is a streamlined 4-component framework that exists in **two legitimate vari
 
 **Best for**: Data analysis, transformations, processing tasks
 
-**Sources**: Fabio Vivas, Juuzt.ai
+**Provenance**: The documented community form. Sources: Fabio Vivas (fvivas.com); Juuzt.ai; Damien Griffin / Thoughts Brewing (17 December 2024).
 
 ### RISE-IX: Instructions-Examples (Instruction-Focused)
 **Components**: Role, **Instructions**, Steps, **Examples**
 
 **Best for**: Content creation, learning tasks, example-based work
 
-**Sources**: AiPromptsX, The Prompt Warrior, Thoughts Brewing
+**Provenance**: This skill's own composition — no external source documents this exact expansion. The nearest published forms are Role/Instructions/Steps/**Expectations** (promptwizz.com) and Role/Instruction/**Specifics**/Examples (aipromptsx.com). Use as a house pattern; do not cite it as an established framework.
 
 ---
 
@@ -542,13 +561,13 @@ every wear while treading lightly on the planet..."
 
 ## Summary
 
-RISE framework exists in two well-documented variants:
+This file documents two RISE patterns:
 
-**RISE-IE (Input-Expectation)**: Best for data processing, analysis, and transformation tasks where you have specific input to work with.
+**RISE-IE (Input-Expectation)**: The documented community form of RISE. Best for data processing, analysis, and transformation tasks where you have specific input to work with.
 
-**RISE-IX (Instructions-Examples)**: Best for content creation, writing, and tasks where examples help clarify desired output style.
+**RISE-IX (Instructions-Examples)**: This skill's own variant, not an externally documented form. Best for content creation, writing, and tasks where examples help clarify desired output style.
 
-Both variants are legitimate and effective. Choose based on whether your task is more analytical/data-focused (IE) or creative/instruction-focused (IX).
+Both are practically effective. Only RISE-IE has external documentation — say so if a user asks where these come from. Choose based on whether your task is more analytical/data-focused (IE) or creative/instruction-focused (IX).
 
 When in doubt, ask: **"Am I processing data or creating content?"**
 - Processing data → **RISE-IE**

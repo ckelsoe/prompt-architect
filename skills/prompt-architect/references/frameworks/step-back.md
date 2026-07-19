@@ -4,7 +4,7 @@
 
 Step-Back Prompting is a two-step reasoning technique where the model first answers a higher-level "step-back" question that retrieves the underlying principles, concepts, or facts relevant to the original problem — then uses those retrieved principles as context to answer the original question. By abstracting first, the model grounds its reasoning in first principles rather than diving directly into a potentially error-prone specific answer.
 
-**Research basis:** "Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models" (Zheng et al., Google DeepMind, arXiv:2310.06117, ICLR 2024). Demonstrated +7-27% accuracy on MMLU Physics and Chemistry, +27% on TimeQA, +25% on MuSiQue vs. direct prompting.
+**Research basis:** "Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models" (Zheng et al., Google DeepMind, arXiv:2310.06117, ICLR 2024). Demonstrated +7% on MMLU Physics, +11% on Chemistry, +27% on TimeQA, and +7% on MuSiQue vs. direct prompting (PaLM-2L).
 
 ## Components
 

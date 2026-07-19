@@ -4,6 +4,8 @@
 
 RTF is the simplest prompting framework, focusing on Role, Task, and Format. It's ideal for straightforward, well-defined tasks where minimal context is needed and the primary concern is output formatting.
 
+**Origin:** No single documented originator. RTF circulated as an unattributed community convention by late 2023 — the earliest dated listing found (Moritz Kremb, The Prompt Warrior, 13 October 2023) presents it without credit while explicitly crediting named authors for other frameworks in the same article. It does not appear in any peer-reviewed prompting survey, including The Prompt Report (arXiv 2406.06608).
+
 ## Components
 
 ### R - Role

@@ -49,35 +49,49 @@ const SKILL_DIR = path.join(__dirname, '..', 'skills', 'prompt-architect');
 const SKILL_FILE = path.join(SKILL_DIR, 'SKILL.md');
 
 const REQUIRED_DIRS = [
-  'scripts',
   'references/frameworks',
   'assets/templates',
 ];
 
-const REQUIRED_FRAMEWORKS = [
-  'co-star.md',
-  'risen.md',
-  'rise.md',
-  'tidd-ec.md',
-  'rtf.md',
-  'chain-of-thought.md',
-  'chain-of-density.md',
-];
+const FRAMEWORKS_DIR = path.join(SKILL_DIR, 'references', 'frameworks');
+const TEMPLATES_DIR = path.join(SKILL_DIR, 'assets', 'templates');
 
-const REQUIRED_TEMPLATES = [
-  'co-star_template.txt',
-  'risen_template.txt',
-  'rise-ie_template.txt',
-  'rise-ix_template.txt',
-  'tidd-ec_template.txt',
-  'rtf_template.txt',
-  'hybrid_template.txt',
-];
+// Templates that are not named after a single framework.
+const NON_FRAMEWORK_TEMPLATES = ['hybrid_template.txt'];
 
-const REQUIRED_SCRIPTS = [
-  'framework_analyzer.py',
-  'prompt_evaluator.py',
-];
+// Reference docs that define more than one independently-selectable framework.
+// rise.md documents RISE-IE and RISE-IX, each with its own template and routing row.
+const MULTI_FRAMEWORK_DOCS = { 'rise.md': ['rise-ie', 'rise-ix'] };
+
+// Read the filesystem rather than hardcoding lists — a hardcoded subset is why
+// count drift and a deleted reference doc could both pass CI silently.
+function listFrameworkDocs() {
+  return fs.readdirSync(FRAMEWORKS_DIR).filter(f => f.endsWith('.md')).sort();
+}
+
+function listTemplates() {
+  return fs.readdirSync(TEMPLATES_DIR).filter(f => f.endsWith('.txt')).sort();
+}
+
+// The advertised framework count: one per reference doc, except docs that
+// define several.
+function expectedFrameworkCount() {
+  return listFrameworkDocs().reduce(
+    (n, doc) => n + (MULTI_FRAMEWORK_DOCS[doc] ? MULTI_FRAMEWORK_DOCS[doc].length : 1),
+    0
+  );
+}
+
+// Every template slug a framework doc implies.
+function expectedTemplateSlugs() {
+  const slugs = [];
+  for (const doc of listFrameworkDocs()) {
+    const base = doc.replace(/\.md$/, '');
+    if (MULTI_FRAMEWORK_DOCS[doc]) slugs.push(...MULTI_FRAMEWORK_DOCS[doc]);
+    else slugs.push(base);
+  }
+  return slugs;
+}
 
 let errorCount = 0;
 let warningCount = 0;
@@ -115,47 +129,59 @@ function validateSkill() {
 
   // Check framework files
   info('\nValidating framework files...');
-  REQUIRED_FRAMEWORKS.forEach(framework => {
-    const frameworkPath = path.join(SKILL_DIR, 'references', 'frameworks', framework);
-    if (!fs.existsSync(frameworkPath)) {
-      error(`Framework file missing: ${framework}`);
-      errorCount++;
-    } else {
-      const stats = fs.statSync(frameworkPath);
-      const sizeKB = (stats.size / 1024).toFixed(2);
-      success(`Framework found: ${framework} (${sizeKB} KB)`);
-      
-      // Warn if framework file is too small
-      if (stats.size < 5000) {
-        warning(`Framework ${framework} seems small (< 5 KB)`);
-        warningCount++;
-      }
+  const frameworkDocs = listFrameworkDocs();
+  if (frameworkDocs.length === 0) {
+    error('No framework reference docs found');
+    errorCount++;
+  }
+  frameworkDocs.forEach(framework => {
+    const stats = fs.statSync(path.join(FRAMEWORKS_DIR, framework));
+    if (stats.size < 5000) {
+      warning(`Framework ${framework} seems small (< 5 KB)`);
+      warningCount++;
     }
   });
+  success(`${frameworkDocs.length} framework reference docs found`);
 
-  // Check template files
+  // Check every framework has its template, and no template is orphaned
   info('\nValidating template files...');
-  REQUIRED_TEMPLATES.forEach(template => {
-    const templatePath = path.join(SKILL_DIR, 'assets', 'templates', template);
-    if (!fs.existsSync(templatePath)) {
-      error(`Template file missing: ${template}`);
-      errorCount++;
-    } else {
-      success(`Template found: ${template}`);
-    }
-  });
+  const templates = listTemplates();
+  const templateSet = new Set(templates);
+  let templateErrors = 0;
 
-  // Check script files
-  info('\nValidating script files...');
-  REQUIRED_SCRIPTS.forEach(script => {
-    const scriptPath = path.join(SKILL_DIR, 'scripts', script);
-    if (!fs.existsSync(scriptPath)) {
-      error(`Script file missing: ${script}`);
+  for (const slug of expectedTemplateSlugs()) {
+    const expected = `${slug}_template.txt`;
+    if (!templateSet.has(expected)) {
+      error(`Template missing for framework "${slug}": ${expected}`);
       errorCount++;
-    } else {
-      success(`Script found: ${script}`);
+      templateErrors++;
     }
-  });
+  }
+
+  const expectedSet = new Set([
+    ...expectedTemplateSlugs().map(s => `${s}_template.txt`),
+    ...NON_FRAMEWORK_TEMPLATES,
+  ]);
+  for (const template of templates) {
+    if (!expectedSet.has(template)) {
+      error(`Orphaned template with no corresponding framework doc: ${template}`);
+      errorCount++;
+      templateErrors++;
+    }
+  }
+  for (const template of NON_FRAMEWORK_TEMPLATES) {
+    if (!templateSet.has(template)) {
+      error(`Required non-framework template missing: ${template}`);
+      errorCount++;
+      templateErrors++;
+    }
+  }
+  if (templateErrors === 0) {
+    success(`${templates.length} templates found, all matched to frameworks`);
+  }
+
+  // Cross-check the advertised count against what is actually on disk
+  validateFrameworkCount();
 
   // Check package structure
   info('\nValidating package structure...');
@@ -168,6 +194,107 @@ function validateSkill() {
     validatePackageJson();
   }
 
+}
+
+// Assert the advertised framework count matches the filesystem, everywhere it
+// is stated. This is the check whose absence let "27" survive to v3.2.2 while
+// 28 frameworks shipped.
+function validateFrameworkCount() {
+  info('\nValidating advertised framework count...');
+  const actual = expectedFrameworkCount();
+  const root = path.join(__dirname, '..');
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+
+  const declared = (pkg.claudeCode && pkg.claudeCode.frameworks) || [];
+  if (declared.length !== actual) {
+    error(`package.json claudeCode.frameworks lists ${declared.length} frameworks, but ${actual} exist on disk`);
+    errorCount++;
+  } else {
+    success(`claudeCode.frameworks matches disk (${actual})`);
+  }
+
+  // Any prose that says "<N> ... framework" or "<N>-framework" must say N = actual.
+  const proseSites = [
+    'package.json',
+    '.claude-plugin/plugin.json',
+    '.claude-plugin/marketplace.json',
+    'README.md',
+    'adapters/system-prompt.md',
+    path.join('skills', 'prompt-architect', 'SKILL.md'),
+  ];
+  const countPattern = /(\d+)[\s-]+(?:research-backed\s+)?frameworks?\b/gi;
+  let mismatches = 0;
+
+  for (const rel of proseSites) {
+    const full = path.join(root, rel);
+    if (!fs.existsSync(full)) continue;
+    const lines = fs.readFileSync(full, 'utf8').split('\n');
+    lines.forEach((line, i) => {
+      let m;
+      countPattern.lastIndex = 0;
+      while ((m = countPattern.exec(line)) !== null) {
+        const n = parseInt(m[1], 10);
+        // Ignore small numbers — those are phrases like "two frameworks", or
+        // "2 frameworks" inside an explanatory sentence, not the headline count.
+        if (n >= 10 && n !== actual) {
+          error(`${rel}:${i + 1} advertises ${n} frameworks, but ${actual} exist — "${m[0]}"`);
+          errorCount++;
+          mismatches++;
+        }
+      }
+    });
+  }
+  if (mismatches === 0) {
+    success(`All advertised framework counts agree (${actual})`);
+  }
+}
+
+// CLAUDE.md claims CI validates the SKILL.md version. It did not. It does now,
+// along with every other site that carries the version.
+function validateVersionSites() {
+  info('\nValidating version consistency across all sites...');
+  const root = path.join(__dirname, '..');
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+  const expected = pkg.version;
+
+  const sites = [];
+
+  sites.push({ name: 'package.json claudeCode.version', value: pkg.claudeCode && pkg.claudeCode.version });
+
+  const pluginPath = path.join(root, '.claude-plugin', 'plugin.json');
+  if (fs.existsSync(pluginPath)) {
+    sites.push({ name: 'plugin.json version', value: JSON.parse(fs.readFileSync(pluginPath, 'utf8')).version });
+  }
+
+  const marketPath = path.join(root, '.claude-plugin', 'marketplace.json');
+  if (fs.existsSync(marketPath)) {
+    const market = JSON.parse(fs.readFileSync(marketPath, 'utf8'));
+    (market.plugins || []).forEach((p, i) => {
+      sites.push({ name: `marketplace.json plugins[${i}].version`, value: p.version });
+    });
+  }
+
+  if (fs.existsSync(SKILL_FILE)) {
+    const fm = fs.readFileSync(SKILL_FILE, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    const m = fm && fm[1].match(/^\s*version:\s*["']?([^"'\r\n]+)["']?\s*$/m);
+    sites.push({ name: 'SKILL.md metadata.version', value: m ? m[1].trim() : undefined });
+  }
+
+  let bad = 0;
+  for (const site of sites) {
+    if (site.value === undefined) {
+      error(`${site.name} is missing — cannot verify it matches package.json (${expected})`);
+      errorCount++;
+      bad++;
+    } else if (site.value !== expected) {
+      error(`${site.name} is ${site.value}, expected ${expected}`);
+      errorCount++;
+      bad++;
+    }
+  }
+  if (bad === 0) {
+    success(`All ${sites.length + 1} version sites agree (${expected})`);
+  }
 }
 
 function validateSkillFile() {
@@ -185,7 +312,7 @@ function validateSkillFile() {
   const frontmatter = frontmatterMatch[1];
   
   // Check required fields
-  const requiredFields = ['name', 'description'];
+  const requiredFields = ['name', 'description', 'version'];
   requiredFields.forEach(field => {
     if (!frontmatter.includes(`${field}:`)) {
       error(`SKILL.md missing required field: ${field}`);
@@ -330,6 +457,7 @@ function validatePluginManifest() {
 try {
   validateSkill();
   validatePluginManifest();
+  validateVersionSites();
 
   // Final summary
   log('\n' + '='.repeat(50), 'blue');

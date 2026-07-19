@@ -12,7 +12,9 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        # Floor must match package.json engines.node (>=20.19.0) — @clack/prompts
+        # is ESM-only, so require() of it throws ERR_REQUIRE_ESM below 20.19.
+        node-version: [20.19.x, 22.x, 24.x]
 
     steps:
       - name: Checkout code

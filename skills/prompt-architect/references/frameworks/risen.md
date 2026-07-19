@@ -4,6 +4,8 @@
 
 RISEN is a methodology-focused framework that emphasizes process, steps, and boundaries. It's ideal for complex multi-step tasks where following a specific procedure matters, and where defining what NOT to do is as important as what to do.
 
+**Origin:** Community framework, attributed to Kyle Balmer (AI educator, @iamkylebalmer). The earliest dated appearance is Moritz Kremb, "5 prompt frameworks to level up your prompts" (The Prompt Warrior, 13 October 2023), which credits Balmer with creating and sharing it; Balmer himself writes only "I call the RISEN framework" and makes no claim of invention. No academic source documents RISEN.
+
 ## Components
 
 ### R - Role

@@ -1,7 +1,7 @@
 {
   "name": "@ckelsoe/prompt-architect",
-  "version": "3.2.2",
-  "description": "Agent skill for analyzing and improving prompts using 27 research-backed frameworks across 7 intent categories. Works with Claude Code, Gemini CLI, Cursor, Copilot, and 30+ Agent Skills compatible tools.",
+  "version": "3.3.0",
+  "description": "Agent skill for analyzing and improving prompts using 29 frameworks across 7 intent categories. Works with Claude Code, Gemini CLI, Cursor, Copilot, and 30+ Agent Skills compatible tools.",
   "main": "skills/prompt-architect/SKILL.md",
   "keywords": [
     "claude-code",
@@ -56,7 +56,7 @@
     "prompt-architect": "scripts/install.js"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=20.19.0"
   },
   "files": [
     "skills/",
@@ -81,7 +81,7 @@
     "type": "skill",
     "skillName": "prompt-architect",
     "skillPath": "skills/prompt-architect",
-    "version": "3.2.2",
+    "version": "3.3.0",
     "compatibility": {
       "claudeCode": ">=1.0.0"
     },
@@ -116,6 +116,7 @@
       "ReAct",
       "Chain-of-Thought",
       "Chain-of-Density",
+      "Iterative-Compression",
       "Self-Refine",
       "CAI-Critique-Revise",
       "Devils-Advocate",

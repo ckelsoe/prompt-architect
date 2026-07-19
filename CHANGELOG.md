@@ -5,6 +5,108 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2026-07-19
+
+### Added
+- **Chain of Density is now the real method.** `chain-of-density.md` was rewritten around entity densification at *fixed* length, scoped to summarization, and cited to Adams et al., "From Sparse to Dense" (arXiv 2309.04269, NewSum @ EMNLP 2023). The previous content described generic progressive shortening — the opposite of the published technique, which holds length constant.
+- **New framework: Iterative Compression.** The general multi-pass shortening technique that used to be filed under Chain of Density is preserved as its own framework, with its own reference doc and template, and is no longer attributed to CoD. Framework count is now 29.
+- **Quality scoring is implemented.** `SKILL.md` and `adapters/system-prompt.md` now instruct the model to score prompts 1-10 on the five dimensions the README advertises — Clarity, Specificity, Context, Completeness, Structure — with rubric anchors defining the 1-3 / 4-6 / 7-8 / 9-10 bands. Previously this was advertised in three places and implemented in none, and the skill's dimension list disagreed with the README's.
+- **Framework combination guidance.** A "Combining Frameworks" section with concrete pairings (CO-STAR + Self-Refine, RISEN + ReAct, BROKE + Devil's Advocate) that finally routes to `hybrid_template.txt`, previously the only template with no path leading to it.
+- **Self-Consistency citation and a corrected template** in `chain-of-thought.md`, now citing Wang et al. (arXiv 2203.11171, ICLR 2023) and describing a real majority vote over independently sampled reasoning paths rather than asking the model to judge which of three different approaches it liked best.
+- **Origin lines for 10 previously uncited frameworks**: CO-STAR, Chain-of-Thought, RISEN, APE, RTF, CTF, RACE, BAB, plus corrected provenance for RISE and TIDD-EC.
+- **Acronym-collision disambiguation** for APE (vs. "Automatic Prompt Engineer," Zhou et al., arXiv 2211.01910) and RACE (vs. Dave Chaffey's 2010 Reach-Act-Convert-Engage marketing model).
+
+### Changed
+- **Provenance is now stated honestly per framework.** Frameworks with peer-reviewed backing cite it; community conventions say so plainly rather than leaving a silent gap. CO-STAR is credited to GovTech Singapore's Data Science & AI team — as Sheila Teo's own article does — rather than to Teo, who popularized it.
+- `rise.md`: "RISE-IE" and "RISE-IX" are now labeled as this skill's internal shorthand, not established terminology. RISE-IX is identified as our own composition; its three previously cited sources do not support it. `ctf.md` no longer propagates "RISE-IE" as if it were standard vocabulary.
+- `tidd-ec.md`: dropped the "originally documented alongside CO-STAR" claim, which implied a shared provenance that does not exist, and reassessed its three "authoritative sources" as one origin post, one same-organization republication, and one passing mention.
+- `SKILL.md` step numbering fixed — it had two sections numbered `### 4.` and now runs 1-7, matching the adapter.
+- `SKILL.md` template section reduced from a 30-line filename listing to one line; filenames are mechanically derivable.
+- Installer `--force` now does something: it is required to replace a **symlinked** install path, which previously was deleted without warning.
+
+### Fixed
+- **Installer no longer installs to Claude Code only.** Mode 5 (the `postinstall` path most users hit) and Mode 3 (`--yes`) now install to every detected agent, as documented. Mode 5 previously hard-skipped every agent but Claude and ignored `detect()` entirely.
+- **Windsurf adapter no longer duplicates itself.** A fresh `.windsurfrules` was written without marker comments, so the next run could not find or remove it and appended a second copy; the marker-stripping regex also lacked the `g` flag. Verified stable across repeated installs.
+- **`--project` is no longer ignored** for the Gemini and universal Agent Skills targets — only the Claude entry honored it.
+- **`engines.node` raised to `>=20.19.0`.** It declared `>=14.0.0`, but `@clack/prompts@1.1.0` is ESM-only, so `require()` of it throws `ERR_REQUIRE_ESM` below 20.19 — the headline `npx` experience failed across most of the declared range with a bare "Installation error". The CI matrix floor was raised to match.
+- **Step-Back statistic corrected**: MuSiQue is +7%, not +25% (a 3.5x overstatement); MMLU is +7% Physics / +11% Chemistry, not a "7-27% range."
+- **Socratic Prompting citation corrected**: single author Edward Y. Chang, IEEE CCWC 2023 — not "Chang et al." and not EMNLP/NAACL.
+- **Pre-Mortem attribution corrected**: the ~30% finding belongs to Mitchell, Russo & Pennington (1989), popularized by Gary Klein (HBR 2007); it measures identification of "reasons for future outcomes" against a might-happen framing, not "failure causes" against forward risk analysis. The unsupported "Brookings Institution" affiliation was removed.
+- **Skeleton-of-Thought quality claim qualified**: parity in roughly 60% of cases, with degradation on writing, math, and coding — previously "maintained or improved quality."
+- **Constitutional AI claim scoped**: the critique-before-revision effect is strongest for smaller models; the authors found no noticeable difference at 52B and kept critiques for transparency.
+- README no longer instructs users to create an `.npmrc` and a GitHub token for a registry the package is not published to. It is on public npm and needs no authentication.
+- README: duplicate `## Quick Start` heading renamed to `## Verifying Your Installation` (the table of contents anchor resolved to the wrong section), and the TOC completed.
+
+### Removed
+- `framework_analyzer.py` and `prompt_evaluator.py` (~50 KB). Nothing invoked them, they had no CLI, and `framework_analyzer.py` had already drifted — its header read "all 27" above a 28-entry dict. Their scoring dimensions were carried into the SKILL.md rubric before removal.
+- `.github/workflows/version-bump.yml`. It ran `npm version`, which updates only `package.json`, then immediately pushed the tag — landing a broken release tag on the remote before anyone could intervene.
+
+### Validation
+- `validate-skill.js` now derives framework and template checks from the filesystem instead of a hardcoded 7-entry subset, cross-checks `claudeCode.frameworks` against what is on disk, and **asserts every advertised framework count agrees with reality**. This is the check whose absence let "27" ship while 28 frameworks existed.
+- `validate-skill.js` now verifies **all five version sites** — `package.json`, `claudeCode.version`, `plugin.json`, `marketplace.json`, and `SKILL.md` frontmatter. It previously checked only `plugin.json`, and did not check SKILL.md's version at all, despite documentation claiming otherwise.
+- `test.js` gained a **drift guard** asserting `SKILL.md` and `adapters/system-prompt.md` keep identical step headings, sequential numbering, and the same framework set. These two files are hand-maintained copies and had already diverged.
+
+---
+
+## [3.2.2] - 2026-03-30
+
+### Added
+- Prominent Quick Start at the top of the README with the `npx @ckelsoe/prompt-architect` command
+- Codex CLI installation instructions via `$skill-installer install`
+- `/install-skill` documented as the primary Claude Code installation method, with the plugin marketplace commands retained for update support
+
+### Changed
+- README installation section consolidated: separate per-tool sections for Gemini CLI and for Cursor/Copilot/Windsurf/Codex were replaced by a single "Other Agents" section pointing at `~/.agents/skills/`
+- npm demoted to an alternative installation method
+
+### Fixed
+- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` versions brought back in sync with `package.json`; both had been left behind at 3.2.1
+
+---
+
+## [3.2.1] - 2026-03-24
+
+### Fixed
+- **Direct download link for ChatGPT**: the `.skill` link now points at `releases/latest/download/prompt-architect.skill` rather than the releases page, making it a one-click download
+- **Nothing after the revised prompt**: SKILL.md now states explicitly that no text may follow the closing backticks — the revised prompt must be the last element of the response. The example interaction was updated to comply.
+
+### Changed
+- `prompt-architect.skill` removed from git tracking and added to a new `.gitignore` alongside `node_modules/`. It is a build artifact produced by `npm run build:skill` and attached to releases by CI.
+
+---
+
+## [3.2.0] - 2026-03-24
+
+### Changed
+- **SKILL.md "Present Improvements" restructured for copy-pasteable output.** Responses now follow a fixed order: (A) analysis — framework selected, changes made, components applied; (B) a usage-instructions block explaining how to use the prompt in a new chat or the same chat; (C) the revised prompt last, in a fenced code block.
+- **The revised prompt is now clean flat text**: no framework section headers (`BEFORE:`, `BRIDGE:`, `CONTEXT:`), no gratuitous indentation, and no internal markdown unless the prompt genuinely requires it — so it can be copied verbatim with zero editing.
+- Example interaction rewritten to model the new output structure
+- Version synced across SKILL.md, `package.json`, `plugin.json`, and `marketplace.json`
+
+---
+
+## [3.1.1] - 2026-03-24
+
+### Fixed
+- **CI pipeline**: committed `package-lock.json` so `npm ci` works, and removed the unreliable `npm ci || npm install` fallback
+- Test matrix moved to Node 18/20/22; Node 14/16 dropped, as `@clack/prompts` requires a newer runtime
+
+---
+
+## [3.1.0] - 2026-03-24
+
+> The 3.x restructure described in the `[3.0.0]` entry below shipped across the 3.0.x line and landed in git under the `v3.1.0` tag. The items here are the parts of that work not already listed there.
+
+### Added
+- **`.skill` builder**: `scripts/build-skill.js` and `npm run build:skill` produce a ZIP for ChatGPT upload
+- **`bin` entry**: `npx @ckelsoe/prompt-architect` runs the installer directly
+
+### Changed
+- `package.json` `files` array now ships `skills/`, `.claude-plugin/`, and `MIGRATION.md`
+- Removed the obsolete adapters `for-cursor.mdc`, `for-github-copilot.md`, and `for-openai-codex-cli.md` — those tools read `SKILL.md` natively. Only `system-prompt.md` (universal) and `for-windsurf.md` remain.
+
+---
+
 ## [3.0.0] - 2026-03-24
 
 ### Breaking Changes
@@ -14,7 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Claude Code Plugin System support**: `.claude-plugin/plugin.json` and `marketplace.json` — install via `/plugin marketplace add` and `/plugin install`
 - **Gemini CLI support**: Native Agent Skills compatibility. Install via `gemini skills install`
-- **Agent Skills standard compliance** (agentskills.io): Added `license`, `compatibility`, and `metadata` fields to SKILL.md frontmatter. Works with 30+ compatible agents including Cursor, Copilot, Kiro, Roo Code, Amp, OpenHands, and more
+- **Agent Skills standard compliance** (agentskills.io): Added `license`, `compatibility`, and `metadata` fields to SKILL.md frontmatter. Works with 30+ compatible agents including Cursor, Copilot, Kiro, Zoo Code, Amp, OpenHands, and more
 - **Interactive multi-agent installer**: Detects installed AI agents (Claude Code, Gemini CLI, Cursor, Copilot, Windsurf, Codex) and presents a selection UI using @clack/prompts
 - **Universal install path**: `~/.agents/skills/` for Agent Skills standard compatible tools
 - **CLI flags**: `--all`, `--claude`, `--gemini`, `--agents`, `--cursor`, `--copilot`, `--windsurf`, `--codex`, `--yes`
@@ -258,7 +360,7 @@ The framework selection system in SKILL.md was completely restructured:
 
 ## Links
 
-- [npm Package](https://www.npmjs.com/package/@ckelsoe/claude-skill-prompt-architect)
-- [GitHub Repository](https://github.com/ckelsoe/claude-skill-prompt-architect)
-- [Issue Tracker](https://github.com/ckelsoe/claude-skill-prompt-architect/issues)
-- [Contributing Guidelines](https://github.com/ckelsoe/claude-skill-prompt-architect/blob/main/README.md#contributing)
+- [npm Package](https://www.npmjs.com/package/@ckelsoe/prompt-architect)
+- [GitHub Repository](https://github.com/ckelsoe/prompt-architect)
+- [Issue Tracker](https://github.com/ckelsoe/prompt-architect/issues)
+- [Contributing Guidelines](https://github.com/ckelsoe/prompt-architect/blob/main/README.md#contributing)

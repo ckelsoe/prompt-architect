@@ -54,7 +54,7 @@ skills/prompt-architect/SKILL.md
 
 ### The skill itself is unchanged
 
-The `SKILL.md` content, all 27 frameworks, reference docs, and templates are identical. Only the packaging and distribution have changed.
+The `SKILL.md` content, all framework reference docs, and all templates are identical. Only the packaging and distribution have changed.
 
 ## GitHub Repository
 

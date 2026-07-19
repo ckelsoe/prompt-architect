@@ -4,7 +4,7 @@
 
 CAI Critique-Revise is a two-phase output improvement pattern derived from Anthropic's Constitutional AI methodology. A model generates an initial response, explicitly critiques it against a stated principle or standard, then revises the response to align with that principle. Unlike Self-Refine (which uses multi-dimensional quality feedback), CAI Critique-Revise is principle-driven: the critique is always measured against a specific, explicitly stated standard — a "constitution" of one or more principles.
 
-**Research basis:** "Constitutional AI: Harmlessness from AI Feedback" (Bai et al., Anthropic, arXiv 2212.08073, 2022). Originally a training methodology; the critique-revise loop is directly usable as a prompting pattern. Key finding: generating an explicit critique before revising produces better alignment than asking for direct revision without a critique step.
+**Research basis:** "Constitutional AI: Harmlessness from AI Feedback" (Bai et al., Anthropic, arXiv 2212.08073, 2022). Originally a training methodology; the critique-revise loop is directly usable as a prompting pattern. Key finding: generating an explicit critique before revising produces better alignment than asking for direct revision without a critique step. The effect is strongest for smaller models; the authors found no noticeable difference at 52B and retained critiques primarily for transparency into the model's reasoning.
 
 ## The Key Insight
 

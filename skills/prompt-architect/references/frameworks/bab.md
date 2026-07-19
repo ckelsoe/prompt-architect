@@ -4,6 +4,8 @@
 
 BAB (Before, After, Bridge) is a transformation-focused framework ideal for rewrite, refactor, and conversion tasks. It explicitly defines the current state, the desired state, and asks for the path between them. Nothing in the standard framework set handles "change this into that" as cleanly as BAB.
 
+**Origin:** Predates LLMs as a direct-response copywriting formula. The earliest verified dated appearance is Kevan Lee's "27 Best Copywriting Formulas" (Buffer blog, 13 October 2014), which lists Before-After-Bridge as formula #1 and — unlike the other formulas in that article, which it credits to named copywriters such as Bob Stone — presents it as already-common property with no attributed author. No individual coiner has been verified. Its use in prompt engineering is a later community adaptation of the copywriting formula.
+
 ## Components
 
 ### B - Before

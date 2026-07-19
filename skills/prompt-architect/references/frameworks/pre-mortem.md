@@ -2,17 +2,17 @@
 
 ## Overview
 
-Pre-Mortem Prompting adapts Gary Klein's prospective hindsight technique to AI prompting. Instead of asking "what could go wrong?" (which triggers optimism bias and produces vague risks), it instructs the AI to *assume* the project or decision has already failed catastrophically — then work backwards to identify the specific reasons why. This committed-failure frame consistently produces more specific, actionable failure identification than forward risk analysis.
+Pre-Mortem Prompting adapts Gary Klein's prospective hindsight technique to AI prompting. Instead of asking "what could go wrong?" (which triggers optimism bias and produces vague risks), it instructs the AI to *assume* the project or decision has already failed catastrophically — then work backwards to identify the specific reasons why. In practice this committed-failure frame tends to yield more specific, actionable failure identification than an open-ended "what could go wrong?" question.
 
-**Research basis:** Gary Klein's prospective hindsight research (Cognitive Systems Engineering; Brookings Institution). Studies show ~30% improvement in correct identification of failure causes compared to standard forward risk analysis. Application to LLM prompting is practitioner-level (no dedicated AI paper), but the cognitive mechanism is well-established.
+**Research basis:** Mitchell, Russo & Pennington, "Back to the Future: Temporal Perspective in the Explanation of Events" (*Journal of Behavioral Decision Making*, 1989) found that prospective hindsight — imagining an event has *already occurred* — increases the ability to correctly identify **reasons for future outcomes** by ~30%, compared with imagining it *might* occur. Gary Klein popularized the technique as the "pre-mortem" (*Harvard Business Review*, September 2007), which is where the 30% figure is most often cited from. Note the measured comparison is already-happened vs. might-happen framing, not pre-mortem vs. forward risk analysis. Application to LLM prompting is practitioner-level (no dedicated AI paper), but the cognitive mechanism is well-established.
 
-## Why Assumed Failure Outperforms Forward Risk Analysis
+## Why the Assumed-Failure Frame Helps
 
-Forward risk: *"What could go wrong?"* → Produces vague, hedged answers ("there might be delays", "adoption could be low")
+Forward risk: *"What could go wrong?"* → Tends to produce vague, hedged answers ("there might be delays", "adoption could be low")
 
-Pre-mortem: *"This has already failed — why did it fail?"* → Produces specific, committed answers ("the integration with Salesforce took 3x longer than estimated because we didn't account for their API rate limits")
+Pre-mortem: *"This has already failed — why did it fail?"* → Tends to produce specific, committed answers ("the integration with Salesforce took 3x longer than estimated because we didn't account for their API rate limits")
 
-The difference: by committing to the failure frame, the model bypasses optimism bias and generates specific causal narratives rather than probabilistic hedges.
+The mechanism: committing to the failure frame bypasses optimism bias and elicits specific causal narratives rather than probabilistic hedges. This is the practitioner rationale for the technique — the 1989 study measured the certainty framing itself, not a head-to-head against forward risk analysis, so treat the comparison above as an observed pattern rather than a measured result.
 
 ## Components
 

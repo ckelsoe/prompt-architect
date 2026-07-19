@@ -1,6 +1,6 @@
 # Prompt Architect
 
-Transform vague prompts into expert-level, structured prompts using 27 research-backed frameworks across 7 intent categories.
+Transform vague prompts into expert-level, structured prompts using 29 frameworks across 7 intent categories.
 
 Works with **Claude Code, ChatGPT, Gemini CLI, Cursor, GitHub Copilot, Windsurf, OpenAI Codex**, and [30+ Agent Skills compatible tools](https://agentskills.io).
 
@@ -14,9 +14,9 @@ npx @ckelsoe/prompt-architect
 
 The interactive installer detects your AI agents (Claude Code, Gemini CLI, Cursor, Copilot, Codex, and more) and lets you choose where to install.
 
-> **Important:** Use `npx`, not `npm install`. The `npx` command runs the interactive multi-agent installer. Running `npm install` will only install to Claude Code silently via the postinstall hook.
+> **Tip:** Use `npx` rather than `npm install`. Both work — `npm install` runs the same installer via the postinstall hook and installs to every agent it detects — but only `npx` gives you the interactive menu to choose specific targets.
 
-> Requires `.npmrc` with `@ckelsoe:registry=https://npm.pkg.github.com` and a GitHub token with `read:packages` scope.
+> Published on the public npm registry. **No authentication required.**
 
 ---
 
@@ -28,11 +28,14 @@ The interactive installer detects your AI agents (Claude Code, Gemini CLI, Curso
 - [Supported Frameworks](#supported-frameworks)
 - [Quick Start](#quick-start)
 - [Installation](#installation)
+- [Verifying Your Installation](#verifying-your-installation)
+- [Updating](#updating)
 - [Usage](#usage)
 - [Framework Selection Guide](#framework-selection-guide)
 - [Project Structure](#project-structure)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
+- [Support](#support)
 - [License](#license)
 
 ---
@@ -57,7 +60,7 @@ Prompt Architect is an [Agent Skills](https://agentskills.io) compatible skill t
 
 ## Key Features
 
-### 27 Research-Backed Frameworks Across 7 Intent Categories
+### 29 Frameworks Across 7 Intent Categories
 
 | Framework | Best For | Complexity |
 |-----------|----------|------------|
@@ -81,7 +84,8 @@ Prompt Architect is an [Agent Skills](https://agentskills.io) compatible skill t
 | **Least-to-Most** | Compositional multi-hop problems (simplest first) | Medium |
 | **Plan-and-Solve (PS+)** | Zero-shot numerical/calculation reasoning | Low |
 | **Chain of Thought** | Reasoning, problem-solving | Medium |
-| **Chain of Density** | Iterative refinement, summarization | Medium |
+| **Chain of Density** | Summarization at fixed length, maximum information density | Medium |
+| **Iterative Compression** | Shortening text toward a target length | Low |
 | **Self-Refine** | Iterative output quality improvement (any task) | Medium |
 | **CAI Critique-Revise** | Principle-based critique and revision (Anthropic) | Medium |
 | **Devil's Advocate** | Strongest opposing argument against a position | Low |
@@ -457,7 +461,7 @@ RESPONSE FORMAT:
 **Best for:** Identifying specific failure causes before they happen
 
 **Approach:** Assume the project has already failed → describe the failure → work backwards to specific causes with warning signs
-**Research:** Gary Klein's prospective hindsight — ~30% improvement over forward risk analysis
+**Research:** Mitchell, Russo & Pennington (1989), popularized by Gary Klein (HBR 2007) — prospective hindsight improves identification of reasons for future outcomes by ~30%; LLM application is practitioner-level, with no dedicated AI paper
 
 **Example Use Cases:** Project kickoffs, product launches, technical migrations, high-stakes strategic decisions
 
@@ -610,7 +614,7 @@ See [`adapters/README.md`](adapters/README.md) for detailed instructions for eac
 
 ---
 
-## Quick Start
+## Verifying Your Installation
 
 After installing, test with:
 
@@ -837,11 +841,7 @@ prompt-architect/
 ├── LICENSE                            # MIT License
 │
 └── prompt-architect/                  # The skill
-    ├── SKILL.md                       # Core skill instructions (5 KB)
-    │
-    ├── scripts/                       # Analysis Utilities
-    │   ├── framework_analyzer.py      # Framework recommendation logic
-    │   └── prompt_evaluator.py        # Quality scoring system
+    ├── SKILL.md                       # Core skill instructions
     │
     ├── references/                    # Framework Documentation
     │   └── frameworks/                # Loaded on-demand
@@ -908,9 +908,8 @@ prompt-architect/
 
 **Core Components:**
 - **SKILL.md** - Main skill logic and instructions (intent-based selection system)
-- **27 Framework Docs** - Complete references with examples
-- **29 Templates** - Ready-to-use structures (27 frameworks + hybrid + chain variants)
-- **2 Python Scripts** - Analysis and scoring utilities
+- **Framework Reference Docs** - 28 files covering all 29 frameworks, with examples (RISE documents two variants)
+- **Templates** - 30 ready-to-use structures: one per framework, plus `hybrid_template.txt` for combinations
 
 ---
 

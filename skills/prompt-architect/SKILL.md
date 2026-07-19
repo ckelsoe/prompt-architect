@@ -1,11 +1,11 @@
 ---
 name: prompt-architect
-description: Analyzes and improves prompts using 27 research-backed frameworks across 7 intent categories. Use when a user wants to improve, rewrite, structure, or engineer a prompt — including requests like "help me write a better prompt", "improve this prompt", "what framework should I use", "make this prompt more effective", or any prompt engineering task. Recommends the right framework based on intent (create, transform, reason, critique, recover, clarify, agentic), asks targeted questions, and delivers a structured, high-quality result.
+description: Analyzes and improves prompts using 29 frameworks across 7 intent categories. Use when a user wants to improve, rewrite, structure, or engineer a prompt — including requests like "help me write a better prompt", "improve this prompt", "what framework should I use", "make this prompt more effective", or any prompt engineering task. Recommends the right framework based on intent (create, transform, reason, critique, recover, clarify, agentic), asks targeted questions, and delivers a structured, high-quality result.
 license: MIT
 compatibility: Requires no external dependencies. Works with any Agent Skills compatible tool.
 metadata:
   author: ckelsoe
-  version: "3.2.2"
+  version: "3.3.0"
   homepage: https://github.com/ckelsoe/prompt-architect
 ---
 
@@ -17,16 +17,30 @@ You are an expert in prompt engineering and systematic application of prompting 
 
 ### 1. Initial Assessment
 
-When a user provides a prompt to improve, analyze across dimensions:
-- **Clarity**: Is the goal clear and unambiguous?
-- **Specificity**: Are requirements detailed enough?
-- **Context**: Is necessary background provided?
-- **Constraints**: Are limitations specified?
-- **Output Format**: Is desired format clear?
+When a user provides a prompt to improve, **score it 1-10 on each of these five dimensions** and report an overall score (the mean, to one decimal place). Always show the scores — they justify the changes you are about to make and give the user a before/after they can feel.
+
+| Dimension | What you are scoring |
+|---|---|
+| **Clarity** | Is the goal unambiguous? Penalize vague terms ("thing", "stuff", "something", "maybe"), unresolved pronouns, and an implied-but-unstated objective. |
+| **Specificity** | Are requirements concrete? Reward named entities, quantities, and explicit format/length/style specifications. Penalize prompts so short they cannot carry the detail. |
+| **Context** | Is the necessary background present? Reward stated situation, audience, and rationale ("because", "in order to"). Penalize a bare instruction with no setting. |
+| **Completeness** | Are *what*, *why*, *how*, and *output format* all present? Each missing element costs. |
+| **Structure** | Is it organized for its length? Reward sections, lists, and logical ordering. Penalize run-on sentences and long unbroken prose. |
+
+**Rubric anchors** — apply per dimension so scores mean the same thing every time:
+
+| Band | Meaning |
+|---|---|
+| **1-3** | Absent or actively harmful. The model would have to guess this dimension entirely. |
+| **4-6** | Present but underspecified. The model can proceed, but will fill gaps with assumptions the user did not choose. |
+| **7-8** | Solid. Enough to produce a good result; refinement would be marginal. |
+| **9-10** | Complete and unambiguous. A competent model has nothing left to infer on this dimension. |
+
+Score the prompt *as written*, not as you charitably interpret it — the gap between those two is precisely what the framework will fix. A prompt scoring 7+ across the board often needs no framework at all (see **When NOT to Use Frameworks**).
 
 ### 2. Intent-Based Framework Selection
 
-With 27 frameworks, identify the user's **primary intent** first, then use the discriminating questions within that category.
+With 29 frameworks, identify the user's **primary intent** first, then use the discriminating questions within that category.
 
 ---
 
@@ -68,7 +82,8 @@ With 27 frameworks, identify the user's **primary intent** first, then use the d
 |--------|-----------|
 | Rewrite, refactor, convert | **BAB** |
 | Iterative quality improvement | **Self-Refine** |
-| Compress or densify | **Chain of Density** |
+| Summarize at fixed length, maximize information | **Chain of Density** |
+| Shorten text toward a target length | **Iterative Compression** |
 | Outline-first then expand sections | **Skeleton of Thought** |
 
 ---
@@ -106,6 +121,20 @@ With 27 frameworks, identify the user's **primary intent** first, then use the d
 
 ---
 
+#### Combining Frameworks
+
+Most prompts need exactly one framework. Combine only when the task genuinely has **two separable phases** — one framework structures the request, a second governs how the output is checked or refined. If you cannot name the two phases, do not combine.
+
+| When | Combination | Why |
+|---|---|---|
+| High-stakes content that must survive review | **CO-STAR + Self-Refine** | CO-STAR fixes audience/tone/format; Self-Refine adds a critique-and-revise loop before delivery |
+| Multi-step procedure executed with tools | **RISEN + ReAct** | RISEN specifies the steps and success criteria; ReAct governs the tool-use cycle within each step |
+| Business deliverable with a hostile audience | **BROKE + Devil's Advocate** | BROKE sets objective and key results; Devil's Advocate stress-tests them before they reach a stakeholder |
+
+When you combine, load `assets/templates/hybrid_template.txt` and state plainly in your analysis which framework owns which phase. Never stack more than two — a third adds structure the model spends attention parsing rather than following.
+
+---
+
 ### 3. Framework Quick Reference
 
 One-line per framework (load `references/frameworks/` for full detail):
@@ -115,7 +144,7 @@ One-line per framework (load `references/frameworks/` for full detail):
 **Comprehensive:** CO-STAR | RISEN | TIDD-EC
 **Data:** RISE-IE | RISE-IX
 **Reasoning:** Plan-and-Solve | Chain of Thought | Least-to-Most | Step-Back | Tree of Thought | RCoT
-**Structure/Iteration:** Skeleton of Thought | Chain of Density
+**Structure/Iteration:** Skeleton of Thought | Chain of Density | Iterative Compression
 **Critique/Quality:** Self-Refine | CAI Critique-Revise | Devil's Advocate | Pre-Mortem
 **Meta/Reverse:** RPEF | Reverse Role Prompting
 **Agentic:** ReAct
@@ -144,7 +173,8 @@ Ask targeted questions (3-5 at a time) based on identified gaps:
 **For Least-to-Most**: Full problem, decomposed subproblems in dependency order?
 **For Plan-and-Solve**: Problem with all relevant numbers/variables?
 **For Chain of Thought**: Problem, reasoning steps, verification?
-**For Chain of Density**: Content to improve, iterations, optimization goals?
+**For Chain of Density**: Source document to summarize, fixed target length, number of iterations?
+**For Iterative Compression**: Content to compress, target length, optimization goal, stopping criterion?
 **For Self-Refine**: Output to improve, feedback dimensions, stop condition?
 **For CAI Critique-Revise**: The principle to enforce, output to critique?
 **For Devil's Advocate**: Position to attack, attack dimensions, severity ranking needed?
@@ -153,7 +183,7 @@ Ask targeted questions (3-5 at a time) based on identified gaps:
 **For RPEF**: Output sample to reverse-engineer, input data if available?
 **For Reverse Role**: Intent statement, domain of expertise, interview mode (batch vs. conversational)?
 
-### 4. Apply Framework
+### 5. Apply Framework
 
 Using gathered information:
 1. Load appropriate template from `assets/templates/`
@@ -161,7 +191,7 @@ Using gathered information:
 3. Fill missing elements with reasonable defaults
 4. Structure according to framework format
 
-### 5. Present Improvements
+### 6. Present Improvements
 
 Structure your output in this exact order:
 
@@ -184,11 +214,11 @@ Structure your output in this exact order:
 - The user must be able to copy the entire block contents and paste it verbatim with zero editing
 - **Nothing after the code block** — the revised prompt must be the absolute last element in the response. No trailing suggestions, tips, or follow-up text after the closing backticks.
 
-### 6. Iterate
+### 7. Iterate
 
 - Confirm improvements align with intent
 - Refine based on feedback
-- Switch or combine frameworks if needed
+- Switch or combine frameworks if needed (see **Combining Frameworks** below)
 - Continue until satisfactory
 
 ## Framework References
@@ -213,7 +243,8 @@ Detailed framework docs in `references/frameworks/`:
 - `least-to-most.md` - Decompose into ordered subproblems, solve sequentially
 - `plan-and-solve.md` - Zero-shot: plan + extract variables + calculate (PS+)
 - `chain-of-thought.md` - Step-by-step reasoning techniques
-- `chain-of-density.md` - Iterative refinement through compression
+- `chain-of-density.md` - Entity densification at fixed length, for summarization (Adams et al.)
+- `iterative-compression.md` - Progressive shortening toward a target length
 - `self-refine.md` - Generate → Feedback → Refine loop (NeurIPS 2023)
 - `cai-critique-revise.md` - Principle-based critique + revision (Anthropic)
 - `devils-advocate.md` - Strongest opposing argument generation (ACM IUI 2024)
@@ -226,36 +257,7 @@ Load these when applying specific frameworks for detailed component guidance, se
 
 ## Templates
 
-Framework templates in `assets/templates/` provide structure:
-- `co-star_template.txt` - Full CO-STAR structure
-- `risen_template.txt` - Full RISEN structure
-- `rise-ie_template.txt` - RISE-IE structure (Input-Expectation for data tasks)
-- `rise-ix_template.txt` - RISE-IX structure (Instructions-Examples for creative tasks)
-- `tidd-ec_template.txt` - TIDD-EC structure (Task, Instructions, Do, Don't, Examples, Context)
-- `ctf_template.txt` - CTF structure (Context-Task-Format for situational prompts)
-- `rtf_template.txt` - Full RTF structure
-- `ape_template.txt` - APE structure (Action-Purpose-Expectation ultra-minimal)
-- `bab_template.txt` - BAB structure (Before-After-Bridge for transformations)
-- `race_template.txt` - RACE structure (Role-Action-Context-Expectation)
-- `crispe_template.txt` - CRISPE structure (with Experiment/variants)
-- `broke_template.txt` - BROKE structure (with Key Results + Evolve)
-- `care_template.txt` - CARE structure (with Rules + Examples)
-- `tree-of-thought_template.txt` - Tree of Thought branching exploration structure
-- `react_template.txt` - ReAct Thought-Action-Observation cycle structure
-- `skeleton-of-thought_template.txt` - Skeleton + expand structure
-- `step-back_template.txt` - Step-back question + principle application
-- `least-to-most_template.txt` - Decompose + sequential solving
-- `plan-and-solve_template.txt` - PS+ trigger phrase structure
-- `chain-of-thought_template.txt` - Step-by-step reasoning with verification
-- `chain-of-density_template.txt` - Iterative compression with stopping criterion
-- `self-refine_template.txt` - Generate → Feedback → Refine structure
-- `cai-critique-revise_template.txt` - Principle → Critique → Revision structure
-- `devils-advocate_template.txt` - Position attack with severity ranking
-- `pre-mortem_template.txt` - Failure assumption + cause analysis
-- `rcot_template.txt` - 4-step backward verification structure
-- `rpef_template.txt` - Output analysis + recovered prompt template
-- `reverse-role_template.txt` - Intent + interview trigger structure
-- `hybrid_template.txt` - Combined framework approach
+Every framework has a fill-in template at `assets/templates/<framework>_template.txt`, named after the framework's reference doc (e.g. `co-star.md` → `co-star_template.txt`). RISE has two: `rise-ie_template.txt` and `rise-ix_template.txt`. One extra template, `hybrid_template.txt`, is for combined-framework prompts (see **Combining Frameworks**).
 
 ## Key Principles
 

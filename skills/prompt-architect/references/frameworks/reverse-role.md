@@ -4,7 +4,7 @@
 
 Reverse Role Prompting flips the traditional prompting dynamic: instead of you constructing a detailed prompt, you provide a minimal intent statement and the AI interviews you — asking targeted clarifying questions — until it has enough information to execute the task well. This is the framework for when you know what you want but struggle to articulate all the details needed for a good prompt.
 
-**Research basis:** Widely circulated as "reverse prompting" in practitioner communities (2023–2024). Formalized academically as **FATA** (First Ask Then Answer), arXiv 2508.08308, August 2025 — showing ~40% improvement over standard prompting. Related to **Socratic Prompting** (Chang et al., arXiv 2303.08769, EMNLP 2023/NAACL 2024).
+**Research basis:** Widely circulated as "reverse prompting" in practitioner communities (2023–2024). Formalized academically as **FATA** (First Ask Then Answer), arXiv 2508.08308, August 2025 — showing ~40% improvement over standard prompting. Related to **Socratic Prompting** (Chang, arXiv 2303.08769, IEEE CCWC 2023).
 
 ## When to Use
 

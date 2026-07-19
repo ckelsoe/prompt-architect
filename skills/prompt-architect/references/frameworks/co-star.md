@@ -4,6 +4,8 @@
 
 CO-STAR is a comprehensive prompting framework that emphasizes context, audience, and communication style. It's particularly effective for content creation, writing tasks, and scenarios where tone and audience considerations significantly impact output quality.
 
+**Origin:** Developed by the Data Science & AI team at GovTech (Government Technology Agency of Singapore), and popularized by Sheila Teo, who won GovTech's "Prompt Royale" — Singapore's first GPT-4 prompt engineering competition, 400+ participants, finale 8 November 2023. Teo credits the framework to GovTech rather than to herself: "The CO-STAR framework, a brainchild of GovTech Singapore's Data Science & AI team, is a handy template for structuring prompts." Practitioner framework — no controlled evaluation of CO-STAR has been published.
+
 ## Components
 
 ### C - Context

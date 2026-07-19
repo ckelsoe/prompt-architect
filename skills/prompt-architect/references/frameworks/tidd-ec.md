@@ -2,7 +2,9 @@
 
 ## Overview
 
-TIDD-EC is a precision-focused prompt engineering framework that excels in providing clear boundaries and actionable guidance through explicit "Dos and Don'ts." Originally documented alongside CO-STAR, it emphasizes clarity and specificity in task execution, making it ideal for tasks requiring detailed instructions and explicit constraints.
+TIDD-EC is a precision-focused prompt template that provides clear boundaries and actionable guidance through explicit "Dos and Don'ts." It emphasizes clarity and specificity in task execution, making it useful for tasks requiring detailed instructions and explicit constraints.
+
+**Origin:** Community convention, no verified originator. The earliest traceable appearance is "Mastering Prompt Engineering: A Guide to the CO-STAR and TIDD-EC Frameworks," published 5 February 2024 on Medium by the corporate account **Vivas.AI** (Vuram Technology Solutions Pvt. Ltd., Chennai). That post names no individual author and cites no source, introducing the framework only as "another framework emerges on the horizon." No earlier source, named originator, or published evaluation of TIDD-EC could be found. Not research-backed.
 
 **Key Strength**: Explicit positive (Do) and negative (Don't) guidance prevents errors and misinterpretations.
 
@@ -435,18 +437,29 @@ When applying TIDD-EC, verify:
 - [ ] Context includes relevant constraints
 - [ ] All components work together coherently
 
-## Research Sources
+## Provenance
 
-Based on authoritative sources documenting TIDD-EC alongside CO-STAR:
+TIDD-EC has no verified originator and no academic basis. The full traceable source set is three items, honestly assessed:
 
-1. **Mastering Prompt Engineering: A Guide to the CO-STAR and TIDD-EC Frameworks** - Vivas.AI, Medium
+1. **Vivas.AI, "Mastering Prompt Engineering: A Guide to the CO-STAR and TIDD-EC Frameworks"** — Medium, 5 February 2024
    - [https://vivasai01.medium.com/mastering-prompt-engineering-a-guide-to-the-co-star-and-tidd-ec-frameworks-3334588cb908](https://vivasai01.medium.com/mastering-prompt-engineering-a-guide-to-the-co-star-and-tidd-ec-frameworks-3334588cb908)
+   - *This is the origin, not corroboration of it.* Corporate account, no individual byline, no citations. Every later mention traces back here.
 
-2. **Mastering Prompt Engineering: A Guide to the CO-STAR and TIDD-EC Frameworks** - GPT Teams
+2. **GPT Teams, same title**
    - [https://gptteams.ai/articles/mastering-prompt-engineering-a-guide-to-the-co-star-and-tidd-ec-frameworks](https://gptteams.ai/articles/mastering-prompt-engineering-a-guide-to-the-co-star-and-tidd-ec-frameworks)
+   - *Not independent.* Same title and content as (1), carrying a Vivas.AI-affiliated byline and pointing readers back to vivas.ai. A same-organization republication; it adds no evidentiary weight.
 
-3. **In conversation with AI - when Prompt Engineering meets Linguistics** - Scott Logic Blog
+3. **Hélène Sauvé, "In conversation with AI — when Prompt Engineering meets Linguistics"** — Scott Logic, 12 July 2024
    - [https://blog.scottlogic.com/2024/07/12/when-prompt-engineering-meets-linguistics.html](https://blog.scottlogic.com/2024/07/12/when-prompt-engineering-meets-linguistics.html)
+   - *Passing mention only.* TIDD-EC appears in a single clause, and is expanded there **without the E and C**. Evidence the acronym circulated; not evidence of origin or efficacy.
+
+**These are not "authoritative sources."** They are one origin post, one republication of it, and one one-line mention. The template below remains practically useful — explicit Do/Don't constraints are a sound prompting tactic independent of this acronym — but the acronym itself carries no authority.
+
+**Correction:** an earlier version of this file said TIDD-EC was "originally documented alongside CO-STAR." That was misleading. CO-STAR is separately attributable to **GovTech Singapore's Data Science & AI team** (popularized by Sheila Teo). Teo's article does not mention TIDD-EC, and no GovTech or Teo source connects the two. The only link is that one Medium post happened to describe both frameworks in the same article — which is not shared provenance.
+
+**Naming caution:** "Vivas.AI" above (a Chennai company) is unrelated to "Fabio Vivas" (fvivas.com), cited in `rise.md`. Do not merge them.
+
+**Confusable:** exabytes.my documents **TID-EC** = Task, Input, Desired Output, Example, Context. Different acronym, different framework.
 
 ## Key Takeaways
 

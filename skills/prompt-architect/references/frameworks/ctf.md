@@ -4,6 +4,8 @@
 
 CTF is a simple 3-component framework focused on situational context, task clarity, and output format. It is ideal for tasks where background/situation is more important than AI persona framing, and the primary concern is getting a clearly defined output from a well-understood context.
 
+**Origin:** No single documented originator. CTF appears in the community framework literature as a variant of RTF, with Context substituted for Role, documented alongside it in unattributed practitioner listings from 2024 onward (e.g. fvivas.com, 15 March 2024). No academic treatment; absent from The Prompt Report (arXiv 2406.06608).
+
 ## Components
 
 ### C - Context
@@ -168,7 +170,7 @@ Markdown template with:
 - ❌ Audience and tone are critical (use CO-STAR)
 - ❌ Multi-step process with methodology needed (use RISEN)
 - ❌ Explicit dos/don'ts required (use TIDD-EC)
-- ❌ Input→output transformation (use RISE-IE)
+- ❌ Input→output transformation (use RISE — the Role/Input/Steps/Expectation form)
 
 ## CTF vs RTF
 

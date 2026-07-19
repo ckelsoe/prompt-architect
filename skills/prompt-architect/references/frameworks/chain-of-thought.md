@@ -4,6 +4,8 @@
 
 Chain of Thought is a prompting technique that encourages step-by-step reasoning and makes the thinking process explicit. Instead of jumping to answers, it guides Claude to break down complex problems, show intermediate steps, and verify logic along the way.
 
+**Research basis:** "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models" (Wei et al., Google Research, arXiv 2201.11903, NeurIPS 2022). Prompting PaLM 540B with eight chain-of-thought exemplars raised GSM8K accuracy from 17.9% with standard prompting to 56.9%, beating the prior fine-tuned state of the art of 55% (GPT-3 plus a verifier, Cobbe et al. 2021).
+
 ## Core Concept
 
 CoT works by:
@@ -319,24 +321,27 @@ STEPS:
 ### Self-Consistency
 Generate multiple reasoning paths and choose the most common answer:
 
+**Research basis:** "Self-Consistency Improves Chain of Thought Reasoning in Language Models" (Wang et al., arXiv 2203.11171, ICLR 2023). Sample a diverse set of reasoning paths rather than greedy-decoding one, then "marginalize out the reasoning paths and aggregate by choosing the most consistent answer in the final answer set." On PaLM 540B / GSM8K, a majority vote over 40 sampled paths reached 74.4% versus 56.5% for greedy CoT decoding (+17.9 points); an unweighted majority vote matched or beat every weighted aggregation the authors tested.
+
+The mechanism is **sampling the same prompt repeatedly and taking a majority vote** — not asking the model to try different methods and then judge which it likes best. Self-assessment is a different (and weaker) technique; the model is not a reliable judge of its own reasoning.
+
 ```
-Solve this problem using three different approaches:
+Solve this problem. Show your step-by-step reasoning, then state your final
+answer on its own line as:
 
-APPROACH 1:
-[Method 1 with step-by-step reasoning]
+FINAL ANSWER: [answer]
 
-APPROACH 2:
-[Method 2 with step-by-step reasoning]
-
-APPROACH 3:
-[Method 3 with step-by-step reasoning]
-
-COMPARISON:
-Which approach is most reliable and why?
-
-FINAL ANSWER:
-Based on the most consistent result.
+[Problem]
 ```
+
+Run this **same prompt N times at non-zero temperature** (the paper samples 40; 5-10 is usually enough in practice, and temperature ~0.7 is a reasonable default). Then aggregate outside the model:
+
+1. Extract the `FINAL ANSWER:` value from each of the N samples
+2. Count how often each distinct answer appears
+3. Return the most frequent answer — a plain, unweighted majority vote
+4. Treat a near-tie as a signal of genuine uncertainty, not as a reason to ask the model to break the tie
+
+Do **not** ask the model to compare its own paths and pick the best one. The diversity of independently sampled reasoning is what produces the gain; collapsing it into a single self-judgment discards exactly the signal the method depends on.
 
 ### Uncertainty Quantification
 ```

@@ -1,7 +1,7 @@
 {
   "name": "prompt-architect",
-  "description": "27-framework prompt engineering skill for analyzing and improving prompts across 7 intent categories",
-  "version": "3.2.2",
+  "description": "29-framework prompt engineering skill for analyzing and improving prompts across 7 intent categories",
+  "version": "3.3.0",
   "author": {
     "name": "Charles Kelsoe",
     "email": "charles@kelsoe.com"
