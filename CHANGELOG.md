@@ -5,6 +5,15 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.1] - 2026-07-19
+
+### Fixed
+- **Publishing was broken before this release and would have failed for any version.** `.github/workflows/publish.yml` pinned Node 20 while running `npm install -g npm@latest`; once npm 12 shipped (requiring `^22.22.2 || ^24.15.0 || >=26`), that step failed with `EBADENGINE` before the publish ran. The workflow now uses Node 24. This is why 3.3.0 has no published artifact — its tag exists, but the release never completed.
+
+*All 3.3.0 changes below are included in this release.*
+
+---
+
 ## [3.3.0] - 2026-07-19
 
 ### Added

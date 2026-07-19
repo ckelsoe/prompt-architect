@@ -20,7 +20,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Must stay on a line that current npm supports: npm@latest (12.x)
+          # requires ^22.22.2 || ^24.15.0 || >=26. Pinning '20' here silently
+          # broke publishing when npm 12 shipped — the upgrade step below fails
+          # with EBADENGINE before anything is published.
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Upgrade npm for OIDC Trusted Publishing
