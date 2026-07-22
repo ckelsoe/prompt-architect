@@ -45,29 +45,52 @@ jobs:
       - name: Publish to npm
         run: npm publish --provenance --access public
 
+      - name: Generate release notes from CHANGELOG
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          # Extract this version's section body: everything between its
+          # '## [x.y.z]' header and the next '## [' header, dropping the header
+          # line itself, '---' rules, and leading blank lines.
+          awk -v ver="$VERSION" '
+            /^## \[/ { if (p) exit; if (index($0, "## [" ver "]") == 1) { p=1; next } }
+            p {
+              if ($0 == "---") next
+              if (!seen && $0 ~ /^[[:space:]]*$/) next
+              seen=1; print
+            }
+          ' CHANGELOG.md > release_notes.md
+          # Guard: never publish an empty body. A missing section means the tag
+          # was cut without a matching CHANGELOG entry — fail so it gets fixed.
+          if ! grep -q '[^[:space:]]' release_notes.md; then
+            echo "::error::No CHANGELOG.md section found for version $VERSION. Add a '## [$VERSION]' entry before tagging."
+            exit 1
+          fi
+          # Append install instructions below the changelog section.
+          cat >> release_notes.md <<'EOF'
+
+          ## Installation
+
+          **npm (interactive multi-agent installer):**
+          ```bash
+          npm install -g @ckelsoe/prompt-architect
+          npx @ckelsoe/prompt-architect
+          ```
+
+          **ChatGPT / Gemini CLI / Agent Skills:**
+          Download `prompt-architect.skill` below and upload to your tool.
+
+          **Claude Code Plugin:**
+          ```
+          /plugin marketplace add ckelsoe/prompt-architect
+          /plugin install prompt-architect@prompt-architect-marketplace
+          ```
+          EOF
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           name: Release ${{ github.ref_name }}
           files: prompt-architect.skill
-          body: |
-            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
-
-            ## Installation
-
-            **npm (interactive multi-agent installer):**
-            ```bash
-            npm install -g @ckelsoe/prompt-architect
-            npx @ckelsoe/prompt-architect
-            ```
-
-            **ChatGPT / Gemini CLI / Agent Skills:**
-            Download `prompt-architect.skill` below and upload to your tool.
-
-            **Claude Code Plugin:**
-            ```
-            /plugin marketplace add ckelsoe/prompt-architect
-            /plugin install prompt-architect@prompt-architect-marketplace
-            ```
+          body_path: release_notes.md
           draft: false
           prerelease: false
