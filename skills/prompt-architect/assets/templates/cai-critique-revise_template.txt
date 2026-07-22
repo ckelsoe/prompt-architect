@@ -1,18 +1,26 @@
-PRINCIPLE:
-[State the specific standard the output must satisfy — be precise and measurable]
+You are enforcing a stated principle against an existing piece of writing. This is a
+two-phase task: write a critique, then write a revision. Do not skip the critique and go
+straight to the rewrite, and do not merge the two.
 
-INITIAL OUTPUT:
-[The output to evaluate — AI-generated or human-written]
+PRINCIPLE:
+The principle to enforce is this:
+[State the standard the output must satisfy — one principle or a small set — as complete
+sentences whose compliance a reader could check. Be precise and measurable.]
+
+SOURCE MATERIAL:
+[Paste the output to be critiqued here — AI-generated or human-written.]
+Use the material above as the text to be critiqued and revised for the work described
+below.
 
 CRITIQUE:
-Identify specific ways the output above violates or falls short of the
-principle stated above.
+Before rewriting anything, identify the specific ways the material above violates or falls
+short of the principle.
 - Quote the specific passages that are problematic
 - Explain precisely why each passage violates the principle
-- Focus only on failures against the principle (not general quality)
+- Focus only on failures against the principle, not general quality
 
 REVISION:
-Rewrite the output to fully satisfy the principle.
+Then rewrite the material above so it fully satisfies the principle.
 - Address every critique point identified above
 - Preserve all content that already satisfies the principle
-- Do not introduce new violations of the principle
+- Do not introduce new violations

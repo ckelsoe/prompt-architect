@@ -1,3 +1,7 @@
+SOURCE MATERIAL:
+[Optional — include only if this task works from material you already have. Paste the source document, data, or draft this task operates on here. If you have nothing to paste, delete this bracketed block along with the sentence directly below it.]
+Use the material above as the factual basis for the work described below.
+
 CONTEXT:
 [Who you are, the situation you're in, and why this task exists]
 

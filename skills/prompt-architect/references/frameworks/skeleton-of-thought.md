@@ -34,21 +34,47 @@ Point X: [point name] — [one-line description]
 
 ## Template Structure
 
-```
-PHASE 1 — SKELETON:
-Generate a skeleton outline for the following question. List only key points,
-one per line, in the format: [number]. [Point name] | [One-sentence description].
-Do not expand yet.
+Section headers are stripped at emission, so every header's meaning is carried by
+unbracketed prose that ships with the prompt. Do not reintroduce header-only structure.
 
-QUESTION/TOPIC:
-[Your question or topic]
+```
+SOURCE MATERIAL:
+[Optional — paste the document, data, or notes the answer must be drawn from here. If you
+have nothing to paste, delete this bracketed block along with the sentence directly below
+it.]
+Use the material above as the factual basis for the work described below.
+
+Answer the topic or question below in two phases: first a skeleton outline, then a full
+expansion of every point in that skeleton.
+
+TOPIC / QUESTION:
+[Write out the full topic or question as a complete, self-contained sentence rather than a
+bare noun phrase, including any audience, scope, or depth of coverage specified]
+
+PHASE 1 — SKELETON:
+First, outline the topic above. List only the key points, one per line, in this format:
+N. [Point name] | [One-sentence description of what this point covers]
+Replace N with the point's number and fill in both bracketed parts, keeping that line's
+format exactly. Produce the skeleton and nothing else — do not expand any point yet.
 
 PHASE 2 — EXPAND:
-Now expand each point into [2-4 sentences / a paragraph / detailed explanation].
-Each point should be self-contained and complete.
-
-[Optional: expand points in parallel by sending each as a separate request]
+Once the skeleton is complete, expand each of its points into [2-4 sentences / a paragraph /
+detailed coverage]. Restate a point's name before expanding it, and make each expansion
+self-contained.
 ```
+
+The two-phase framing sentence sits before `TOPIC / QUESTION` so that both phases are
+announced before the topic appears; the topic in turn sits before both phases so that
+Phase 1's "the topic above" resolves once the headers are gone.
+
+**Parallel expansion is not part of the emitted prompt.** The template runs both phases in
+a single self-contained prompt. Splitting Phase 2 into one request per skeleton point — the
+source of the paper's latency gain — is a workflow the sender builds around the model, not
+an instruction the model can act on. A line such as "[Optional: expand points in parallel by
+sending each as a separate request]" addresses the human holding the prompt, and a
+header-stripped prompt has nowhere to put a note to the sender: the model would read it as
+an instruction it cannot execute. If that note is ever added for the sender's benefit, it
+must be deleted before the prompt is sent.
 
 ### Minimal Single-Pass SoT
 For use in a single prompt when parallel API calls aren't available:
@@ -67,14 +93,23 @@ Present as: Skeleton → then Full Expansion.
 
 **After SoT:**
 ```
+Answer the topic or question below in two phases: first a skeleton outline, then a full
+expansion of every point in that skeleton.
+
+TOPIC / QUESTION:
+Explain microservices architecture to a senior engineer who is evaluating whether to
+migrate an existing monolith, covering the trade-offs that bear on that decision.
+
 PHASE 1 — SKELETON:
-Create a skeleton outline for explaining microservices architecture to a
-senior engineer evaluating whether to migrate from a monolith. List 5-7 key
-points in format: N. [name] | [one-sentence description]. Do not expand.
+First, outline the topic above. List 5-7 key points, one per line, in this format:
+N. [Point name] | [One-sentence description of what this point covers]
+Replace N with the point's number and fill in both bracketed parts, keeping that line's
+format exactly. Produce the skeleton and nothing else — do not expand any point yet.
 
 PHASE 2 — EXPAND:
-Expand each skeleton point into 2-3 paragraphs. Each section should be
-self-contained. Include specific trade-offs relevant to a migration decision.
+Once the skeleton is complete, expand each of its points into 2-3 paragraphs. Restate a
+point's name before expanding it, and make each expansion self-contained. Include the
+specific trade-offs that bear on a migration decision.
 ```
 
 **Skeleton output (Phase 1):**
@@ -104,15 +139,26 @@ risk of scope creep, integration failures, and a multi-month feature freeze...
 
 **After SoT:**
 ```
+Answer the topic or question below in two phases: first a skeleton outline, then a full
+expansion of every point in that skeleton.
+
+TOPIC / QUESTION:
+Write a competitive analysis comparing our product against [you fill this in: name of the
+first competitor] and [you fill this in: name of the second competitor], for an internal
+audience deciding where to invest next.
+
 PHASE 1 — SKELETON:
-Create a skeleton for a competitive analysis covering our product vs. [Competitor A]
-and [Competitor B]. List 6-8 comparison dimensions in format:
-N. [dimension] | [what to compare]. Do not write the analysis yet.
+First, outline the topic above. List 6-8 comparison dimensions, one per line, in this
+format:
+N. [Dimension name] | [One-sentence description of what to compare on that dimension]
+Replace N with the dimension's number and fill in both bracketed parts, keeping that line's
+format exactly. Produce the skeleton and nothing else — do not write the analysis yet.
 
 PHASE 2 — EXPAND:
-For each dimension, write 1 paragraph analyzing how our product compares on that
-dimension. Include specific, concrete observations. Flag any dimension where we
-have a clear advantage or significant gap.
+Once the skeleton is complete, expand each dimension into one paragraph analyzing how our
+product compares on it. Restate the dimension's name before expanding it, and make each
+expansion self-contained. Use specific, concrete observations, and flag any dimension where
+we have a clear advantage or a significant gap.
 ```
 
 ### Example 3: Learning Content

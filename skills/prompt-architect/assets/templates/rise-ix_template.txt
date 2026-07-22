@@ -21,8 +21,8 @@ EXAMPLES:
 - Successful outputs from similar tasks
 - 2-3 concrete examples recommended]
 
-Example 1: [First reference example demonstrating desired output]
+Example 1: [Paste the first reference sample here — the actual piece whose style and format the output should match, not a description of it]
 
-Example 2: [Second reference example showing format/style to match]
+Example 2: [Paste a second reference sample here]
 
-[Optional] Example 3: [Third example if additional clarity needed]
+Example 3: [Optional — paste a third reference sample here if more clarity is needed. If you only have two, delete this line and the blank line above it.]

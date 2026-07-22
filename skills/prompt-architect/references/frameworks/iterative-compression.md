@@ -34,91 +34,6 @@ Think of it as "progressive enhancement" for prompts.
 - Time-critical quick tasks
 - Tasks with fixed formats that can't improve
 
-## Implementation Approaches
-
-### Approach 1: Explicit Multi-Pass
-Request multiple iterations upfront.
-
-**Example:**
-```
-Create a summary of this article using Iterative Compression:
-
-ITERATION 1:
-Write a verbose summary hitting all main points (150-200 words)
-
-ITERATION 2:
-Refine the summary: increase information density, remove redundancy, keep it under 150 words
-
-ITERATION 3:
-Further refine: make every word count, increase precision, keep it under 120 words
-
-ITERATION 4:
-Final pass: maximize information density while maintaining clarity (100 words max)
-
-ITERATION 5:
-Ultimate compression: distill to absolute essentials (50 words max)
-
-After all iterations, explain what improved in each pass.
-```
-
-### Approach 2: Recursive Refinement
-Use output from one iteration as input to the next.
-
-**Example:**
-```
-PASS 1: Write a first draft explanation of quantum entanglement for a general audience.
-
-PASS 2: Review your explanation. What's unclear? What's redundant? Rewrite it, addressing these issues.
-
-PASS 3: Review again. Where can you be more precise? Where can you use better examples? Rewrite.
-
-PASS 4: Final review. Every sentence should earn its place. Remove or improve anything that doesn't. Final version.
-
-Show all passes so we can see the evolution.
-```
-
-### Approach 3: Targeted Improvement
-Focus each iteration on specific aspect.
-
-**Example:**
-```
-Write a product description, then improve it iteratively:
-
-DRAFT:
-[Initial version]
-
-ITERATION 1 - CLARITY:
-Rewrite focusing on making it clearer and easier to understand.
-
-ITERATION 2 - IMPACT:
-Rewrite focusing on making it more compelling and persuasive.
-
-ITERATION 3 - CONCISION:
-Rewrite focusing on removing every unnecessary word.
-
-ITERATION 4 - PRECISION:
-Rewrite focusing on being more specific and accurate.
-
-FINAL:
-Combine the best elements from all iterations.
-```
-
-### Approach 4: Constraint-Based Refinement
-Add tighter constraints with each iteration.
-
-**Example:**
-```
-Explain this technical concept through progressive refinement:
-
-VERSION 1: Explain in 500 words or less
-VERSION 2: Reduce to 300 words without losing key information
-VERSION 3: Reduce to 150 words, keeping only essentials
-VERSION 4: Create a 50-word version capturing the core idea
-VERSION 5: One sentence (25 words max)
-
-Each version should be complete and self-contained.
-```
-
 ## Best Practices
 
 ### 1. Define What to Optimize
@@ -161,7 +76,74 @@ Poor:
 "Make it shorter"
 ```
 
+## Template Structure
+
+Section headers are stripped at emission, along with the divider rules that separate them in the shipped `.txt`, so every slot's meaning is carried by the unbracketed prose that travels with it rather than by the header above it. The one exception is the `Iteration 1:` / `Iteration 2:` / `Iteration 3:` labels — those are literal labels inside the protocol, not section headers, and they must survive into the emitted prompt exactly as written.
+
+```
+SOURCE MATERIAL:
+[Paste the full text to be compressed here.]
+Use the material above as the text to be compressed for the work described below.
+Every version must be a rewrite of that material — never introduce a claim it does
+not support.
+
+OPTIMIZATION GOAL:
+Every pass must move the text toward this goal:
+[A full sentence naming what improves and by how much, not a bare label like
+"concision." For example: "Reduce word count by 20% each pass while retaining all key
+information," or "Raise information density — cut filler until every sentence earns
+its place."]
+
+TARGET:
+The final version must reach this end state:
+[A phrase completing the sentence above, e.g. "under 150 words and readable by a
+non-specialist." Name the unit, not a bare number.]
+
+NUMBER OF ITERATIONS:
+Run this many passes in total:
+[The count as a phrase completing the sentence above, e.g. "three passes."
+Typical: 2-4]
+Iteration 1: [What this first pass must do to the source text, as a full sentence.]
+Iteration 2: [How this pass tightens the result of pass 1, as a full sentence.]
+Iteration 3: [Optional — what this final polish pass must do, as a full sentence.
+Delete this line if running fewer than three passes; add further Iteration lines in
+the same form if running more.]
+
+ITERATION INSTRUCTIONS:
+In each pass, identify what can be cut, compressed, or clarified, apply the changes,
+then check both that the result serves the goal above better than the version before
+it and that nothing the goal requires keeping was lost. Stop when [a clause completing
+this sentence, e.g. "no filler words remain" or "all three passes are complete"].
+
+OUTPUT FORMAT:
+Deliver the final version in this format:
+[A phrase completing the sentence above, e.g. "a single paragraph of continuous
+prose," a bullet list, or a one-sentence summary.]
+
+INTERMEDIATE VERSIONS:
+[Optional — keep exactly one of these two sentences as the entire content of this
+block, or delete the block: "Show the output of every iteration in order, labelled by
+pass number." / "Show only the final version — do not print the intermediate
+passes."]
+
+Compression has a floor. Past a point, passes strip meaning rather than filler. If a
+pass would remove something a reader needs, stop at the previous version and deliver
+that.
+```
+
+Two slots behave differently from their counterparts in other frameworks in this package. `SOURCE MATERIAL` is **not** optional here — several frameworks let you delete that block when you have nothing to paste, but this one cannot: compression is defined as a rewrite of supplied text, so with no source there is nothing to compress. `INTERMEDIATE VERSIONS` is the opposite — it is genuinely optional, and when kept it takes exactly one of the two supplied sentences as its entire content rather than free-form instructions.
+
+The closing paragraph about compression's floor is unbracketed prose, not a fillable slot. It ships verbatim in every emitted prompt and is the stopping condition that keeps the last pass from stripping meaning.
+
+The `Iteration N:` lines admit two shapes. A **length ladder** names a shrinking word count for each pass (200 → 150 → 100 → 75), which suits material with a hard limit to hit. **Progressive tightening** instead names what each pass removes — restatement first, then inferable detail, then hedges — which suits material where the floor matters more than the number. Either shape is on-method; what is not is assigning each pass a *different quality dimension* (clarity, then impact, then tone). That is multi-dimensional refinement rather than compression, the text does not get shorter, and it is what `self-refine.md` is for. Use this framework only when the text should shrink.
+
 ## Complete Examples
+
+Every example below is shown in emitted form: each slot carries its own role in prose.
+Read the section headers as scaffolding that will be deleted — the examples are written
+so that nothing is lost when it is. The `Iteration N:` lines are the exception: they are
+literal labels inside the protocol, not section headers, and they survive emission
+exactly as written.
 
 ### Example 1: Summarization
 
@@ -172,32 +154,49 @@ Summarize this research paper.
 
 **With Iterative Compression:**
 ```
-Summarize this research paper using Iterative Compression:
+SOURCE MATERIAL:
+[Paste the full text of the research paper here]
+Use the material above as the text to be compressed for the work described below.
+Every version must be a rewrite of that material — never introduce a claim it does
+not support.
 
-[Paper content]
+OPTIMIZATION GOAL:
+Every pass must move the text toward this goal:
+Cut roughly a quarter of the word count on each pass while retaining every finding,
+the method that produced it, and the limitations the authors state.
 
-ITERATION 1 (200 words):
-Create a comprehensive summary covering all major points. Prioritize completeness over brevity.
+TARGET:
+The final version must reach this end state:
+Under 75 words, covering the core findings, and readable by someone outside the field.
 
-ITERATION 2 (150 words):
-Refine the summary:
-- Remove redundant information
-- Combine related points
-- Increase information density
+NUMBER OF ITERATIONS:
+Run this many passes in total:
+four passes.
+Iteration 1: Write a comprehensive summary of roughly 200 words covering every major
+point, prioritizing completeness over brevity.
+Iteration 2: Cut that summary to roughly 150 words by removing repeated information
+and combining related points.
+Iteration 3: Cut to roughly 100 words, keeping only what a reader needs in order to
+understand what was found and how it was established.
+Iteration 4: Cut to 75 words, distilling to the core findings while preserving the
+numbers and qualifiers that keep them accurate.
 
-ITERATION 3 (100 words):
-Further compression:
-- Keep only essential information
-- Make every sentence count
-- Maintain accuracy
+ITERATION INSTRUCTIONS:
+In each pass, identify what can be cut, compressed, or clarified, apply the changes,
+then check both that the result serves the goal above better than the version before
+it and that nothing the goal requires keeping was lost. Stop when all four passes are
+complete.
 
-ITERATION 4 (75 words):
-Maximum density:
-- Distill to core findings
-- Remove all fluff
-- Preserve critical details
+OUTPUT FORMAT:
+Deliver the final version in this format:
+a single paragraph of continuous prose.
 
-For each iteration, highlight what you removed and why.
+INTERMEDIATE VERSIONS:
+Show the output of every iteration in order, labelled by pass number.
+
+Compression has a floor. Past a point, passes strip meaning rather than filler. If a
+pass would remove something a reader needs, stop at the previous version and deliver
+that.
 ```
 
 ### Example 2: Code Documentation
@@ -209,26 +208,50 @@ Document this function.
 
 **With Iterative Compression:**
 ```
-Document this function through iterative refinement:
+SOURCE MATERIAL:
+[Paste the function's signature and its existing documentation here]
+Use the material above as the text to be compressed for the work described below.
+Every version must be a rewrite of that material — never introduce a claim it does
+not support.
 
-[Code]
+OPTIMIZATION GOAL:
+Every pass must move the text toward this goal:
+Cut length while keeping every parameter, return value, raised exception, and edge
+case a caller must know about — remove restatement of what the signature already
+shows, not the behaviour it does not.
 
-DRAFT DOCUMENTATION:
-Write complete documentation with examples, edge cases, everything.
+TARGET:
+The final version must reach this end state:
+Under 120 words, readable without scrolling, and complete enough that a caller never
+has to open the implementation.
 
-ITERATION 1 - CLARITY:
-Review and rewrite confusing sections. Add examples where helpful.
+NUMBER OF ITERATIONS:
+Run this many passes in total:
+three passes.
+Iteration 1: Cut every sentence that restates the signature or names types the
+signature already declares.
+Iteration 2: Merge the remaining prose so each parameter, return value, and raised
+exception is described exactly once, in one place.
+Iteration 3: Cut to 120 words by reducing the examples to the single shortest call
+that still shows the edge case a caller is most likely to hit.
 
-ITERATION 2 - CONCISION:
-Remove redundancy. Combine related points. Make it tighter.
+ITERATION INSTRUCTIONS:
+In each pass, identify what can be cut, compressed, or clarified, apply the changes,
+then check both that the result serves the goal above better than the version before
+it and that nothing the goal requires keeping was lost. Stop when all three passes are
+complete.
 
-ITERATION 3 - PRECISION:
-Be more specific about types, behaviors, edge cases.
+OUTPUT FORMAT:
+Deliver the final version in this format:
+a docstring with a one-line summary, a parameter list, a return description, and at
+most one example.
 
-ITERATION 4 - USABILITY:
-Optimize for developer experience. What do they need to know most?
+INTERMEDIATE VERSIONS:
+Show only the final version — do not print the intermediate passes.
 
-Show each version and explain key changes.
+Compression has a floor. Past a point, passes strip meaning rather than filler. If a
+pass would remove something a reader needs, stop at the previous version and deliver
+that.
 ```
 
 ### Example 3: Email Refinement
@@ -240,24 +263,48 @@ Write an email announcing this feature.
 
 **With Iterative Compression:**
 ```
-Draft an announcement email, then refine it:
+SOURCE MATERIAL:
+[Paste the full draft of the announcement email here]
+Use the material above as the text to be compressed for the work described below.
+Every version must be a rewrite of that material — never introduce a claim it does
+not support.
 
-DRAFT:
-Write a first draft covering all important information.
+OPTIMIZATION GOAL:
+Every pass must move the text toward this goal:
+Cut roughly a third of the word count on each pass while keeping what the feature
+does, who it affects, when it ships, and what the reader has to do about it.
 
-ITERATION 1 - STRUCTURE:
-Reorganize for better flow. Most important information first.
+TARGET:
+The final version must reach this end state:
+Under 120 words, scannable in fifteen seconds, with the action the reader must take
+stated in the first two sentences.
 
-ITERATION 2 - CLARITY:
-Simplify language. Remove jargon. Make it scannable.
+NUMBER OF ITERATIONS:
+Run this many passes in total:
+three passes.
+Iteration 1: Move the action the reader must take to the opening and cut the
+throat-clearing that currently precedes it.
+Iteration 2: Cut the background to the single sentence a reader needs in order to
+understand why the change is happening.
+Iteration 3: Cut to 120 words by removing hedges, restated benefits, and any sentence
+whose removal a reader would not notice.
 
-ITERATION 3 - ENGAGEMENT:
-Strengthen the call-to-action. Make it more compelling.
+ITERATION INSTRUCTIONS:
+In each pass, identify what can be cut, compressed, or clarified, apply the changes,
+then check both that the result serves the goal above better than the version before
+it and that nothing the goal requires keeping was lost. Stop when all three passes are
+complete.
 
-ITERATION 4 - POLISH:
-Final edits for tone, concision, impact.
+OUTPUT FORMAT:
+Deliver the final version in this format:
+a subject line followed by no more than three short paragraphs.
 
-Show the evolution and explain major changes.
+INTERMEDIATE VERSIONS:
+Show the output of every iteration in order, labelled by pass number.
+
+Compression has a floor. Past a point, passes strip meaning rather than filler. If a
+pass would remove something a reader needs, stop at the previous version and deliver
+that.
 ```
 
 ### Example 4: Technical Explanation
@@ -269,129 +316,49 @@ Explain how this algorithm works.
 
 **With Iterative Compression:**
 ```
-Explain this algorithm through progressive refinement:
+SOURCE MATERIAL:
+[Paste the full existing explanation of the algorithm here]
+Use the material above as the text to be compressed for the work described below.
+Every version must be a rewrite of that material — never introduce a claim it does
+not support.
 
-PASS 1 - COMPREHENSIVE:
-Explain thoroughly, assuming no prior knowledge. Include:
-- What it does
-- How it works
-- Why it's designed this way
-- Example walkthrough
+OPTIMIZATION GOAL:
+Every pass must move the text toward this goal:
+Roughly halve the word count on each pass while keeping the algorithm's inputs, its
+outputs, the step that does the real work, and its complexity.
 
-PASS 2 - REFINED:
-Review Pass 1. What's unclear? What's redundant? Rewrite addressing these.
+TARGET:
+The final version must reach this end state:
+Under 100 words, understandable by a developer who has never seen the algorithm, with
+no step omitted that they would need in order to implement it.
 
-PASS 3 - OPTIMIZED:
-Make it maximally clear and concise. Every paragraph must earn its place.
+NUMBER OF ITERATIONS:
+Run this many passes in total:
+three passes.
+Iteration 1: Cut to roughly 400 words by removing history, motivation, and
+comparisons to other algorithms.
+Iteration 2: Cut to roughly 200 words by reducing the worked example to its shortest
+form and dropping any step the reader can infer from the ones around it.
+Iteration 3: Cut to 100 words, keeping the inputs, the outputs, the central step, and
+the complexity, and nothing else.
 
-PASS 4 - POLISHED:
-Final pass. Perfect clarity, zero fluff, optimal examples.
+ITERATION INSTRUCTIONS:
+In each pass, identify what can be cut, compressed, or clarified, apply the changes,
+then check both that the result serves the goal above better than the version before
+it and that nothing the goal requires keeping was lost. Stop when all three passes are
+complete.
 
-Show all passes and note significant improvements.
-```
+OUTPUT FORMAT:
+Deliver the final version in this format:
+a numbered list of steps followed by one sentence naming the time and space
+complexity.
 
-## Combining Iterative Compression with Other Frameworks
+INTERMEDIATE VERSIONS:
+Show the output of every iteration in order, labelled by pass number.
 
-### Iterative Compression + CO-STAR
-```
-CONTEXT: [Background]
-OBJECTIVE: [Goal]
-STYLE: [Writing style]
-TONE: [Tone]
-AUDIENCE: [Readers]
-
-RESPONSE PROCESS (Iterative Compression):
-Draft 1: [Comprehensive version]
-Draft 2: [Refined for clarity]
-Draft 3: [Optimized for audience]
-Draft 4: [Final polished version]
-```
-
-### Iterative Compression + RISEN
-```
-ROLE: [Expertise]
-INSTRUCTIONS: Use iterative refinement
-STEPS:
-1. Create initial version
-2. Review and identify weaknesses
-3. Refine addressing weaknesses
-4. Repeat until optimal
-END GOAL: [Final quality criteria]
-NARROWING: [Constraints on iterations]
-```
-
-### Iterative Compression + Chain of Thought
-```
-For each iteration of Iterative Compression, use Chain of Thought:
-
-ITERATION 1:
-Think through: What should this initial version include?
-[Create version]
-
-ITERATION 2:
-Think through: What weaknesses exist? How to address them?
-[Refine version]
-
-ITERATION 3:
-Think through: What can be compressed or improved?
-[Further refine]
-```
-
-## Advanced Techniques
-
-### Aspect-Focused Iteration
-Each iteration improves a different dimension:
-
-```
-ITERATION 1 - ACCURACY: Get the facts right
-ITERATION 2 - CLARITY: Make it understandable
-ITERATION 3 - CONCISION: Remove waste
-ITERATION 4 - IMPACT: Make it compelling
-ITERATION 5 - STYLE: Polish the voice
-```
-
-### A/B Iteration Branches
-Create alternative versions and merge best parts:
-
-```
-DRAFT: [Initial version]
-
-BRANCH A - CONCISION:
-[Optimize for brevity]
-
-BRANCH B - COMPLETENESS:
-[Optimize for thoroughness]
-
-MERGE:
-Combine the best elements of both branches.
-```
-
-### Constrained Progressive Compression
-```
-VERSION 1: 1000 words - Complete explanation
-VERSION 2: 500 words - 50% compression
-VERSION 3: 250 words - 75% compression
-VERSION 4: 100 words - 90% compression
-VERSION 5: 25 words - 97.5% compression
-
-Each version must be self-contained and accurate.
-```
-
-### Quality Metric Iteration
-```
-ITERATION 1:
-[Create initial version]
-Self-assess (1-10): Clarity ___ Concision ___ Accuracy ___ Impact ___
-
-ITERATION 2:
-[Improve lowest scoring dimension]
-Self-assess: Clarity ___ Concision ___ Accuracy ___ Impact ___
-
-ITERATION 3:
-[Improve next lowest dimension]
-Self-assess: Clarity ___ Concision ___ Accuracy ___ Impact ___
-
-Continue until all metrics > 8
+Compression has a floor. Past a point, passes strip meaning rather than filler. If a
+pass would remove something a reader needs, stop at the previous version and deliver
+that.
 ```
 
 ## Refinement Strategies

@@ -4,11 +4,13 @@
 
 CRISPE is a comprehensive general-purpose prompting framework covering six dimensions: Capacity and Role, Insight, Instructions, Personality, and Experiment. Its defining feature — the **Experiment** component — sets it apart from similar frameworks by explicitly asking the AI to produce multiple variants, approaches, or versions, enabling the user to compare and choose the best output rather than accepting a single answer.
 
-**Origin:** Developed by Matt Nigh (community framework, 2022). Since adopted in clinical AI literature (cited in PMC peer-reviewed medical AI studies, 2024-2025) and educational technology research (Springer, 2025).
+**Origin:** Community framework, commonly attributed to Matt Nigh (2022). No primary source for that attribution has been verified for this package. Practitioner framework — no controlled evaluation of CRISPE has been published.
+
+*Correction:* an earlier version of this file stated that CRISPE was "cited in PMC peer-reviewed medical AI studies, 2024-2025" and in "educational technology research (Springer, 2025)." Those claims named no title, author, DOI, or PMCID and were not checkable as written, so they have been removed. Being *mentioned* in a paper would not constitute evaluation of the framework in any case.
 
 ## Components
 
-### C — Capacity and Role
+### C, R — Capacity and Role
 **Purpose:** Define the expertise level and professional role the AI should embody. More specific than a simple "you are a..." — it combines the *type* of expertise with the *level* of sophistication expected.
 
 **Questions to Ask:**
@@ -21,7 +23,7 @@ CRISPE is a comprehensive general-purpose prompting framework covering six dimen
 - "You are a senior software architect specializing in distributed systems..."
 - "Act as a world-class UX researcher who has run hundreds of user interviews..."
 
-### R — Insight
+### I — Insight
 **Purpose:** Provide the background context, data, or knowledge the AI needs to perform the task effectively. This is the "briefing" — what you'd tell a new consultant before they start work.
 
 **Questions to Ask:**
@@ -34,7 +36,7 @@ CRISPE is a comprehensive general-purpose prompting framework covering six dimen
 - "Context: our team uses Python exclusively, we have a 3-month deadline, and our infrastructure is AWS..."
 - "Background: this is for a Series A startup pitching to enterprise buyers for the first time..."
 
-### I — Instructions
+### S — Instructions
 **Purpose:** State clearly and specifically what the AI should do. The task itself, with enough detail to remove ambiguity.
 
 **Questions to Ask:**
@@ -47,7 +49,7 @@ CRISPE is a comprehensive general-purpose prompting framework covering six dimen
 - "Create a technical design document for this feature..."
 - "Analyze this data and identify the top 3 risk factors..."
 
-### S — Personality (Style)
+### P — Personality (Style)
 **Purpose:** Define the tone, voice, and communication style of the response. Sets how the output should *feel* — the personality it should embody.
 
 **Questions to Ask:**

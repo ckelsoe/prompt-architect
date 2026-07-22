@@ -2,7 +2,7 @@
 
 ## Overview
 
-RISE is a streamlined 4-component framework for structuring prompts around a role, the material to work from, a process, and a target output. This skill supports two variants, described below.
+RISE is a streamlined 4-component framework for structuring prompts around a role, the material to work from, a process, and a target output. This skill supports two variants, described below. Both emit as a flat block of prose with their section headers stripped, so each slot must read on its own once its label is gone: the role and the process survive as sentences and an ordered list, while the material each variant works from lives inside a named slot — the pasted input for RISE-IE, the pasted reference samples for RISE-IX — rather than under a header that will be deleted.
 
 **Origin:** Community convention with no identifiable originator and no academic basis. The dominant documented expansion is **Role, Input, Steps, Expectation** — Fabio Vivas (fvivas.com); Juuzt.ai; Damien Griffin, "AI Quick Tips 111: Prompt Framework — R.I.S.E." (Thoughts Brewing, 17 December 2024). RISE's first appearance and original author could not be established. Not research-backed. Distinct from **RISEN** (Role, Instructions, Steps, End goal, Narrowing), which is a separate framework.
 
@@ -66,7 +66,7 @@ Verified published expansions of RISE:
 ### RISE-IE Components
 
 #### R - Role
-**Purpose:** Define the perspective or expertise needed for the task.
+**Purpose:** Define the perspective or expertise needed for the task, as a complete sentence. Nothing else in the emitted prompt establishes who is doing the work once the `ROLE` header is gone, so a bare noun phrase ("data analyst") leaves the perspective unstated.
 
 **Questions to Ask:**
 - What expertise is required?
@@ -74,12 +74,12 @@ Verified published expansions of RISE:
 - What knowledge level is needed?
 
 **Examples:**
-- "Act as a data analyst..."
-- "You are a content editor..."
-- "Take the perspective of a UX researcher..."
+- "Act as a data analyst experienced with sales exports."
+- "You are a content editor who works with long-form drafts."
+- "Take the perspective of a UX researcher who reads raw session logs."
 
 #### I - Input
-**Purpose:** Specify what's being provided and its characteristics.
+**Purpose:** Carry the actual data or content the task runs on. This is where RISE-IE's source material lives — the input is pasted directly into this slot, then a short prose line ("About the material above: …") describes its format and quirks and ties it to the steps that follow. Because the material sits inside the slot rather than under a deletable header, name it in the paste line ("the customer review export (CSV)"), never as a generic "content".
 
 **Questions to Ask:**
 - What data/content is being provided?
@@ -88,12 +88,12 @@ Verified published expansions of RISE:
 - What should Claude expect to receive?
 
 **Examples:**
-- "You'll receive a CSV file with sales data..."
-- "Input is a collection of user feedback emails..."
-- "You have access to JSON API responses..."
+- "About the material above: a CSV export of 50 rows of sales data, one order per row, with a header line."
+- "About the material above: a collection of user feedback emails, some with mixed English and Spanish."
+- "About the material above: JSON API responses, occasionally with null fields where a value is missing."
 
 #### S - Steps
-**Purpose:** Define how to process the input.
+**Purpose:** Define how to process the input, as an ordered list of actions. The numbered sequence reads as a procedure on its own, so it does not need the `STEPS` header to signal what it is, but each step should name what it operates on ("the reviews above") so the reference survives.
 
 **Questions to Ask:**
 - How should the input be processed?
@@ -102,11 +102,11 @@ Verified published expansions of RISE:
 - What analysis should be performed?
 
 **Examples:**
-- "1. Parse CSV, 2. Calculate metrics, 3. Identify trends..."
-- "Extract key themes, categorize by sentiment, count occurrences..."
+- "1. Parse the CSV above, 2. Calculate per-region totals, 3. Identify month-over-month trends..."
+- "Extract key themes from the emails above, categorize each by sentiment, count occurrences..."
 
 #### E - Expectation
-**Purpose:** Define what the output should look like.
+**Purpose:** Define what the output should look like — the deliverable and its shape. Phrase it as a standing description ("Produce a summary table that…") so it reads as the target output once the `EXPECTATION` header is removed rather than dangling as a loose noun phrase.
 
 **Questions to Ask:**
 - What format should output take?
@@ -115,37 +115,49 @@ Verified published expansions of RISE:
 - What's the deliverable?
 
 **Examples:**
-- "Provide a summary table with top 10 items..."
-- "Generate a JSON object with categorized results..."
-- "Create a report with charts and key findings..."
+- "Produce a summary table listing the top 10 items by revenue..."
+- "Return a JSON object with the categorized results..."
+- "Deliver a report with the key findings and one chart per region..."
 
 ### RISE-IE Template
 
+Section headers are stripped at emission, so every slot's meaning is carried by the prose around and inside it rather than by the header above it. The `INPUT` slot is where RISE-IE's source material goes — the data is pasted directly into it, and the `About the material above:` line ties that pasted data to the description and the steps below. Because RISE-IE is the data-processing variant, there is no from-scratch form: without input to work on, the framework has nothing to do, so the input slot is never deleted.
+
 ```
 ROLE:
-[Perspective or expertise needed]
+[Define the perspective or expertise needed for this task]
 
 INPUT:
-[Description of provided data/content:
-- Format and structure
-- Key characteristics
-- Any quirks or special considerations]
+[Paste the data or content to be processed here — name it specifically in this line, e.g.
+"Paste the customer review export (CSV) here". Paste the material itself, not a description of it.]
+
+About the material above:
+[Specify what data/content is being provided:
+- Format and structure (CSV, JSON, text, etc.)
+- Key characteristics and fields
+- Any quirks or special considerations
+- What to expect in the data]
 
 STEPS:
-1. [Processing action 1]
-2. [Processing action 2]
-3. [Processing action 3]
-4. [Continue with transformation/analysis steps...]
+1. [How to process the input - first action]
+2. [Processing step 2 - transformation or analysis]
+3. [Processing step 3 - continue with methodology]
+4. [Add more processing/analysis steps as needed...]
 
 EXPECTATION:
-[Output format and content requirements:
+[Define what the output should look like:
 - Format and structure
-- Required elements
-- Level of detail
-- Length or size constraints]
+- Required elements and sections
+- Level of detail needed
+- Length or size constraints
+- Specific deliverables]
 ```
 
 ### RISE-IE Complete Example
+
+The example below is shown in emitted form: the material is pasted into the input slot,
+and every later slot references "the reviews above" so nothing is lost when the headers
+are deleted.
 
 **Before RISE-IE:**
 "Analyze these customer reviews."
@@ -156,27 +168,27 @@ ROLE:
 You are a customer insights analyst with expertise in sentiment analysis and theme extraction.
 
 INPUT:
-You'll receive 50 customer reviews from our mobile app. Each review contains:
-- Star rating (1-5)
-- Written feedback
-- Date of review
-- User segment (free/premium)
+[Paste the 50 customer reviews exported from the mobile app here]
+
+About the material above:
+50 customer reviews from our mobile app. Each review contains a star rating (1-5), the
+written feedback, the date of the review, and the user segment (free or premium).
 
 STEPS:
-1. Categorize reviews by sentiment (positive, neutral, negative)
-2. Extract common themes and topics mentioned
+1. Categorize the reviews above by sentiment (positive, neutral, negative)
+2. Extract the common themes and topics they mention
 3. Identify feature requests vs. complaints vs. praise
-4. Segment findings by user type (free vs. premium)
-5. Highlight urgent issues mentioned multiple times
+4. Segment the findings by user type (free vs. premium)
+5. Highlight urgent issues mentioned by multiple reviewers
 6. Note any patterns in timing or trends
 
 EXPECTATION:
-Provide a structured analysis with:
-- Summary table showing sentiment distribution
-- Top 5 themes with frequency counts
-- List of feature requests ranked by mentions
-- Critical issues requiring immediate attention
-- Comparison of free vs. premium user feedback
+Produce a structured analysis containing:
+- A summary table showing the sentiment distribution
+- The top 5 themes with frequency counts
+- A list of feature requests ranked by number of mentions
+- The critical issues requiring immediate attention
+- A comparison of free vs. premium user feedback
 - 2-3 actionable recommendations
 ```
 
@@ -203,7 +215,7 @@ Provide a structured analysis with:
 ### RISE-IX Components
 
 #### R - Role
-**Purpose:** Define who the AI should embody (persona or expertise).
+**Purpose:** Define who the AI should embody (persona or expertise), as a complete sentence. Once the `ROLE` header is stripped nothing else names the persona, so a bare noun phrase leaves the emitted prompt without one.
 
 **Questions to Ask:**
 - What persona is most appropriate?
@@ -216,7 +228,7 @@ Provide a structured analysis with:
 - "Take on the role of a technical writer..."
 
 #### I - Instructions
-**Purpose:** Specify the main task or directive.
+**Purpose:** Specify the main task or directive, as a complete imperative sentence. This is the only slot that states what to produce, so it must carry the instruction on its own once the `INSTRUCTIONS` header is gone.
 
 **Questions to Ask:**
 - What is the primary task?
@@ -230,7 +242,7 @@ Provide a structured analysis with:
 - "Develop an email sequence for customer onboarding"
 
 #### S - Steps
-**Purpose:** Outline the process or methodology to follow.
+**Purpose:** Outline the process or methodology to follow, as an ordered list. The numbered sequence reads as a workflow on its own and does not depend on the `STEPS` header to signal what it is.
 
 **Questions to Ask:**
 - What's the sequence of actions?
@@ -243,7 +255,7 @@ Provide a structured analysis with:
 - "Start with hook, develop key points, conclude with action items"
 
 #### E - Examples
-**Purpose:** Provide positive examples showing desired output.
+**Purpose:** Carry the actual reference samples the output should match. This is where RISE-IX's material lives — the samples themselves are pasted into this slot, not descriptions of them, and they are what the framework works from in place of a source-material block. Because they land here, RISE-IX needs no separate material slot: each pasted sample should be the real piece whose style and format the output should emulate, introduced by a line ("Match the style of the samples below:") so the samples read as models once the `EXAMPLES` header is gone.
 
 **Questions to Ask:**
 - What does good output look like?
@@ -252,37 +264,51 @@ Provide a structured analysis with:
 - What format should be followed?
 
 **Examples:**
-- "Similar to our 'Eco-Friendly Living' post format with 3 main sections"
-- "Follow the style of these product descriptions: [examples]"
-- "Match the tone and structure of this email: [example]"
+- "Match the style of the two product descriptions pasted below."
+- "Follow the structure of the onboarding email pasted below."
+- "Produce copy in the voice of the sample post pasted below."
 
 ### RISE-IX Template
 
+Section headers are stripped at emission, so every slot's meaning is carried by the prose around and inside it rather than by the header above it. RISE-IX has no source-material block: the reference samples are its material, and they are pasted into the `EXAMPLES` slot as the actual pieces to match. The role and instructions must be complete sentences, and the samples must be reproduced in full rather than described.
+
 ```
 ROLE:
-[Persona or expertise level]
+[Define who the AI should embody - persona or expertise level]
 
 INSTRUCTIONS:
-[Main task or directive:
+[Specify the main task or directive:
 - What to create or accomplish
 - Core requirements
-- Key guidelines to follow]
+- Key guidelines to follow
+- Specific constraints or considerations]
 
 STEPS:
 1. [Approach or methodology step 1]
-2. [Step 2]
-3. [Step 3]
-4. [Continue with workflow/process steps...]
+2. [Step 2 - how to execute the task]
+3. [Step 3 - continue with workflow]
+4. [Add more steps as needed for the creative/instruction process...]
 
 EXAMPLES:
-[Positive examples showing desired output:
-- Reference materials
-- Style to emulate
-- Format to follow
-- Similar successful outputs]
+[Provide positive examples showing desired output:
+- Reference materials that demonstrate the style
+- Format examples to emulate
+- Successful outputs from similar tasks
+- 2-3 concrete examples recommended]
+
+Example 1: [Paste the first reference sample here — the actual piece whose style and format the output should match, not a description of it]
+
+Example 2: [Paste a second reference sample here]
+
+Example 3: [Optional — paste a third reference sample here if more clarity is needed. If you only have two, delete this line and the blank line above it.]
 ```
 
 ### RISE-IX Complete Example
+
+The example below is shown in emitted form: the instructions read as a standing directive,
+and the reference samples are pasted in full into the examples slot as the models the
+output must match. RISE-IX has no source-material block to delete — its samples are what
+it works from, so the examples slot is always present.
 
 **Before RISE-IX:**
 "Write product descriptions for our sustainable clothing line."
@@ -293,22 +319,20 @@ ROLE:
 You are a senior copywriter specializing in sustainable fashion and eco-conscious brands.
 
 INSTRUCTIONS:
-Create compelling product descriptions for our new sustainable clothing line that:
-- Highlight eco-friendly materials and production methods
-- Appeal to environmentally conscious millennials
-- Emphasize both style and sustainability
-- Include specific product details and benefits
-- Drive purchase intent through emotional connection
+Write compelling product descriptions for our new sustainable clothing line that
+highlight eco-friendly materials and production methods, appeal to environmentally
+conscious millennials, emphasize both style and sustainability, include specific product
+details and benefits, and drive purchase intent through an emotional connection.
 
 STEPS:
 1. Start with an attention-grabbing opening about the product's unique appeal
 2. Describe the sustainable materials and ethical production process
 3. Highlight the product's style, fit, and versatility
 4. Include specific technical details (materials, care, sizing)
-5. End with a call-to-action emphasizing the impact of their purchase
+5. End with a call-to-action emphasizing the impact of the purchase
 
 EXAMPLES:
-Similar to these high-performing descriptions:
+Match the style, tone, and structure of the two reference descriptions below.
 
 Example 1: "The Ocean Breeze Tee - Crafted from 100% recycled ocean plastics,
 this impossibly soft tee proves sustainability never has to sacrifice style. Each

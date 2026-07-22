@@ -1,3 +1,11 @@
+SOURCE MATERIAL:
+[Optional — include only if this task operates on material you already have. Paste the
+specific artifact here and name it in this line, e.g. "Paste the legacy authentication
+function here", "Paste the revised requirements doc here" — the artifact itself, not a
+description of it. If this task generates from scratch, delete this bracketed block along
+with the sentence directly below it.]
+Use the material above as the basis for the task described below.
+
 CONTEXT:
 [Describe the situation, background, or circumstances surrounding this task.
 Include relevant details like: current state, constraints, what's already been done,

@@ -183,6 +183,32 @@ test('Adapter has not drifted from SKILL.md', () => {
     throw new Error(`Frameworks in SKILL.md but missing from adapter: ${dropped.join(', ')}`);
   }
   void missing;
+
+  // 4. Load-bearing rules must be present in BOTH files.
+  //    Checks 1-3 compare only step headings and framework names, so they cannot
+  //    see prose drift. The adapter shipped without SKILL.md's entire output
+  //    delivery contract -- the rules that define what the skill actually emits --
+  //    while this test passed. Any rule that changes the emitted artifact goes here.
+  const invariants = [
+    'No framework section headers',
+    'scaffolding, not part of the deliverable',
+    'paste it verbatim with zero editing',
+    'the absolute last element in the response',
+    'Your revised prompt is ready.',
+    'Never stack more than two',
+    'Never default a fact about the user',
+    'Never soften or drop a prohibition',
+    // The worked example must demonstrate the emission rules, not violate them.
+    // The adapter previously shipped a BAB example with BEFORE:/AFTER:/BRIDGE: headers.
+    'Now rewrite the job posting above.',
+  ];
+  const divergent = invariants.filter(r => skill.includes(r) !== adapter.includes(r));
+  if (divergent.length > 0) {
+    const detail = divergent
+      .map(r => `${JSON.stringify(r)} (SKILL.md: ${skill.includes(r) ? 'yes' : 'NO'}, adapter: ${adapter.includes(r) ? 'yes' : 'NO'})`)
+      .join('\n  ');
+    throw new Error(`Emission-contract rules differ between SKILL.md and the adapter:\n  ${detail}`);
+  }
 });
 
 // Agent Skills compliance tests

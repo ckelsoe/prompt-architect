@@ -1,27 +1,37 @@
-PRE-MORTEM ANALYSIS
+You are conducting a pre-mortem on the project described below. The failure stated further
+down is settled fact, not a possibility — work backwards from it and explain why it happened.
+Do not hedge with "could," "might," or "may."
+
+SOURCE MATERIAL:
+[Optional — paste the project plan, proposal, or decision document here. If you have nothing
+to paste, delete this bracketed block along with the sentence directly below it.]
+Use the material above as the factual basis for the work described below.
 
 PROJECT/DECISION:
-[Describe the project, plan, or decision being analyzed — include team size,
-timeline, resources, key goals, and any relevant constraints]
+[Describe the project, plan, or decision being analyzed in full sentences — what is being
+attempted, plus team size, timeline, resources, goals, and constraints]
 
 FAILURE ASSUMPTION:
-It is [DATE — e.g., 12 months from now] and [project/decision] has completely
-and catastrophically failed. It did not achieve [primary goal].
+It is [DATE — e.g., 12 months from now] and [project/decision] has completely and
+catastrophically failed. It did not achieve [primary goal].
 
 FAILURE NARRATIVE:
-Describe the failure in 2-3 sentences from the perspective of someone
-looking back on it.
+Begin by describing how that failure unfolded, in 2-3 sentences, in past tense from the
+perspective of someone looking back on it.
 
 FAILURE CAUSES:
-Identify [8-12] specific reasons this failed. For each:
+Then identify [8-12] specific reasons it failed, each stated as something that already went
+wrong. Cover technical/product, team/organizational, market/adoption, financial/resource,
+external dependencies, and timeline/scope. Give each cause three lines:
 - CAUSE: [What specifically went wrong — be specific, not generic]
 - DOMAIN: [Technical / People / Market / Financial / External / Timeline]
 - WARNING SIGN: [What was the earliest observable indicator this was happening?]
-
-Cover these domains: technical/product, team/organizational, market/adoption,
-financial/resource, external dependencies, timeline/scope.
+"CAUSE:", "DOMAIN:" and "WARNING SIGN:" are literal labels in this protocol, not headings —
+keep them exactly as written.
 
 PRIORITY ASSESSMENT:
-1. The 3 most LIKELY failure causes given our specific situation
-2. The 3 most PREVENTABLE causes where action now would help most
-3. Any single point of failure that could kill the project alone
+After listing every cause, close by singling out three things:
+1. The 3 causes most LIKELY to be what actually happened, given the situation above.
+2. The 3 most PREVENTABLE causes — where action taken today would have made the most
+   difference.
+3. Any single point of failure that could have killed the project on its own.

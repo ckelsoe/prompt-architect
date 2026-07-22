@@ -5,6 +5,25 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2026-07-22
+
+This release makes the **emission contract** explicit and consistent across the whole skill. When Prompt Architect delivers the final prompt, framework section headers (`CONTEXT:`, `ROLE:`, `BEFORE:`, …) are stripped — the user pastes a flat block of prose with no labels. Previously the framework docs and templates were written as if those headers would survive, so slots that were bare fragments ("meeting summary", "busy professionals") lost their meaning once the header was removed. Every framework now carries its own meaning in prose.
+
+### Added
+- **Optional `SOURCE MATERIAL` block on every template that operates on an artifact.** It names the artifact concretely (never a generic "content"), ties it to the task with one carrier sentence, and self-deletes for from-scratch tasks. Three frameworks are deliberately exempt because they have no pasted-material slot: **ReAct** (material arrives as live tool output), **Reverse Role** (everything is gathered through the interview), and **RISE-IX** (its samples land in the EXAMPLES slot).
+- **Emission-contract test guard.** `scripts/test.js` now fails if the load-bearing output-delivery rules (no section headers in the deliverable, paste-verbatim, "revised prompt is last element", the negation-survival and no-defaulting rules, and the worked example obeying them) diverge between `SKILL.md` and `adapters/system-prompt.md`. The prior drift checks compared only step headings and framework names, so prose drift — like the adapter shipping a BAB example *with* `BEFORE:/AFTER:/BRIDGE:` headers — passed silently.
+
+### Changed
+- **All 28 framework reference docs rewritten for the emission contract.** Each Overview now states how the framework emits; each component's guidance says whether its slot must be a complete sentence or ships inside a carrier sentence; and every Complete Example is shown in emitted form — with the `SOURCE MATERIAL` block, "the … above" references, and at least one from-scratch variant showing the block deleted. Origin/citation facts were preserved verbatim throughout.
+- **Elicitation questions in `SKILL.md` and the adapter now ask for the user's own material** ("Paste the Q3 revenue report here", "paste 2-3 actual samples whose style should be matched") instead of one-word checklists ("Context, audience, tone?"). A framework that operates on an artifact and never asks for it will otherwise invent one. The material-question exemptions above are documented inline.
+- **APE loses its collapsed single-sentence form.** The two inconsistent inline syntaxes it advertised were never implemented by the template and break when source material or multi-clause expectations are present; the doc now explains why. A complete APE prompt is still three sentences.
+- **`RISE` → `RISE-IE` in cross-references.** Docs that pointed to RISE as the input-transformation framework now use the skill's `RISE-IE` shorthand consistently. `RISEN` references are unchanged.
+
+### Fixed
+- **`RACE` examples no longer dangle.** Two examples referenced material "described below" when the `SOURCE MATERIAL` block places it above; they now say "above", matching the template's positioning rule.
+
+---
+
 ## [3.3.1] - 2026-07-19
 
 ### Fixed

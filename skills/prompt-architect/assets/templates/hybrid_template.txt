@@ -1,7 +1,8 @@
 === HYBRID / COMBINED FRAMEWORK TEMPLATE ===
 
-Use this when a single framework doesn't fully cover your needs.
-Include only the sections that add value — remove the rest.
+Use this when a single framework doesn't fully cover your needs. Include only the sections
+that add value and delete the rest — a hybrid with 4 focused sections beats one that uses
+all 15.
 
 ─────────────────────────────────────────────
 COMMON COMBINATION PATTERNS
@@ -35,6 +36,15 @@ Use when: create content → then verify it meets an explicit principle/standard
 HYBRID TEMPLATE STRUCTURE
 ─────────────────────────────────────────────
 
+[Headers are stripped at emission, so fill every slot below with complete sentences that name
+their own subject.]
+
+SOURCE MATERIAL:
+[Optional — paste the artifact this task operates on here, named concretely (the current job
+posting, the Q3 revenue report). If you have nothing to paste, delete this bracketed block
+along with the sentence directly below it.]
+Use the material above as the factual basis for the work described below.
+
 CONTEXT / BACKGROUND:
 [From CTF / CO-STAR / CARE — situation, background, why this task exists]
 
@@ -44,32 +54,42 @@ ROLE:
 OBJECTIVE:
 [From CO-STAR / RISEN — specific goal to achieve]
 
-INPUT (if applicable):
-[From RISE-IE — what's being provided, format, characteristics]
+INPUT CHARACTERISTICS:
+[From RISE-IE's "About the material above" slot — the format, structure, and quirks of
+whatever you pasted under SOURCE MATERIAL, not the material itself. If you pasted nothing
+there, delete this bracketed block.]
 
 INSTRUCTIONS / STEPS:
 [From RISEN / RISE — guiding principles, methodology, step sequence]
 
 CONSTRAINTS / RULES:
-[From CARE / TIDD-EC / RISEN — what must/must not happen, boundaries]
+[From CARE / TIDD-EC / RISEN — boundaries on the work, each stated as a requirement or a
+prohibition]
 
 DO:
-[From TIDD-EC — explicit positive guidance]
+[From TIDD-EC — required behaviors, each a complete imperative sentence]
 
 DON'T:
-[From TIDD-EC — explicit negative guidance]
+[From TIDD-EC — prohibitions, each phrased as "Do not…" or "Never…" so it stands on its own
+line]
 
-AUDIENCE (if relevant):
-[From CO-STAR — who this is for, characteristics]
+AUDIENCE:
+[From CO-STAR — who this is for and what they already know]
 
-TONE & STYLE (if relevant):
+TONE & STYLE:
 [From CO-STAR / CRISPE — voice and communication style]
 
-EXAMPLES (if relevant):
-[From RISE-IX / CARE — reference samples]
+EXAMPLES:
+[From RISE-IX / CARE — reference samples. If you have none, delete this bracketed block along
+with the sentence directly below it.]
+Match the form and quality of the samples above; do not reuse their content.
 
-KEY RESULTS (if relevant):
-[From BROKE — measurable business outcomes]
+KEY RESULTS:
+Your response will be judged on whether it can plausibly move the measurable outcomes
+below. They are the success bar, not tasks to carry out:
+[From BROKE — measurable business outcomes, each a complete sentence naming the metric and
+its target. If the task has no measurable business outcome, delete this bracketed block along
+with the two sentences directly above it.]
 
 END GOAL / EXPECTATION:
 [From RISEN / RACE / BROKE — success criteria, final outcome, output format]
@@ -78,24 +98,24 @@ FORMAT:
 [From RTF / CTF / APE — exactly how output should be structured]
 
 ─────────────────────────────────────────────
-CRITIQUE / VERIFICATION LAYER (optional)
+CRITIQUE / VERIFICATION LAYER
 ─────────────────────────────────────────────
-Add after generation if needed:
+
+[Optional — if the task has a distinct verification phase, keep exactly one of the three
+blocks below and append it after the generation instructions above. Otherwise delete all
+three.]
 
 FEEDBACK DIMENSIONS (Self-Refine):
-Review for: [dimension 1], [dimension 2], [dimension 3]
-Refine addressing all feedback.
+Review your own draft for [dimension 1], [dimension 2], and [dimension 3], then revise it to
+address every point you raised.
 
 OR
 
 PRINCIPLE (CAI Critique-Revise):
-[State the standard] → Critique → Revise.
+Measure your draft against this principle, then revise the draft until it complies: [the
+explicit standard the output must meet].
 
 OR
 
 POSITION ATTACK (Devil's Advocate):
-Argue against the above recommendation as forcefully as possible.
-
-─────────────────────────────────────────────
-NOTE: Use only sections relevant to your task.
-A hybrid with 4 focused sections beats a hybrid that uses all 15.
+Argue against the recommendation above as forcefully as possible.

@@ -27,151 +27,259 @@ The intermediate critique step is load-bearing — it forces the model to identi
 - "No hedging language ('might', 'could', 'perhaps') unless genuine uncertainty exists"
 
 ### Initial Generation
-**Purpose:** The output to evaluate. Can be AI-generated or human-written.
+**Purpose:** The output to evaluate. Can be AI-generated or human-written. This fills the template's `SOURCE MATERIAL` slot, and unlike in frameworks that generate from scratch, it is required — there is nothing to critique without it.
 
 ### Critique Step
-**Purpose:** Explicit evaluation of the output against the principle. The critique must be specific and quote the problematic passages.
+**Purpose:** Explicit evaluation of the material against the principle. The critique must be specific and quote the problematic passages. It is the first of the template's two phases, and the framing paragraph exists to stop the model collapsing it into the rewrite.
 
-**Critique trigger:** *"Identify specific ways in which the response above violates or falls short of the following principle: [principle]. Quote the specific passages that are problematic. Explain why each violates the principle."*
+**Critique trigger:** *"Before rewriting anything, identify the specific ways the material above violates or falls short of the principle. Quote the specific passages that are problematic. Explain precisely why each passage violates the principle."*
 
 ### Revision Step
-**Purpose:** Rewrite the response to satisfy the principle. The revision should address every critique point.
+**Purpose:** Rewrite the material to satisfy the principle. The revision should address every critique point.
 
-**Revision trigger:** *"Revise the response to fully satisfy the principle. Address every critique point. Preserve all content that already satisfies the principle."*
+**Revision trigger:** *"Then rewrite the material above so it fully satisfies the principle. Address every critique point identified above. Preserve all content that already satisfies the principle."*
 
 ### Iteration (optional)
 **Purpose:** Run the critique-revise cycle again against the same principle (to catch remaining issues) or a different principle (multi-principle alignment).
 
 ## Template Structure
 
-```
-PRINCIPLE:
-[State the specific standard the output must satisfy]
+Section headers are stripped at emission, so every header's meaning is carried by
+unbracketed prose that ships with the prompt. Do not reintroduce header-only structure.
 
-INITIAL OUTPUT:
-[The output to evaluate — AI-generated or human-written]
+The two-phase rule is stated once, in the opening framing paragraph, and the pasted
+material is delimited by the `SOURCE MATERIAL:` block together with the anchor sentence
+directly beneath it. That anchor sentence is what keeps the pasted text readable as
+material to be critiqued rather than as instructions to follow — do not delete it while
+keeping the block.
+
+```
+You are enforcing a stated principle against an existing piece of writing. This is a
+two-phase task: write a critique, then write a revision. Do not skip the critique and go
+straight to the rewrite, and do not merge the two.
+
+PRINCIPLE:
+The principle to enforce is this:
+[State the standard the output must satisfy — one principle or a small set — as complete
+sentences whose compliance a reader could check. Be precise and measurable.]
+
+SOURCE MATERIAL:
+[Paste the output to be critiqued here — AI-generated or human-written.]
+Use the material above as the text to be critiqued and revised for the work described
+below.
 
 CRITIQUE:
-Identify specific ways the output above violates or falls short of
-the principle stated above.
+Before rewriting anything, identify the specific ways the material above violates or falls
+short of the principle.
 - Quote the specific passages that are problematic
 - Explain precisely why each passage violates the principle
-- Do not mention positives — focus only on failures
+- Focus only on failures against the principle, not general quality
 
 REVISION:
-Rewrite the output to fully satisfy the principle.
+Then rewrite the material above so it fully satisfies the principle.
 - Address every critique point identified above
-- Preserve all content that already meets the principle
+- Preserve all content that already satisfies the principle
 - Do not introduce new violations
 ```
 
+The slot is named `SOURCE MATERIAL`, not `INITIAL OUTPUT`, and it is not optional here —
+unlike the same-named slot in frameworks that generate from scratch, this framework has
+nothing to critique without it.
+
 ### Multi-Principle Version
+
+Same shape as above. The principles are enumerated in the single `PRINCIPLE` slot with
+stable labels, and the critique phase is run once per principle in the order they were
+listed. The framing paragraph, the `SOURCE MATERIAL` anchor sentence, and the revision
+prose are unchanged.
+
 ```
-PRINCIPLES:
-P1: [First principle]
-P2: [Second principle]
-P3: [Third principle]
+You are enforcing a set of stated principles against an existing piece of writing. This is
+a two-phase task: write a critique, then write a revision. Do not skip the critique and go
+straight to the rewrite, and do not merge the two.
 
-INITIAL OUTPUT:
-[The output]
+PRINCIPLE:
+The principles to enforce are the following, and only the following:
+P1: [State the first standard as complete, checkable sentences.]
+P2: [State the second one the same way.]
+P3: [State the third one the same way.]
+"P1", "P2" and "P3" are literal labels used by the critique below — keep them exactly as
+written. [Add or remove P lines, then delete this line.]
 
-CRITIQUE — P1:
-[Critique against P1]
+SOURCE MATERIAL:
+[Paste the output to be critiqued here — AI-generated or human-written.]
+Use the material above as the text to be critiqued and revised for the work described
+below.
 
-CRITIQUE — P2:
-[Critique against P2]
-
-CRITIQUE — P3:
-[Critique against P3]
+CRITIQUE:
+Before rewriting anything, work through the principles in order and, for each one
+separately, identify the specific ways the material above violates or falls short of it.
+Label each group of findings with the principle it belongs to.
+- Quote the specific passages that are problematic
+- Explain precisely why each passage violates that principle
+- Focus only on failures against the principles, not general quality
+- Where one passage violates more than one principle, say so under each
 
 REVISION:
-Rewrite addressing all critique points across all three principles.
+Then rewrite the material above so it fully satisfies every principle.
+- Address every critique point identified above, across all principles
+- Preserve all content that already satisfies the principles
+- Do not introduce new violations
+- Where two principles pull against each other, satisfy the earlier-listed one and say
+  which trade-off you made
 ```
 
 ## Complete Examples
 
+Every example below is shown in emitted form: the framing paragraph first, then each slot
+carrying its own role in prose. Read the headers as scaffolding that will be deleted — the
+examples are written so that nothing is lost when it is. Only the `SOURCE MATERIAL` block
+keeps a `[...]` placeholder, because the text to be critiqued is the one thing the user
+must supply.
+
 ### Example 1: Plain Language Compliance
 
 ```
-PRINCIPLE:
-Plain language only. Every sentence must be understandable by someone
-with no technical background. No jargon without immediate plain-language
-definition. Maximum sentence length: 20 words.
+You are enforcing a stated principle against an existing piece of writing. This is a
+two-phase task: write a critique, then write a revision. Do not skip the critique and go
+straight to the rewrite, and do not merge the two.
 
-INITIAL OUTPUT:
-Our API leverages asynchronous microservice orchestration to facilitate
-real-time event-driven data synchronization across distributed endpoints,
-enabling seamless interoperability between heterogeneous enterprise systems.
+PRINCIPLE:
+The principle to enforce is this:
+Plain language only. Every sentence must be understandable by a reader with no technical
+background. No jargon may appear without an immediate plain-language definition. No
+sentence may exceed 20 words.
+
+SOURCE MATERIAL:
+Our API leverages asynchronous microservice orchestration to facilitate real-time
+event-driven data synchronization across distributed endpoints, enabling seamless
+interoperability between heterogeneous enterprise systems.
+Use the material above as the text to be critiqued and revised for the work described
+below.
 
 CRITIQUE:
-Identify every phrase that violates the plain language principle above.
-Quote each problematic phrase and explain the violation.
+Before rewriting anything, identify the specific ways the material above violates or falls
+short of the principle.
+- Quote every phrase that is jargon, that stands undefined, or that carries a sentence
+  past 20 words
+- Explain precisely which part of the principle each quoted phrase breaks
+- Focus only on failures against the principle, not general quality
 
 REVISION:
-Rewrite the description so a non-technical reader understands exactly
-what the product does.
+Then rewrite the material above so it fully satisfies the principle.
+- Address every critique point identified above
+- Preserve all content that already satisfies the principle
+- Do not introduce new violations
+- State plainly what the product does; do not compensate for lost jargon with new
+  abstraction
 ```
 
 ### Example 2: Evidence-Backed Claims
 
 ```
-PRINCIPLE:
-Every claim must be backed by reasoning, data, or an example.
-No assertion may stand without support. Hedging language ("might",
-"could") is acceptable only when genuine uncertainty exists.
+You are enforcing a stated principle against an existing piece of writing. This is a
+two-phase task: write a critique, then write a revision. Do not skip the critique and go
+straight to the rewrite, and do not merge the two.
 
-INITIAL OUTPUT:
-[Paste an analysis or recommendation]
+PRINCIPLE:
+The principle to enforce is this:
+Every claim must be backed by reasoning, data, or an example. No assertion may stand
+without support. Hedging language such as "might" or "could" is acceptable only where
+genuine uncertainty exists, and the uncertainty must be named.
+
+SOURCE MATERIAL:
+[Paste the analysis or recommendation to be critiqued here.]
+Use the material above as the text to be critiqued and revised for the work described
+below.
 
 CRITIQUE:
-Identify every unsupported claim. Quote the specific assertion and
-state what type of support is missing (reasoning, data, or example).
+Before rewriting anything, identify the specific ways the material above violates or falls
+short of the principle.
+- Quote each unsupported assertion in full
+- For each one, name which type of support is missing: reasoning, data, or example
+- Quote separately any hedge that stands in for evidence rather than marking real
+  uncertainty
+- Focus only on failures against the principle, not general quality
 
 REVISION:
-Rewrite adding appropriate support for every flagged claim.
-If a claim cannot be supported, remove it or explicitly mark it
-as an assumption.
+Then rewrite the material above so it fully satisfies the principle.
+- Address every critique point identified above
+- Preserve all content that already satisfies the principle
+- Do not introduce new violations
+- Where a claim cannot be supported from the material given, either cut it or mark it
+  explicitly as an assumption; do not invent supporting data
 ```
 
 ### Example 3: User Agency Preservation
 
 ```
-PRINCIPLE:
-The response must preserve user agency. It may present options and
-tradeoffs but must not make decisions for the user. The final choice
-should always be explicitly left to the user with clear reasoning
-for each option.
+You are enforcing a stated principle against an existing piece of writing. This is a
+two-phase task: write a critique, then write a revision. Do not skip the critique and go
+straight to the rewrite, and do not merge the two.
 
-INITIAL OUTPUT:
-[Paste an AI recommendation that made a firm choice for the user]
+PRINCIPLE:
+The principle to enforce is this:
+The response must preserve the reader's agency. It may lay out options and their
+trade-offs, but it must not make the decision for them. The final choice must be left to
+the reader explicitly, with the reasoning for each option stated so the reader can weigh
+them.
+
+SOURCE MATERIAL:
+[Paste the recommendation to be critiqued here — the one that made a firm choice on the
+reader's behalf.]
+Use the material above as the text to be critiqued and revised for the work described
+below.
 
 CRITIQUE:
-Identify every place where the response makes a decision for the user
-or removes their agency. Quote the specific passages.
+Before rewriting anything, identify the specific ways the material above violates or falls
+short of the principle.
+- Quote every passage that settles the decision for the reader or narrows it to one option
+- Explain precisely how each quoted passage removes the reader's choice
+- Quote any option that is presented without the reasoning needed to weigh it
+- Focus only on failures against the principle, not general quality
 
 REVISION:
-Rewrite so the user has full information and clear options, but the
-final decision remains with them.
+Then rewrite the material above so it fully satisfies the principle.
+- Address every critique point identified above
+- Preserve all content that already satisfies the principle
+- Do not introduce new violations
+- Keep every substantive recommendation intact as a stated option with its reasoning;
+  preserving agency means returning the choice, not withholding the analysis
 ```
 
 ### Example 4: Factual Precision
 
 ```
-PRINCIPLE:
-The response must distinguish between: (1) established facts,
-(2) inferences based on evidence, and (3) speculation. Each claim
-must be labeled accordingly. No mixing of categories without labels.
+You are enforcing a stated principle against an existing piece of writing. This is a
+two-phase task: write a critique, then write a revision. Do not skip the critique and go
+straight to the rewrite, and do not merge the two.
 
-INITIAL OUTPUT:
-[Paste a technical or analytical response]
+PRINCIPLE:
+The principle to enforce is this:
+The response must distinguish established fact from evidence-based inference and from
+speculation. Every claim must be labeled as one of those three. No sentence may blend
+categories without labeling each part.
+
+SOURCE MATERIAL:
+[Paste the technical or analytical response to be critiqued here.]
+Use the material above as the text to be critiqued and revised for the work described
+below.
 
 CRITIQUE:
-Identify claims that mix categories or present inferences as facts.
-Quote each and categorize it.
+Before rewriting anything, identify the specific ways the material above violates or falls
+short of the principle.
+- Quote each claim that is unlabeled, mislabeled, or blends two categories in one sentence
+- State which of the three categories each quoted claim actually belongs to, and why
+- Focus only on failures against the principle, not general quality
 
 REVISION:
-Rewrite with explicit labeling: [FACT], [INFERENCE], [SPECULATION]
-where appropriate.
+Then rewrite the material above so it fully satisfies the principle.
+- Address every critique point identified above
+- Preserve all content that already satisfies the principle
+- Do not introduce new violations
+- Label every claim [FACT], [INFERENCE], or [SPECULATION], splitting any sentence that
+  carries more than one category
+- Do not promote a claim to a stronger category to avoid an awkward label
 ```
 
 ## Best Use Cases
@@ -222,9 +330,9 @@ where appropriate.
 
 ## Quick Reference
 
-| Component | Purpose |
-|-----------|---------|
-| Principle | The specific standard to enforce |
-| Initial Output | The output to evaluate |
-| Critique | Quote-specific violations of the principle |
-| Revision | Rewrite satisfying all critique points |
+| Component | Template slot | Purpose |
+|-----------|---------------|---------|
+| Principle | `PRINCIPLE` | The specific standard to enforce |
+| Initial Generation | `SOURCE MATERIAL` | The output to evaluate (required) |
+| Critique | `CRITIQUE` | Quote-specific violations of the principle |
+| Revision | `REVISION` | Rewrite satisfying all critique points |

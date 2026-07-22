@@ -2,7 +2,7 @@
 
 ## Overview
 
-Reverse Role Prompting flips the traditional prompting dynamic: instead of you constructing a detailed prompt, you provide a minimal intent statement and the AI interviews you — asking targeted clarifying questions — until it has enough information to execute the task well. This is the framework for when you know what you want but struggle to articulate all the details needed for a good prompt.
+Reverse Role Prompting flips the traditional prompting dynamic: instead of you constructing a detailed prompt, you provide a minimal intent statement and the AI interviews you — asking targeted clarifying questions — until it has enough information to execute the task well. This is the framework for when you know what you want but struggle to articulate all the details needed for a good prompt. A complete Reverse Role prompt emits as a short block of prose — an intent statement plus an instruction to run an interview — and carries no source-material block, because the interview is how it gathers everything it needs; SKILL.md exempts it from the material question for exactly that reason. The scaffolding is minimal, but the emission rule still holds: each line has to carry its own meaning in the sentence around it, since there is no header to lean on once the prompt is pasted.
 
 **Research basis:** Widely circulated as "reverse prompting" in practitioner communities (2023–2024). Formalized academically as **FATA** (First Ask Then Answer), arXiv 2508.08308, August 2025 — showing ~40% improvement over standard prompting. Related to **Socratic Prompting** (Chang, arXiv 2303.08769, IEEE CCWC 2023).
 
@@ -17,10 +17,10 @@ Reverse Role Prompting flips the traditional prompting dynamic: instead of you c
 ## Components
 
 ### Intent Statement
-**Purpose:** Your minimal starting point — what you want to achieve in 1-2 sentences. Intentionally brief; the AI will fill in the gaps through questions.
+**Purpose:** Your minimal starting point — what you want to achieve in 1-2 sentences. Intentionally brief; the AI will fill in the gaps through questions. Because the prompt has no separate task block, the intent line is the only thing telling the AI what the interview is in service of, so write it as a complete "My goal: …" statement rather than a bare topic — it still has to read as the objective once any surrounding scaffolding is gone.
 
 ### Interview Trigger
-**Purpose:** The instruction that activates the AI-led interview mode.
+**Purpose:** The instruction that activates the AI-led interview mode. This is the load-bearing sentence of the whole prompt, and it must ship as a complete imperative ("Before you begin, interview me to…"), because nothing else — no header, no format cue — tells the model to run an interview instead of answering immediately. The sentence has to say so itself.
 
 **Core triggers:**
 - Minimal: *"Before responding, ask me all the questions you need to give me the best possible answer."*
@@ -28,15 +28,17 @@ Reverse Role Prompting flips the traditional prompting dynamic: instead of you c
 - Expert mode: *"You are an expert in [X]. Before beginning, conduct a discovery interview to understand my specific situation. Ask one question at a time."*
 
 ### Domain Scope
-**Purpose:** Optionally specify the domain of expertise the AI should bring to the interview. This shapes the quality and relevance of its questions.
+**Purpose:** Optionally specify the domain of expertise the AI should bring to the interview. This shapes the quality and relevance of its questions. It ships as a complete opening sentence ("You are an expert [X] consultant"), which both sets the lens and, standing on its own line, needs no header to announce what it is.
 
 ### Interview Mode
-**Purpose:** Single-batch (FATA: all questions at once) vs. conversational (one question at a time). FATA is faster; conversational is more natural.
+**Purpose:** Single-batch (FATA: all questions at once) vs. conversational (one question at a time). FATA is faster; conversational is more natural. The choice ships inside the carrier sentence "Ask your questions [one at a time / all at once]," so the bracketed slot can stay a fragment while the sentence around it carries the instruction.
 
 ### Synthesis Instruction (optional)
-**Purpose:** After the interview, instruct the AI to either (a) execute the task directly, or (b) first produce a written prompt you can reuse.
+**Purpose:** After the interview, instruct the AI to either (a) execute the task directly, or (b) first produce a written prompt you can reuse. It ships as a complete closing sentence — the template's optional final line — and, like every other slot here, carries its own meaning in prose because there is no "SYNTHESIS:" header in the emitted prompt to carry it.
 
 ## Template Structure
+
+Reverse Role has no framework section headers of the kind the emitter strips — the shipped template is already a short block of prose, and it carries no source-material block because the interview elicits everything it needs. What the emission contract still asks of it is that every slot carry its own meaning in the sentence around it: the intent line reads as an objective, the interview trigger reads as an instruction to run an interview, and the batch-versus-conversational choice rides inside a carrier sentence rather than a header. The one place a header appears — the two-stage version's `STAGE 1` / `STAGE 2` labels — is written so each stage's directive survives on its own if the label is removed.
 
 ### Minimal Version
 ```
@@ -48,16 +50,17 @@ best possible answer. Then, once I've answered, [execute the task / generate the
 
 ### Structured Expert Version
 ```
-You are an expert [domain] consultant.
+You are an expert [DOMAIN] consultant / specialist.
 
-My goal: [1-2 sentence intent]
+My goal: [1-2 sentence description of what you want to achieve]
 
-Before you begin, interview me to understand my specific context,
-constraints, goals, and any relevant background. Ask your questions
-[one at a time / all at once]. Only proceed with [the task] once you
-are confident you have everything you need.
+Before you begin, interview me to understand my specific context, constraints,
+goals, and any relevant background. Ask your questions [one at a time / all at once].
+Only proceed with [the task / generating the full prompt] once you are confident
+you have everything you need.
 
-After the interview: [execute directly / write a full structured prompt I can reuse]
+[Optional: After the interview, synthesize my responses into a complete structured
+prompt using the most appropriate framework, then confirm before executing.]
 ```
 
 ### Two-Stage Version (Interview → Prompt Generation)
@@ -76,16 +79,18 @@ Show me the prompt before executing it.
 
 ## Complete Examples
 
+Every example below is shown in emitted form: the prompt is a short block of prose, and each line carries its own role — intent, interview trigger, mode — without relying on a header. Where an example also shows the AI's questions, read those as the model's response to the prompt, not as part of the deliverable you paste.
+
 ### Example 1: Minimal Trigger
 
-**User intent:**
+**The emitted prompt:**
 ```
 I want to create a training program for new customer success managers.
 Before responding, ask me all the questions you need to give me the
 best possible answer.
 ```
 
-**AI interview questions (FATA style):**
+**What the AI produces in response (FATA style — its output, not part of the prompt):**
 ```
 1. What is the typical background of your CSM hires? (e.g., sales background,
    support, fresh graduates, industry-specific experience)
@@ -104,6 +109,7 @@ best possible answer.
 
 ### Example 2: Expert Domain Interview
 
+**The emitted prompt:**
 ```
 You are an expert in B2B SaaS pricing strategy.
 
@@ -117,6 +123,7 @@ Only advise once you have a full picture.
 
 ### Example 3: Two-Stage Prompt Builder
 
+**The emitted prompt:**
 ```
 STAGE 1 — INTERVIEW:
 You are an expert prompt engineer and technical writer.

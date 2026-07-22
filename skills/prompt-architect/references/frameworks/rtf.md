@@ -156,7 +156,7 @@ FORMAT: Provide as:
 - ❌ Rich context needed (use CO-STAR)
 - ❌ Audience/tone matters (use CO-STAR)
 - ❌ Specific methodology required (use RISEN)
-- ❌ Input transformation needed (use RISE)
+- ❌ Input transformation needed (use RISE-IE)
 
 ## Common Mistakes
 
@@ -221,7 +221,7 @@ FORMAT: [Follow this structure]
 
 ## When to Upgrade from RTF
 
-**Upgrade to RISE if:**
+**Upgrade to RISE-IE if:**
 - Need to specify input characteristics
 - Processing steps matter
 - Input → output transformation

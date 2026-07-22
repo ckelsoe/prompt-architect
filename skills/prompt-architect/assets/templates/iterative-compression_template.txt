@@ -1,5 +1,12 @@
 === ITERATIVE COMPRESSION TEMPLATE ===
 
+Everything down to the first divider rule is guidance for whoever assembles this
+prompt and never belongs in the finished prompt. The prompt itself runs from that
+divider to the end of the file: fill in every bracketed field there, and drop the
+section headers and divider rules when emitting it. 'Iteration 1:', 'Iteration 2:'
+and 'Iteration 3:' are literal labels in this protocol, not headings — keep them
+exactly as written wherever they appear.
+
 Use when: text needs to get tighter and shorter through successive passes —
           trimming to a word limit, cutting filler, sharpening explanations.
 
@@ -10,50 +17,58 @@ NOT for: summarization at a FIXED length with rising information density —
          (accuracy + tone + completeness), not compression.
 
 ─────────────────────────────────────────────
-SOURCE CONTENT:
-[Paste the content to be compressed here]
+SOURCE MATERIAL:
+[Paste the full text to be compressed here.]
+Use the material above as the text to be compressed for the work described below.
+Every version must be a rewrite of that material — never introduce a claim it does
+not support.
 
 ─────────────────────────────────────────────
 OPTIMIZATION GOAL:
-[What should improve with each pass?]
-Examples:
-- "Reduce word count by 20% each pass while retaining all key information"
-- "Increase information density — remove filler, make every sentence earn its place"
-- "Improve clarity — each pass should be more direct and easier to understand"
+Every pass must move the text toward this goal:
+[A full sentence naming what improves and by how much, not a bare label like
+"concision." For example: "Reduce word count by 20% each pass while retaining all key
+information," or "Raise information density — cut filler until every sentence earns
+its place."]
 
 ─────────────────────────────────────────────
 TARGET:
-[Where should this end up? A word count, a reading level, a single paragraph.]
+The final version must reach this end state:
+[A phrase completing the sentence above, e.g. "under 150 words and readable by a
+non-specialist." Name the unit, not a bare number.]
 
 ─────────────────────────────────────────────
 NUMBER OF ITERATIONS:
-[How many refinement passes? Typical: 2-4]
-Iteration 1: [First pass — initial improvement]
-Iteration 2: [Second pass — tighten further]
-Iteration 3: [Optional — final polish]
+Run this many passes in total:
+[The count as a phrase completing the sentence above, e.g. "three passes."
+Typical: 2-4]
+Iteration 1: [What this first pass must do to the source text, as a full sentence.]
+Iteration 2: [How this pass tightens the result of pass 1, as a full sentence.]
+Iteration 3: [Optional — what this final polish pass must do, as a full sentence.
+Delete this line if running fewer than three passes; add further Iteration lines in
+the same form if running more.]
 
 ─────────────────────────────────────────────
 ITERATION INSTRUCTIONS:
-For each iteration:
-1. Identify what can be cut, compressed, or clarified
-2. Apply the changes
-3. Verify: does this version better meet the optimization goal than the previous?
-4. Confirm nothing essential was lost — compression must not drop content that
-   the goal requires keeping
-5. Stop when: [define your stopping criterion]
-   Examples: "length < 150 words", "no filler words remain", "3 iterations complete"
+In each pass, identify what can be cut, compressed, or clarified, apply the changes,
+then check both that the result serves the goal above better than the version before
+it and that nothing the goal requires keeping was lost. Stop when [a clause completing
+this sentence, e.g. "no filler words remain" or "all three passes are complete"].
 
 ─────────────────────────────────────────────
 OUTPUT FORMAT:
-[What format should the final result be in?]
-Examples: paragraph, bullet list, 1-sentence summary, structured sections
+Deliver the final version in this format:
+[A phrase completing the sentence above, e.g. "a single paragraph of continuous
+prose," a bullet list, or a one-sentence summary.]
 
 ─────────────────────────────────────────────
-OPTIONAL — SHOW INTERMEDIATE VERSIONS:
-Set to YES if you want to see each iteration's output.
-Set to NO if you only want the final result.
+INTERMEDIATE VERSIONS:
+[Optional — keep exactly one of these two sentences as the entire content of this
+block, or delete the block: "Show the output of every iteration in order, labelled by
+pass number." / "Show only the final version — do not print the intermediate
+passes."]
 
 ─────────────────────────────────────────────
-NOTE: Compression has a floor. Past a point, further passes strip meaning rather
-than filler. If an iteration removes something a reader would need, stop at the
-previous version.
+Compression has a floor. Past a point, passes strip meaning rather than filler. If a
+pass would remove something a reader needs, stop at the previous version and deliver
+that.

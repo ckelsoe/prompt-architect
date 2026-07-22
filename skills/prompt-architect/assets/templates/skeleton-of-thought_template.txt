@@ -1,15 +1,23 @@
-PHASE 1 — SKELETON:
-Generate a skeleton outline for the following topic or question.
-List only the key points — one per line — in this format:
-N. [Point name] | [One-sentence description of what this point covers]
-Do not expand yet. Skeleton only.
+SOURCE MATERIAL:
+[Optional — paste the document, data, or notes the answer must be drawn from here. If you
+have nothing to paste, delete this bracketed block along with the sentence directly below
+it.]
+Use the material above as the factual basis for the work described below.
+
+Answer the topic or question below in two phases: first a skeleton outline, then a full
+expansion of every point in that skeleton.
 
 TOPIC / QUESTION:
-[Your topic or question]
+[Write out the full topic or question as a complete, self-contained sentence rather than a
+bare noun phrase, including any audience, scope, or depth of coverage specified]
 
----
+PHASE 1 — SKELETON:
+First, outline the topic above. List only the key points, one per line, in this format:
+N. [Point name] | [One-sentence description of what this point covers]
+Replace N with the point's number and fill in both bracketed parts, keeping that line's
+format exactly. Produce the skeleton and nothing else — do not expand any point yet.
 
 PHASE 2 — EXPAND:
-Now expand each skeleton point into [2-4 sentences / a paragraph / detailed coverage].
-Each point should be self-contained and complete.
-[Optional: expand points in parallel by sending each as a separate API call]
+Once the skeleton is complete, expand each of its points into [2-4 sentences / a paragraph /
+detailed coverage]. Restate a point's name before expanding it, and make each expansion
+self-contained.

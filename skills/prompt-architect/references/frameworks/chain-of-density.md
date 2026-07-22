@@ -34,12 +34,12 @@ Entity identification is done by the model itself inside the loop — there is n
 
 ## The Method
 
-Five iterations, issued as a **single prompt** that returns all five summaries at once (not five separate turns):
+`[N]` iterations, issued as a **single prompt** that returns all `[N]` summaries at once (not `[N]` separate turns). The paper uses five, and that is the template's default when the user gives no number:
 
-1. **Write a deliberately sparse first summary.** Long (4-5 sentences, ~80 words) but highly non-specific, padded with filler like "this article discusses." The padding is intentional — it creates the slack that later steps convert into entities.
+1. **Write a deliberately sparse first summary.** Long (4-5 sentences, ~`[TARGET]` words) but highly non-specific, padded with filler like "this article discusses." The padding is intentional — it creates the slack that later steps convert into entities.
 2. **Identify 1-3 missing entities** from the article that are absent from the current summary.
 3. **Rewrite at identical length**, covering everything from the previous summary *plus* the new entities. Make room through fusion, compression, and removal of uninformative phrases.
-4. **Repeat steps 2-3** until five summaries exist.
+4. **Repeat steps 2-3** until `[N]` summaries exist.
 5. **Choose the step you want.** Later is not automatically better — human raters preferred steps 2-3.
 
 **Never drop entities from the previous summary.** If space cannot be made, add fewer new entities. Under pressure, density yields — length and prior content do not.
@@ -57,48 +57,70 @@ Five iterations, issued as a **single prompt** that returns all five summaries a
 - Progressive shortening to a target word count → use **Iterative Compression**
 - Non-summarization tasks. CoD is summarization-specific; the paper evaluates it only on news articles (CNN/DailyMail).
 
-## The Prompt
+## Template Structure
 
-This is the paper's actual prompt, lightly reformatted. It is reproduced closely because the specific wording — especially the fixed-length instruction and the entity criteria — is what makes the technique work.
+The block below is the template's prompt region as authored — what you fill in, not what you send. (Its divider rules are omitted; they mark the guidance/prompt boundary inside the template file and never ship.) Section headers are stripped at emission, so every slot's meaning is carried by the prose around and inside it rather than by the header above it. `SOURCE MATERIAL:` is such a header — it goes, and the unbracketed sentence below it is what tells the model the pasted text is the article to summarize. `Step 1.`, `Step 2.` and `Guidelines:` are the exception: they are literal labels inside the paper's protocol, not document structure, and they ship verbatim.
+
+`[TARGET]` is the fixed word budget and `[N]` the number of summaries, both as bare numerals. Substitute the same numeral at every occurrence of each — in the prompt body below, `[TARGET]` appears three times and `[N]` three times. (The template file names each twice more in its guidance region; those are descriptions of the fields, not slots, and never ship.) The paper's settings are `[TARGET]` = 80 and `[N]` = 5; use those if the user gave no numbers of their own.
 
 ```
-Article: {{ARTICLE}}
+SOURCE MATERIAL:
+[Paste the full document to be summarized here.]
+Use the material above as the article to be summarized for the work described below.
 
-You will generate increasingly concise, entity-dense summaries of the above Article.
+You will generate increasingly concise, entity-dense summaries of the article above.
+Produce [N] summaries in total, each denser than the last, all in a single response.
+Every summary must be exactly [TARGET] words long.
 
-Repeat the following 2 steps 5 times.
+Repeat the following 2 steps [N] times.
 
-Step 1. Identify 1-3 informative Entities (";" delimited) from the Article which are
-missing from the previously generated summary.
-Step 2. Write a new, denser summary of identical length which covers every entity and
-detail from the previous summary plus the Missing Entities.
+Step 1. Identify 1-3 informative entities (";" delimited) from the article which
+are missing from the previously generated summary.
+Step 2. Write a new, denser summary of identical length which covers every entity
+and detail from the previous summary plus the missing entities.
 
-A Missing Entity is:
+A missing entity is:
 - Relevant: to the main story.
 - Specific: descriptive yet concise (5 words or fewer).
 - Novel: not in the previous summary.
-- Faithful: present in the Article.
-- Anywhere: located anywhere in the Article.
+- Faithful: present in the article.
+- Anywhere: located anywhere in the article.
 
 Guidelines:
-- The first summary should be long (4-5 sentences, ~80 words) yet highly non-specific,
-  containing little information beyond the entities marked as missing. Use overly verbose
-  language and fillers (e.g., "this article discusses") to reach ~80 words.
-- Make every word count: re-write the previous summary to improve flow and make space for
-  additional entities.
-- Make space with fusion, compression, and removal of uninformative phrases like "the
-  article discusses".
-- The summaries should become highly dense and concise yet self-contained, e.g., easily
-  understood without the Article.
+- The first summary should be long (4-5 sentences, ~[TARGET] words) yet highly
+  non-specific, containing little information beyond the entities marked as missing.
+  Use overly verbose language and fillers (e.g., "this article discusses") to reach
+  ~[TARGET] words.
+- Make every word count: re-write the previous summary to improve flow and make
+  space for additional entities.
+- Make space with fusion, compression, and removal of uninformative phrases like
+  "the article discusses".
+- The summaries should become highly dense and concise yet self-contained, e.g.,
+  easily understood without the article.
 - Missing entities can appear anywhere in the new summary.
-- Never drop entities from the previous summary. If space cannot be made, add fewer new
-  entities.
+- Never drop entities from the previous summary. If space cannot be made, add
+  fewer new entities.
 
 Remember, use the exact same number of words for each summary.
 
-Answer in JSON. The JSON should be a list (length 5) of dictionaries whose keys are
+Answer in JSON. The JSON should be a list (length [N]) of dictionaries whose keys are
 "Missing_Entities" and "Denser_Summary".
+
+After the JSON, and outside it, add one short paragraph naming which summary you
+recommend and why. Do not default to the last one: in the paper's human evaluation,
+summary 2 (30.8% of first-place votes) and summary 3 (23.0%) were preferred over the
+sparse summary 1 (8.3%), because past a point density costs readability.
 ```
+
+### Relationship to the paper's original prompt
+
+The body above is the paper's prompt, reproduced closely on purpose — the specific wording, especially the fixed-length instruction and the entity criteria, is what makes the technique work. Three deliberate departures:
+
+- **`SOURCE MATERIAL:` replaces the paper's `Article: {{ARTICLE}}` field.** Same job, house convention, and the trailing sentence survives header-stripping where a bare `Article:` label would not.
+- **`[TARGET]` and `[N]` are parameterized** where the paper hardcodes 80 and 5, so the template serves a user-supplied budget and pass count.
+- **The closing recommendation paragraph is an addition, not from the paper.** The paper reports the preference numbers; it does not instruct the model to act on them. This template does, so the user gets a pick rather than a default-to-last.
+
+Sentence-case "missing entity" and "article" replace the paper's mid-sentence capitals. That is formatting only — no wording changed.
 
 ## Worked Example
 

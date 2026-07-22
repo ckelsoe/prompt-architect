@@ -4,6 +4,8 @@
 
 Least-to-Most (LtM) prompting is a decomposition-first framework that breaks a complex problem into an ordered sequence of simpler subproblems, then solves them sequentially — using each prior answer as context for the next. Unlike Chain of Thought (which reasons through a problem in one pass), LtM explicitly separates decomposition from execution, and the subproblems are sequenced from simplest to most complex.
 
+When the prompt is emitted, its section headers — PROBLEM, SOURCE MATERIAL, DECOMPOSE, SOLVE SEQUENTIALLY — are stripped and the model receives a flat block; the decomposition and solving instructions are written as complete sentences, and the `Subproblem 1:` / `Final:` labels survive as literal labels inside the protocol, so the ordered structure is preserved without the headers.
+
 **Research basis:** "Least-to-Most Prompting Enables Complex Reasoning in Large Language Models" (Zhou et al., Google Brain, arXiv:2205.10625, ICLR 2023). On SCAN compositional generalization: LtM achieves 99.7% vs. CoT's 16%. On GSM8K math: matches or exceeds CoT with fewer errors.
 
 ## Why LtM Differs from Chain of Thought
@@ -19,7 +21,7 @@ Least-to-Most (LtM) prompting is a decomposition-first framework that breaks a c
 ## Components
 
 ### Phase 1: Decomposition
-**Purpose:** Break the original problem into an ordered list of subproblems, from simplest to most complex. The key: later subproblems should build on earlier ones.
+**Purpose:** Break the original problem into an ordered list of subproblems, from simplest to most complex. The key: later subproblems should build on earlier ones. The DECOMPOSE header is stripped at emission, so the instruction that opens this phase must be a complete sentence; the numbered `Subproblem 1:`, `Subproblem 2:`, `Final:` labels are literal labels in the protocol and survive the stripping, which is what preserves the ordering once the header is gone.
 
 **Trigger:** "To solve [problem], we need to first solve: [list subproblems in order]"
 
@@ -29,29 +31,39 @@ Least-to-Most (LtM) prompting is a decomposition-first framework that breaks a c
 - What is the correct ordering — which must come first?
 
 ### Phase 2: Sequential Solving
-**Purpose:** Solve each subproblem in order, explicitly using prior answers as context.
+**Purpose:** Solve each subproblem in order, explicitly using prior answers as context. Once the SOLVE SEQUENTIALLY header is removed, the only thing telling the model to reuse earlier answers is this instruction, so it ships as an explicit sentence — carry each answer forward as context for the next subproblem — rather than resting on the header.
 
 **Pattern:** Answer subproblem 1 → use that answer when solving subproblem 2 → use both when solving subproblem 3 → ... → solve original problem.
 
 ## Template Structure
 
+Section headers — `PROBLEM:`, `SOURCE MATERIAL:`, `DECOMPOSE:`, `SOLVE SEQUENTIALLY:` —
+are stripped at emission, so the instruction beneath each one carries its meaning, and the
+`Subproblem N:` / `Final:` labels stay as literal labels rather than headings. The
+`SOURCE MATERIAL` block is optional: it names the artifact the subproblems reason over and
+is deleted when the problem is self-contained.
+
 ```
 PROBLEM:
 [The full, complex problem to solve]
 
+SOURCE MATERIAL:
+[Optional — paste the source material this problem depends on here (the dataset, figures, code, or document the subproblems must reason over). Delete this line and the one below it if the problem above is self-contained.]
+Every subproblem below must be answered against the material above, not from assumption.
+
 DECOMPOSE:
-Break this problem into ordered subproblems, from simplest to most complex.
+Break this problem into ordered subproblems, from simplest prerequisite to most complex.
 Each later subproblem should build on the answer to the previous.
 
-Subproblem 1: [Simplest prerequisite]
-Subproblem 2: [Next level, may depend on #1]
-Subproblem 3: [More complex, depends on #1-2]
-...
+Subproblem 1: [Simplest prerequisite — must be answered first]
+Subproblem 2: [Builds on #1]
+Subproblem 3: [Builds on #1-2]
+[Add subproblems as needed]
 Final: [The original problem, now solvable using all prior answers]
 
 SOLVE SEQUENTIALLY:
-Solve each subproblem in order. Use prior answers as context for each
-subsequent subproblem. Show each solution before moving to the next.
+Solve each subproblem in order. Use prior answers explicitly as context
+for each subsequent subproblem. Show each solution before moving to the next.
 ```
 
 ### Single-Pass Trigger (model decomposes and solves itself):
@@ -66,12 +78,17 @@ Problem: [your problem]
 
 ## Complete Examples
 
+Every example below is shown in emitted form. Where the subproblems reason over an existing
+artifact, the `SOURCE MATERIAL` block carries it and later subproblems refer to "the
+material above"; where the problem is self-contained, that block is deleted.
+
 ### Example 1: Multi-Hop Reasoning
 
 **Before LtM:**
 "What would the tax implications be for a US remote employee working from Portugal for 3 months?"
 
-**After LtM:**
+**After LtM** (no source material — the problem is self-contained, so the `SOURCE MATERIAL`
+block is deleted):
 ```
 PROBLEM:
 What are the tax implications for a US citizen employed by a US company who
@@ -102,7 +119,8 @@ SOLVE SEQUENTIALLY:
 **Before LtM:**
 "How do I add real-time notifications to my Django app?"
 
-**After LtM:**
+**After LtM** (no source material — the problem is self-contained, so the `SOURCE MATERIAL`
+block is deleted):
 ```
 PROBLEM:
 I need to add real-time push notifications to a Django app with PostgreSQL.
@@ -132,11 +150,15 @@ SOLVE SEQUENTIALLY:
 **Before LtM:**
 "Should we expand to the European market?"
 
-**After LtM:**
+**After LtM** (source material supplied):
 ```
 PROBLEM:
 Our B2B SaaS has strong US traction. Should we expand to the European market
 now, given our current 20-person team and 18 months of runway?
+
+SOURCE MATERIAL:
+[Paste the current financials, team breakdown, and US traction metrics here]
+Every subproblem below must be answered against the material above, not from assumption.
 
 DECOMPOSE:
 Subproblem 1: What are the key differences between US and European B2B SaaS
@@ -148,7 +170,7 @@ Subproblem 2: What resources are typically required for a credible EU market ent
 Subproblem 3: What are the signals that a company is or isn't ready for
 international expansion?
 
-Subproblem 4: Given our specific constraints (20 people, 18 months runway),
+Subproblem 4: Given the team size, runway, and traction shown in the material above,
 how do our resources map to those requirements?
 
 Final: Should we expand to Europe now, wait, or explore a different

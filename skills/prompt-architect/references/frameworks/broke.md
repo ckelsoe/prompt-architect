@@ -4,7 +4,9 @@
 
 BROKE (Background, Role, Objective, Key Results, Evolve) is a business-oriented prompt framework that combines OKR-style measurable outcomes with a built-in self-improvement loop. Its defining feature — the **Evolve** step — instructs the AI to critique its own output and suggest 3 ways to improve it, turning a single prompt into a structured iteration cycle without requiring manual re-prompting.
 
-**Origin:** Community/practitioner framework (documented at myframework.net and in educational AI research). Cited in peer-reviewed educational technology research (Springer, 2025). Widely adopted in business and marketing AI workflows.
+**Origin:** Community/practitioner framework, documented at myframework.net. Practitioner framework — no controlled evaluation of BROKE has been published.
+
+*Correction:* an earlier version of this file stated that BROKE was "Cited in peer-reviewed educational technology research (Springer, 2025)" and "widely adopted in business and marketing AI workflows." The first named no title, author, or DOI and was not checkable as written; the second was an unsupported adoption claim. Both have been removed.
 
 ## Components
 
@@ -44,17 +46,26 @@ BROKE (Background, Role, Objective, Key Results, Evolve) is a business-oriented 
 - "Create a set of 10 FAQ entries covering the most common support topics..."
 
 ### K — Key Results
-**Purpose:** Define measurable outcomes that the output should help achieve. This is the OKR element — it sets a business success bar, not just a quality bar.
+
+**Purpose:** Define measurable *business* outcomes the output should help achieve — a business success bar, not only a quality bar. This is the reading BROKE is routed on in this package, and it is what the template's `KEY RESULTS` slot holds.
+
+**Source reading, and how this package splits it.** The source framework at myframework.net glosses K as the key result of the *answer* — a specification of what the response must contain and what form it must take. This package does not discard that reading; it carries it in a separate slot. `broke_template.txt` holds response-shape requirements in `OUTPUT FORMAT` (placed immediately after `OBJECTIVE`) and business outcomes in `KEY RESULTS`. Both readings are implemented; they simply live in different slots, because a single slot holding both produced templates that specified neither well.
+
+*Correction:* an earlier version of this file gave the business-KPI reading alone — "Define measurable outcomes that the output should help achieve. This is the OKR element" — and presented it as the source framework's own definition of K, with no note that it diverged. It does diverge: myframework.net's gloss of K is the key result of the answer, i.e. a specification of the response itself. The divergence is now disclosed rather than silent, and the discarded half is implemented as `OUTPUT FORMAT`. Caveat on this correction's evidence: myframework.net is a practitioner site with no versioning or archival copy, and the gloss above is a paraphrase of a short entry rather than a quotation from a stable document. Treat the split as this package's disclosed design choice, not as a settled reading of the source.
 
 **Questions to Ask:**
-- What measurable outcome should this drive?
-- How will we know this worked?
-- What metric should improve?
+- What measurable business outcome should this drive?
+- What metric should improve, and how will we know this worked?
+- *(feeds `OUTPUT FORMAT`)* What must the response itself contain, and in what form, length, and depth?
 
-**Examples:**
+**Examples — business outcome (`KEY RESULTS`):**
 - "Key result: reduce average sales cycle from 90 to 60 days within one quarter"
 - "Key result: reduce repeat tickets by 30% within 60 days of publishing"
 - "Key result: increase trial-to-paid conversion from 12% to 18%"
+
+**Examples — answer specification (`OUTPUT FORMAT`):**
+- "Rank the top 3 friction points, with supporting evidence and a proposed fix for each"
+- "Cover all 10 topics, one FAQ entry each, in question-and-answer form"
 
 ### E — Evolve
 **Purpose:** After completing the task, the AI provides 3 specific suggestions for improving the output or the prompt itself. This creates a self-improving loop.
@@ -69,58 +80,110 @@ BROKE (Background, Role, Objective, Key Results, Evolve) is a business-oriented 
 
 ## Template Structure
 
+Section headers are stripped at emission, so every slot's meaning is carried by the prose around and inside it rather than by the header above it.
+
 ```
+This is a business task with a defined success bar. Everything below describes one
+deliverable.
+
+SOURCE MATERIAL:
+[Optional — paste the material this task works from here, named specifically: the current
+process document, the performance data, the existing draft. If you have nothing to paste,
+delete this bracketed block along with the sentence directly below it.]
+Use the material above as the factual basis for the work described below.
+
 BACKGROUND:
-[Current situation, why this task exists, relevant constraints and history]
+Here is the situation this task arises from:
+[Describe the current state as narrative prose: what the organization is, what is
+happening now, and why this task exists. Add prior attempts and constraints only where the
+user supplied them; never invent them.]
 
 ROLE:
-[Professional persona and expertise to embody]
+Take on this professional persona for the work:
+[One second-person sentence beginning "You are…", naming the domain expertise and level of
+experience this task requires.]
 
 OBJECTIVE:
-[The specific task and deliverable]
+Your task is to do the following:
+[One imperative sentence naming what to analyze or produce and what the finished artifact
+is.]
+
+OUTPUT FORMAT:
+Deliver your response in this shape:
+[Name the sections the response should contain, its approximate length or item count, and
+how much supporting detail each part carries.]
 
 KEY RESULTS:
-[Measurable outcomes this output should help achieve — how success is defined]
+Your response will be judged on whether it can plausibly move the measurable outcomes
+below. They are the success bar, not tasks to carry out:
+[List each outcome as a statement naming the metric and its target. Add a baseline or time
+frame only where the user gave one; never invent one — write "[you fill this in: current
+value of <metric>]" instead.]
 
 EVOLVE:
-After completing your response, provide 3 specific suggestions for improving
-this output or approach in a follow-up iteration.
+After completing your response, provide 3 specific suggestions for improving this output
+or approach in a follow-up iteration.
 ```
 
+`OUTPUT FORMAT` is a sixth element in a five-letter acronym. It exists because this package reads K as a business success bar (see the K component above), which leaves the deliverable's shape unspecified. It sits between `OBJECTIVE` and `KEY RESULTS` so that the response's shape is fixed before the metrics appear — which keeps the metrics readable as an evaluation bar for an already-defined artifact rather than as a second set of tasks.
+
 ## Complete Examples
+
+Every example below is shown in emitted form: the framing sentence first, then each
+slot carrying its own role in prose. Read the headers as scaffolding that will be
+deleted — the examples are written so that nothing is lost when it is.
 
 ### Example 1: Sales Process Improvement
 
 **Before BROKE:**
 "Help us improve our sales process."
 
-**After BROKE:**
+**After BROKE** (source material supplied):
 ```
+This is a business task with a defined success bar. Everything below describes one
+deliverable.
+
+SOURCE MATERIAL:
+[Paste the CRM stage-duration export for the last two quarters here]
+Use the material above as the factual basis for the work described below.
+
 BACKGROUND:
-We're a B2B SaaS company (40 employees, $3M ARR) selling to mid-market
-operations teams. Our average deal size is $24K ARR. Sales cycle has
-lengthened from 45 days to 90 days over the last 2 quarters. Win rate
-has held steady at 28% so the issue isn't qualification — it's cycle time.
-Primary bottleneck appears to be the "legal review" stage, which now
-averages 35 days after verbal agreement.
+Here is the situation this task arises from:
+We are a B2B SaaS company of 40 employees at $3M ARR, selling to mid-market
+operations teams at an average deal size of $24K ARR. Our sales cycle has
+lengthened from 45 days to 90 days over the last two quarters. Win rate has held
+steady at 28%, so the problem is not qualification — it is cycle time. The primary
+bottleneck appears to be the legal review stage, which now averages 35 days after
+verbal agreement.
 
 ROLE:
-You are an experienced enterprise SaaS sales consultant who specializes
-in deal velocity and reducing friction in the close process.
+Take on this professional persona for the work:
+You are an experienced enterprise SaaS sales consultant who specializes in deal
+velocity and in removing friction from the close process.
 
 OBJECTIVE:
-Identify the root causes of the 35-day legal review bottleneck and
-provide a prioritized action plan to reduce it.
+Your task is to do the following:
+Identify the root causes of the 35-day legal review bottleneck and produce a
+prioritized action plan for reducing it.
+
+OUTPUT FORMAT:
+Deliver your response in this shape:
+Open with a ranked list of root causes, each stated in one sentence with the
+evidence from the material above that supports it. Follow with an action plan of
+five to eight items ordered by expected impact, giving each item an owning role, an
+effort estimate, and the root cause it addresses. Close with a short paragraph
+naming which causes the supplied data cannot settle.
 
 KEY RESULTS:
-- Reduce legal review stage from 35 days to 15 days within 2 quarters
-- Increase overall win rate from 28% to 32% by removing friction at close
-- Reduce sales rep time spent on legal coordination by 50%
+Your response will be judged on whether it can plausibly move the measurable outcomes
+below. They are the success bar, not tasks to carry out:
+- Reduce the legal review stage from 35 days to 15 days within 2 quarters.
+- Increase overall win rate from 28% to 32% by removing friction at close.
+- Reduce sales rep time spent on legal coordination by 50%.
 
 EVOLVE:
-After your response, provide 3 suggestions for how this analysis or
-action plan could be improved with additional information or a different
-approach.
+After completing your response, provide 3 specific suggestions for improving this
+analysis or action plan in a follow-up iteration.
 ```
 
 ### Example 2: Content Strategy
@@ -128,30 +191,46 @@ approach.
 **Before BROKE:**
 "Create a content plan for our blog."
 
-**After BROKE:**
+**After BROKE** (no source material — the calendar is generated from scratch, so the
+`SOURCE MATERIAL` block and the sentence below it are both deleted):
 ```
+This is a business task with a defined success bar. Everything below describes one
+deliverable.
+
 BACKGROUND:
-We are a developer tools company (open-source project management for engineers).
-Our blog currently publishes 2 posts/month with low organic traffic (500
-visits/month). Competitors publish 8-12 posts/month and dominate searches for
-our core keywords. Our DevRel team has capacity for 4 posts/month.
+Here is the situation this task arises from:
+We are a developer tools company building open-source project management for
+engineers. Our blog currently publishes 2 posts per month and draws about 500
+organic visits per month. Competitors publish 8 to 12 posts per month and dominate
+search for our core keywords. Our DevRel team has capacity for 4 posts per month.
 
 ROLE:
-You are a content strategist specializing in developer-focused technical
-content marketing and SEO.
+Take on this professional persona for the work:
+You are a content strategist who specializes in developer-focused technical content
+marketing and technical SEO.
 
 OBJECTIVE:
-Create a 3-month content calendar targeting keywords with real traffic
-potential and aligned with our product's value proposition.
+Your task is to do the following:
+Create a 3-month content calendar targeting keywords with real traffic potential
+and aligned with our product's value proposition.
+
+OUTPUT FORMAT:
+Deliver your response in this shape:
+Produce a month-by-month calendar of 12 posts, 4 per month. Give each post a
+working title, its target keyword, the search intent it serves, the funnel stage it
+belongs to, and a two-sentence summary of the angle. Follow the calendar with a
+short section explaining the sequencing logic across the three months.
 
 KEY RESULTS:
-- Increase organic blog traffic from 500 to 2,000 visits/month in 3 months
-- Generate 50+ qualified leads from content monthly by month 4
-- Rank on page 1 for at least 5 target keywords within 6 months
+Your response will be judged on whether it can plausibly move the measurable outcomes
+below. They are the success bar, not tasks to carry out:
+- Increase organic blog traffic from 500 to 2,000 visits per month within 3 months.
+- Generate 50 or more qualified leads from content per month by month 4.
+- Rank on page 1 for at least 5 target keywords within 6 months.
 
 EVOLVE:
-After your content calendar, suggest 3 improvements — either to the
-plan itself or additional information that would make it more effective.
+After completing your calendar, provide 3 specific suggestions for improving this
+plan, or name the additional information that would make it more effective.
 ```
 
 ### Example 3: Team Process
@@ -159,30 +238,50 @@ plan itself or additional information that would make it more effective.
 **Before BROKE:**
 "How should we run better sprint retrospectives?"
 
-**After BROKE:**
+**After BROKE** (source material supplied):
 ```
+This is a business task with a defined success bar. Everything below describes one
+deliverable.
+
+SOURCE MATERIAL:
+[Paste the notes and action-item lists from the last 4 retrospectives here]
+Use the material above as the factual basis for the work described below.
+
 BACKGROUND:
+Here is the situation this task arises from:
 Our 8-person engineering team has been running 2-week sprints for 6 months.
-Retrospectives currently take 45 minutes and follow Start/Stop/Continue.
-Team feedback: retros feel repetitive, same issues come up every sprint,
-no visible follow-through on action items between retros.
+Retrospectives currently take 45 minutes and follow a Start/Stop/Continue format.
+The team reports that retros feel repetitive, that the same issues resurface every
+sprint, and that there is no visible follow-through on action items between retros.
 
 ROLE:
-You are an experienced Agile coach who has worked with engineering teams
-at growth-stage startups.
+Take on this professional persona for the work:
+You are an experienced Agile coach who has worked with engineering teams at
+growth-stage startups.
 
 OBJECTIVE:
-Redesign our retrospective format and process to make action items
-stick and prevent the same issues from recurring.
+Your task is to do the following:
+Redesign our retrospective format and the process around it so that action items
+stick and the same issues stop recurring.
+
+OUTPUT FORMAT:
+Deliver your response in this shape:
+Begin with a short diagnosis of why the current format is recycling issues, citing
+specific patterns from the retro notes above. Then give the redesigned format as a
+timeboxed agenda totalling 45 minutes or less. Then describe the between-retro
+follow-through process, naming who owns each step. Close with the first three
+changes to make and the order to make them in.
 
 KEY RESULTS:
-- Reduce repeat items in retros by 70% within 2 months
-- At least 80% of action items closed before next retro
-- Team satisfaction with retros (currently 5/10) above 7.5/10 by month 2
+Your response will be judged on whether it can plausibly move the measurable outcomes
+below. They are the success bar, not tasks to carry out:
+- Reduce repeat items across retros by 70% within 2 months.
+- Close at least 80% of action items before the next retro.
+- Raise team satisfaction with retros from 5/10 to above 7.5/10 by month 2.
 
 EVOLVE:
-After your recommendations, provide 3 things you would need to know
-to make this advice more specific or likely to succeed.
+After completing your recommendations, provide 3 specific things you would need to
+know to make this advice more specific or more likely to succeed.
 ```
 
 ## Best Use Cases
@@ -238,5 +337,6 @@ to make this advice more specific or likely to succeed.
 | Background | Situation | "What's the context and history?" |
 | Role | Expertise | "Who should do this?" |
 | Objective | Task | "What needs to be delivered?" |
-| Key Results | Success metrics | "How will we measure success?" |
+| Output Format | Response shape | "What structure, length, and depth does the answer need?" |
+| Key Results | Business success metrics | "What metric should this move, and by how much?" |
 | Evolve | Self-improvement | "How can this be better?" |

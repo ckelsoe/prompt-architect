@@ -4,6 +4,8 @@
 
 Plan-and-Solve (PS+) is a zero-shot prompting technique that improves upon standard Chain of Thought by instructing the model to explicitly plan the solution approach before executing it — and to be careful about extracting variables and calculating intermediate results. It requires no examples or demonstrations and consistently outperforms Zero-Shot CoT ("Let's think step by step") on reasoning tasks.
 
+When the prompt is emitted, the `PROBLEM:` and `SOURCE MATERIAL:` headers are stripped and the instruction reaches the model as a flat block. The plan-and-solve trigger is already a complete sentence, so it survives the stripping intact and needs no carrier sentence; the optional `SOURCE MATERIAL` block names the figures the calculation runs on and ties them to the problem in prose, and is deleted when the problem already states every value.
+
 **Research basis:** "Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models" (Wang et al., ACL 2023, arXiv:2305.04091). Tested across 10 reasoning datasets — consistently outperforms Zero-Shot-CoT and is competitive with few-shot CoT.
 
 ## The Core Trigger Phrases
@@ -29,11 +31,22 @@ The PS+ additions over PS:
 
 ## Template Structure
 
+Section headers — `PROBLEM:` and `SOURCE MATERIAL:` — are stripped at emission, so the
+trigger that follows is written as a complete sentence and survives on its own; it was
+already prose, not a header, which is why PS+ needs no carrier sentence for it. The template
+drops the old `INSTRUCTION:` header for the same reason: a header there would only be
+stripped anyway, so the trigger now sits as bare prose. The `SOURCE MATERIAL` block is
+optional — it names the dataset or table the calculation runs on and is deleted when the
+problem already states every value needed.
+
 ```
 PROBLEM:
-[Your problem or question]
+[Your question, calculation, or reasoning problem]
 
-INSTRUCTION:
+SOURCE MATERIAL:
+[Optional — paste the source data the problem depends on here (the dataset, table, figures, or constraint list the calculation runs on). Delete this line and the one below it if the problem above already states every value needed.]
+The figures and constraints in the material above are authoritative — extract from them rather than from assumed or recalled values.
+
 Let's first understand the problem, extract relevant variables and their
 corresponding numerals, and devise a complete plan. Then, let's carry out
 the plan, calculate intermediate values, pay attention to computation,
@@ -50,12 +63,19 @@ step by step.
 
 ## Complete Examples
 
+Every example below is shown in emitted form. The plan-and-solve trigger is the same
+complete sentence in each — it is what survives header stripping. Where the calculation runs
+on a pasted dataset or constraint list, the `SOURCE MATERIAL` block carries it and the
+problem refers to "the material above"; where every value is already in the problem
+statement, that block is deleted.
+
 ### Example 1: Math / Calculation
 
 **Before PS+:**
 "If a SaaS company has 500 customers at $200/month each, 5% monthly churn, and adds 30 new customers per month, what is the MRR in 6 months?"
 
-**After PS+:**
+**After PS+** (no source material — every value is stated in the problem, so the
+`SOURCE MATERIAL` block is deleted):
 ```
 PROBLEM:
 A SaaS company has 500 customers paying $200/month each. Monthly churn
@@ -98,13 +118,16 @@ Final answer: Month 6 MRR = $X
 **Before PS+:**
 "Our API is returning responses in 800ms average. We want to get it under 200ms. What should we do?"
 
-**After PS+:**
+**After PS+** (source material supplied):
 ```
 PROBLEM:
 Our REST API averages 800ms response time. Target is under 200ms.
 The API serves product catalog queries (read-heavy), is Node.js with
-PostgreSQL, and currently has no caching layer. Database queries are
-the main bottleneck (600ms average per request).
+PostgreSQL, and currently has no caching layer.
+
+SOURCE MATERIAL:
+[Paste the endpoint's profiling output and the current server and database configuration here]
+The figures and constraints in the material above are authoritative — extract from them rather than from assumed or recalled values.
 
 Let's first understand the problem, extract relevant variables and their
 corresponding numerals, and devise a complete plan. Then, let's carry out
@@ -116,7 +139,8 @@ the plan and solve step by step.
 **Before PS+:**
 "What's our payback period if CAC is $1,200 and average MRR per customer is $150 with 70% gross margin?"
 
-**After PS+:**
+**After PS+** (no source material — every value is stated in the problem, so the
+`SOURCE MATERIAL` block is deleted):
 ```
 PROBLEM:
 Customer Acquisition Cost (CAC): $1,200
@@ -136,10 +160,15 @@ and solve the problem step by step.
 **Before PS+:**
 "Given these constraints [complex scheduling problem], is there a valid schedule?"
 
-**After PS+:**
+**After PS+** (source material supplied):
 ```
 PROBLEM:
-[Complex scheduling problem with constraints]
+Determine whether a valid schedule exists that satisfies every constraint,
+or prove that none does.
+
+SOURCE MATERIAL:
+[Paste the full list of scheduling constraints — resources, time windows, and dependencies — here]
+The figures and constraints in the material above are authoritative — extract from them rather than from assumed or recalled values.
 
 Let's first understand the problem, extract all constraints and their
 relationships, and devise a complete plan for finding a valid schedule

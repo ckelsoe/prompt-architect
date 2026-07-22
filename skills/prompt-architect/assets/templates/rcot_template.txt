@@ -1,6 +1,14 @@
 STEP 1 — INITIAL ANSWER:
 Answer the following question using step-by-step reasoning. Show your work.
 
+SOURCE MATERIAL:
+[Optional — paste the document the question below is grounded in here (the
+requirements list, contract, specification, or dataset that states the
+conditions to be satisfied). If every condition is already stated in the
+question itself, delete this bracketed block and the sentence directly below
+it.]
+Treat the material above as part of the original question at every step below.
+
 QUESTION:
 [Your question with all conditions and constraints]
 

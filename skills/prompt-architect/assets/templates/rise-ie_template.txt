@@ -2,6 +2,10 @@ ROLE:
 [Define the perspective or expertise needed for this task]
 
 INPUT:
+[Paste the data or content to be processed here — name it specifically in this line, e.g.
+"Paste the customer review export (CSV) here". Paste the material itself, not a description of it.]
+
+About the material above:
 [Specify what data/content is being provided:
 - Format and structure (CSV, JSON, text, etc.)
 - Key characteristics and fields

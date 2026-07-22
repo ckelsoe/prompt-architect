@@ -2,14 +2,14 @@
 
 ## Overview
 
-APE (Action, Purpose, Expectation) is the most minimal structured prompt framework — even simpler than RTF or CTF. It is designed for ultra-quick, single-sentence or two-sentence prompts where adding more structure would be overkill. APE answers three essential questions in the fewest possible words: what to do, why it matters, and what success looks like.
+APE (Action, Purpose, Expectation) is the most minimal structured prompt framework — even simpler than RTF or CTF. It is designed for ultra-quick, self-contained tasks where adding more structure would be overkill. APE answers three essential questions in the fewest possible words: what to do, why it matters, and what success looks like. A complete APE prompt emits as three short sentences, which makes it the shortest template in this package.
 
 **Origin:** No single documented originator. Action-Purpose-Expectation is a community prompt-engineering convention, documented in practitioner guides from 2024 onward (earliest found: fvivas.com, 15 March 2024) with no attributed creator. It does not appear in any peer-reviewed prompting survey, including The Prompt Report (arXiv 2406.06608). **Not to be confused with** APE = "Automatic Prompt Engineer" from Zhou et al., "Large Language Models Are Human-Level Prompt Engineers" (arXiv 2211.01910, ICLR 2023) — an unrelated automated method that searches over LLM-generated candidate instructions and selects the highest-scoring one. That APE is an algorithm, not a prompt template; the two share only the acronym.
 
 ## Components
 
 ### A - Action
-**Purpose:** State the core action to take. One clear verb-driven instruction.
+**Purpose:** State the core action to take, as one complete imperative sentence. Nothing else in an APE prompt states the task, so a bare noun phrase ("meeting summary") leaves the emitted prompt with no instruction in it at all.
 
 **Questions to Ask:**
 - What exactly should happen?
@@ -17,13 +17,13 @@ APE (Action, Purpose, Expectation) is the most minimal structured prompt framewo
 - What's the one thing needed?
 
 **Examples:**
-- "Write a function that..."
-- "Summarize this document..."
-- "Translate the following..."
-- "List three alternatives to..."
+- "Write a JSDoc comment for the function above."
+- "Summarize the key decisions in the transcript above."
+- "Translate the error message above into Brazilian Portuguese."
+- "List three alternative approaches to the indexing problem described above."
 
 ### P - Purpose
-**Purpose:** State why this action is needed. Provides just enough context to calibrate the output without a full background brief.
+**Purpose:** State why this action is needed. Provides just enough context to calibrate the output without a full background brief. It ships inside the carrier sentence `Calibrate the result to this purpose: …`, so the slot itself may be a fragment.
 
 **Questions to Ask:**
 - Why is this needed?
@@ -31,13 +31,13 @@ APE (Action, Purpose, Expectation) is the most minimal structured prompt framewo
 - Who needs it and why?
 
 **Examples:**
-- "...so a new engineer can understand the codebase quickly"
-- "...for inclusion in a weekly stakeholder email"
-- "...because our target market is in Brazil"
-- "...to help decide which approach to take"
+- "a new engineer who needs to understand the codebase quickly"
+- "inclusion in a weekly stakeholder email"
+- "end users in Brazil, who will see this message in production"
+- "the team deciding which approach to pursue in tomorrow's planning session"
 
 ### E - Expectation
-**Purpose:** Define what a good result looks like. The standard for success.
+**Purpose:** Define what a good result looks like. The standard for success. It ships inside the carrier sentence `A good result meets this standard: …`, so the slot itself may be a fragment, and may hold several clauses.
 
 **Questions to Ask:**
 - What does a good result look like?
@@ -45,36 +45,65 @@ APE (Action, Purpose, Expectation) is the most minimal structured prompt framewo
 - Length, format, or tone requirements?
 
 **Examples:**
-- "Should be under 100 words and jargon-free"
-- "Should be actionable, not just descriptive"
-- "Should fit in a single Slack message"
-- "Should have a clear recommendation at the end"
+- "under 100 words and jargon-free"
+- "actionable, not just descriptive"
+- "short enough to fit in a single Slack message"
+- "ends with a clear recommendation"
 
 ## Template Structure
 
+Section headers are stripped at emission, so every slot's meaning is carried by the prose around and inside it rather than by the header above it. That is why `ACTION` has to be a complete sentence, and why `PURPOSE` and `EXPECTATION` ship with carrier sentences that let their own slots stay fragments.
+
 ```
-ACTION: [What to do]
-PURPOSE: [Why it's needed]
-EXPECTATION: [What a good result looks like]
+SOURCE MATERIAL:
+[Optional — paste the artifact the task operates on here, named concretely (the meeting
+transcript, the function). If the task creates something from scratch, delete this
+bracketed block along with the sentence directly below it.]
+Use the material above as the input for the task described below.
+
+ACTION:
+[One complete imperative sentence naming what to produce, e.g. "Summarize the decisions in
+the transcript above." Never a bare noun phrase like "meeting summary" — nothing else here
+states the task. The two fields below may be fragments.]
+
+PURPOSE:
+Calibrate the result to this purpose: [who needs it and what they will do with it].
+
+EXPECTATION:
+A good result meets this standard: [the success bar — length, format, tone, or quality].
 ```
 
-Or as a single sentence:
-```
-[ACTION] so that [PURPOSE], and it should [EXPECTATION].
-```
+`SOURCE MATERIAL` is a fourth block in a three-letter acronym, and it carries no letter because it is optional. APE is usually pointed at something that already exists — a transcript, a function, a draft — and with no named place to put it, that artifact gets pasted into `ACTION`, the one field that cannot afford to lose its shape. Delete the block and the sentence beneath it whenever the task creates something from scratch.
+
+There is no collapsed single-sentence variant; see **Why There Is No Inline Form** below.
 
 ## Complete Examples
+
+Every example below is shown in emitted form: each slot carries its own role in prose.
+Read the headers as scaffolding that will be deleted — the examples are written so that
+nothing is lost when it is.
 
 ### Example 1: Code Comment
 
 **Before APE:**
 "Add a comment to this function."
 
-**After APE:**
+**After APE** (source material supplied):
 ```
-ACTION: Write a JSDoc comment for this function.
-PURPOSE: So a new team member can understand what it does without reading the implementation.
-EXPECTATION: Should cover parameters, return value, and one usage example. Under 8 lines.
+SOURCE MATERIAL:
+[Paste the function you want documented here]
+Use the material above as the input for the task described below.
+
+ACTION:
+Write a JSDoc comment for the function above.
+
+PURPOSE:
+Calibrate the result to this purpose: a new team member who needs to understand what the
+function does without reading its implementation.
+
+EXPECTATION:
+A good result meets this standard: covers every parameter and the return value, includes
+one usage example, and stays under 8 lines.
 ```
 
 ### Example 2: Meeting Summary
@@ -82,11 +111,22 @@ EXPECTATION: Should cover parameters, return value, and one usage example. Under
 **Before APE:**
 "Summarize this meeting."
 
-**After APE:**
+**After APE** (source material supplied):
 ```
-ACTION: Summarize the key decisions and action items from this meeting transcript.
-PURPOSE: For team members who missed the meeting and need to catch up quickly.
-EXPECTATION: Bullet points only, max 10 bullets, each under 15 words.
+SOURCE MATERIAL:
+[Paste the meeting transcript here]
+Use the material above as the input for the task described below.
+
+ACTION:
+Summarize the key decisions and action items in the transcript above.
+
+PURPOSE:
+Calibrate the result to this purpose: team members who missed the meeting and need to
+catch up quickly.
+
+EXPECTATION:
+A good result meets this standard: bullet points only, at most 10 bullets, each under 15
+words.
 ```
 
 ### Example 3: Alternative Ideas
@@ -94,11 +134,22 @@ EXPECTATION: Bullet points only, max 10 bullets, each under 15 words.
 **Before APE:**
 "Give me options."
 
-**After APE:**
+**After APE** (source material supplied):
 ```
-ACTION: List 3 alternative approaches to the database indexing problem described below.
-PURPOSE: To help the team decide which direction to pursue in tomorrow's planning session.
-EXPECTATION: Each option needs a one-sentence tradeoff (pro and con). No implementation details yet.
+SOURCE MATERIAL:
+[Paste the description of the database indexing problem here]
+Use the material above as the input for the task described below.
+
+ACTION:
+List three alternative approaches to the indexing problem described above.
+
+PURPOSE:
+Calibrate the result to this purpose: the team deciding which direction to pursue in
+tomorrow's planning session.
+
+EXPECTATION:
+A good result meets this standard: each option gets a one-sentence tradeoff naming one
+advantage and one cost, and none of them go into implementation detail yet.
 ```
 
 ### Example 4: Translation
@@ -106,11 +157,43 @@ EXPECTATION: Each option needs a one-sentence tradeoff (pro and con). No impleme
 **Before APE:**
 "Translate this."
 
-**After APE:**
+**After APE** (source material supplied):
 ```
-ACTION: Translate the following error message into Portuguese (Brazilian).
-PURPOSE: Our app is launching in Brazil and this error will be seen by end users.
-EXPECTATION: Natural-sounding Brazilian Portuguese, not a literal translation. Keep technical terms in English.
+SOURCE MATERIAL:
+[Paste the error message to be translated here]
+Use the material above as the input for the task described below.
+
+ACTION:
+Translate the error message above into Brazilian Portuguese.
+
+PURPOSE:
+Calibrate the result to this purpose: end users in Brazil, who will see this message in
+production when the app fails.
+
+EXPECTATION:
+A good result meets this standard: natural-sounding Brazilian Portuguese rather than a
+literal translation, with technical terms left in English.
+```
+
+### Example 5: Deploy Freeze Announcement
+
+**Before APE:**
+"Write an announcement."
+
+**After APE** (no source material — the announcement is written from scratch, so the
+`SOURCE MATERIAL` block and the sentence below it are both deleted):
+```
+ACTION:
+Write a Slack announcement telling the engineering team that Friday deploys are frozen
+until January 5.
+
+PURPOSE:
+Calibrate the result to this purpose: engineers who need to know what changed and what to
+do instead, not why the policy exists.
+
+EXPECTATION:
+A good result meets this standard: one short paragraph, plain and direct, no more than
+four sentences, ending with who to contact for an exception.
 ```
 
 ## Best Use Cases
@@ -160,24 +243,27 @@ EXPECTATION: Natural-sounding Brazilian Portuguese, not a literal translation. K
 | Context needed? | Minimal (Purpose) | Yes | No |
 | Best for | Ultra-quick, one-off | Context-heavy | Expertise-driven |
 
-## Inline APE Pattern
+## Why There Is No Inline Form
 
-APE works especially well as a single sentence:
+Earlier versions of this document offered a collapsed single sentence as an equal option,
+in two different and mutually inconsistent syntaxes — `[ACTION] so that [PURPOSE], and it
+should [EXPECTATION].` and `[ACTION] for [PURPOSE], and it should [EXPECTATION].` The
+shipped template implements neither, and the emitted prompt should not use them. Two
+things break when APE is collapsed:
 
-```
-[ACTION] for [PURPOSE], and it should [EXPECTATION].
-```
+- **There is nowhere to put source material.** Most APE tasks operate on something that
+  already exists. In the collapsed form that artifact has to be pasted into the middle of
+  the instruction sentence, which is the one field the template protects.
+- **The connectives are load-bearing and rigid.** `so that` and `and it should` only fit
+  purposes and expectations that happen to be single clauses. A real expectation is
+  usually several ("bullet points only, at most 10 bullets, each under 15 words"), and
+  splicing that after `and it should` yields a sentence that no longer parses as an
+  instruction.
 
-**Examples:**
-```
-Summarize this PR description for a non-technical stakeholder, and it should fit in two sentences.
-```
-```
-List three naming alternatives for this function for a code review discussion, and each should be self-explanatory without comments.
-```
-```
-Write a commit message for these changes for git history, and it should follow conventional commits format.
-```
+Brevity is preserved without the collapse. A complete APE prompt is three sentences, and
+for a from-scratch task the emitted block is three lines of prose — still the shortest
+output any template in this package produces. The brevity comes from APE having only
+three fields, not from compressing them onto one line.
 
 ## Common Mistakes
 

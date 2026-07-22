@@ -2,14 +2,14 @@
 
 ## Overview
 
-RACE (Role, Action, Context, Expectation) is a medium-complexity framework that sits between RTF's simplicity and CO-STAR's richness. It adds two critical improvements over RTF: situational context (missing from RTF) and an explicit expectation of success (missing from both RTF and CTF). RACE is ideal when you need all four pillars — expertise framing, task clarity, background, and a defined success bar — without the full overhead of CO-STAR or RISEN.
+RACE (Role, Action, Context, Expectation) is a medium-complexity framework that sits between RTF's simplicity and CO-STAR's richness. It adds two critical improvements over RTF: situational context (missing from RTF) and an explicit expectation of success (missing from both RTF and CTF). RACE is ideal when you need all four pillars — expertise framing, task clarity, background, and a defined success bar — without the full overhead of CO-STAR or RISEN. Section headers are stripped at emission, so a RACE prompt lands as a flat block — a role sentence, an action sentence, a paragraph of context, and a success-bar statement — preceded by an optional source-material block whenever the task applies to an artifact the user already has.
 
 **Origin:** No single documented originator. RACE is a community prompt-engineering convention documented in practitioner guides (e.g. fvivas.com, 20 April 2025) with no attributed creator, and does not appear in any peer-reviewed prompting survey. **Not to be confused with** the RACE digital-marketing planning model (Reach, Act, Convert, Engage), created by Dave Chaffey of Smart Insights in 2010 — an unrelated marketing framework that shares only the acronym.
 
 ## Components
 
 ### R - Role
-**Purpose:** Define the expertise or persona needed for the task.
+**Purpose:** Define the expertise or persona needed for the task. Written as a complete sentence — usually beginning "You are…" — so it still reads as a persona assignment once the `ROLE` header is stripped.
 
 **Questions to Ask:**
 - What expertise is required?
@@ -17,12 +17,12 @@ RACE (Role, Action, Context, Expectation) is a medium-complexity framework that 
 - What level of knowledge is assumed?
 
 **Examples:**
-- "You are a senior backend engineer..."
-- "Act as an experienced UX designer..."
-- "You are a plain-language technical writer..."
+- "You are a senior backend engineer familiar with REST conventions."
+- "Act as an experienced UX designer who works on consumer onboarding flows."
+- "You are a plain-language technical writer for developer documentation."
 
 ### A - Action
-**Purpose:** State what needs to be done — the task.
+**Purpose:** State what needs to be done — the task — as one complete imperative sentence. When source material is supplied above, refer to it as "the … above," never "described below": the artifact precedes the action once emitted, so a downward reference would dangle.
 
 **Questions to Ask:**
 - What exactly needs to happen?
@@ -30,12 +30,12 @@ RACE (Role, Action, Context, Expectation) is a medium-complexity framework that 
 - What's the scope?
 
 **Examples:**
-- "Review this API design for consistency..."
-- "Write user onboarding copy for..."
-- "Identify the top 3 risks in..."
+- "Review the REST API design above for consistency, usability, and potential issues."
+- "Write the copy for a 3-screen onboarding flow for our task management app."
+- "Identify the top 5 risks in the migration plan above."
 
 ### C - Context
-**Purpose:** Provide the situational background needed to calibrate the output.
+**Purpose:** Provide the situational background needed to calibrate the output. It fills as a self-contained paragraph and survives header stripping on its own, so long as it reads as description of a situation rather than a bare label.
 
 **Questions to Ask:**
 - What's the situation?
@@ -44,12 +44,12 @@ RACE (Role, Action, Context, Expectation) is a medium-complexity framework that 
 - What does the audience/recipient need?
 
 **Examples:**
-- "This is a public API used by third-party developers who expect stable contracts..."
-- "The users are first-time app users who may be unfamiliar with our terminology..."
-- "This is for a Series A startup with a 3-person engineering team..."
+- "This is a public API used by third-party developers who expect stable contracts."
+- "The users are first-time app users who may be unfamiliar with our terminology."
+- "This is for a Series A startup with a 3-person engineering team."
 
 ### E - Expectation
-**Purpose:** Define what a successful output looks like — the quality bar.
+**Purpose:** Define what a successful output looks like — the quality bar. Phrase it as a complete statement about the result, not a bare fragment: a phrase like "prioritized list" dangles once the `EXPECTATION` header is deleted, whereas "The review should prioritize the highest-severity issues" still names the standard.
 
 **Questions to Ask:**
 - What does success look like?
@@ -58,43 +58,86 @@ RACE (Role, Action, Context, Expectation) is a medium-complexity framework that 
 - Any specific requirements for the output?
 
 **Examples:**
-- "Should prioritize breaking changes and security risks over style issues"
-- "Should be conversational, not instructional — guide rather than command"
-- "Should fit in a single Confluence page, scannable with headers"
+- "The review should prioritize breaking changes and security risks over style issues."
+- "The copy should be conversational, not instructional — guiding rather than commanding."
+- "The output should fit on a single Confluence page, scannable with headers."
 
 ## Template Structure
 
+Section headers are stripped at emission, so every slot's meaning is carried by the prose
+around and inside it rather than by the header above it. Role fills as a "You are…"
+sentence and Context as a self-contained paragraph, so both stand on their own; Action must
+be a complete imperative sentence, and Expectation must be phrased as a statement about the
+result, because neither can lean on a header once emitted.
+
 ```
-ROLE: [Expertise or persona]
+SOURCE MATERIAL:
+[OPTIONAL — include only if this task operates on something the user already has.
+If so, emit a literal paste instruction naming the specific artifact, e.g. "[Paste the REST API design here]"
+or "[Paste the migration plan here]" — then one line of prose tying it to what follows,
+e.g. "The material above is what the task below applies to."
+When this section is used, word ACTION to refer to the material ABOVE ("the migration plan above"),
+never "described below" — the artifact precedes it and a downward reference would dangle.
+If the task generates entirely from scratch, omit this section — do not emit an empty placeholder.]
 
-ACTION: [What needs to be done]
+ROLE:
+[Define the expertise or persona needed — who should do this task and at what level]
 
-CONTEXT: [Background, situation, constraints]
+ACTION:
+[State clearly what needs to be done — the task and deliverable]
 
-EXPECTATION: [What a good result looks like]
+CONTEXT:
+[Provide the situational background:
+- What's the current state / situation?
+- Who is the audience or recipient of the output?
+- Any relevant constraints or prior decisions?
+- What has already been done?]
+
+EXPECTATION:
+[Define what a successful output looks like:
+- Format and structure requirements
+- Quality bar or success criteria
+- What should be prioritized
+- Length or scope constraints]
 ```
+
+`SOURCE MATERIAL` is a fifth block in a four-letter acronym, and it carries no letter
+because it is optional. When RACE is pointed at something that already exists — an API
+design, a migration plan, a module — that artifact is pasted here, and the Action refers to
+it as "the … above." The upward reference is deliberate: the artifact precedes the Action
+once headers are gone, so any "described below" phrasing would point past the end of the
+prompt. Delete the block and the sentence beneath it whenever the task generates from
+scratch.
 
 ## Complete Examples
+
+Every example below is shown in emitted form: each slot carries its own role in prose.
+Read the headers as scaffolding that will be deleted — the examples are written so that
+nothing is lost when it is.
 
 ### Example 1: API Review
 
 **Before RACE:**
 "Review my API design."
 
-**After RACE:**
+**After RACE** (source material supplied):
 ```
+SOURCE MATERIAL:
+[Paste the REST API design here]
+The material above is what the task below applies to.
+
 ROLE: You are a senior backend engineer with API design experience, familiar with
 REST conventions and developer experience best practices.
 
-ACTION: Review this REST API design for consistency, usability, and potential issues.
+ACTION: Review the REST API design above for consistency, usability, and potential issues.
 
 CONTEXT: This is a public API that will be used by third-party developers. We are
 about to publish v1 and changes after launch will be breaking. The team is small
 (3 engineers) and we have not done a formal API review before.
 
 EXPECTATION: Prioritize issues by severity (breaking vs. cosmetic). Flag anything
-that would frustrate external developers or cause versioning headaches. Format as
-a prioritized list with issue, reason, and suggested fix for each.
+that would frustrate external developers or cause versioning headaches. Format the
+result as a prioritized list with issue, reason, and suggested fix for each.
 ```
 
 ### Example 2: Onboarding Copy
@@ -102,7 +145,8 @@ a prioritized list with issue, reason, and suggested fix for each.
 **Before RACE:**
 "Write onboarding text for our app."
 
-**After RACE:**
+**After RACE** (no source material — the copy is written from scratch, so the
+`SOURCE MATERIAL` block and the sentence below it are both deleted):
 ```
 ROLE: You are a UX writer who specializes in onboarding flows for consumer apps.
 
@@ -114,8 +158,8 @@ an account before seeing this onboarding. The screens are: (1) value prop, (2)
 import/create first task, (3) invite team.
 
 EXPECTATION: Each screen needs a headline (5 words max), one-sentence subhead, and
-CTA button label. Tone: encouraging, simple, no jargon. The copy should build
-momentum toward the first meaningful action.
+CTA button label. Keep the tone encouraging, simple, and jargon-free, and let the
+copy build momentum toward the first meaningful action.
 ```
 
 ### Example 3: Risk Assessment
@@ -123,12 +167,16 @@ momentum toward the first meaningful action.
 **Before RACE:**
 "What are the risks of this approach?"
 
-**After RACE:**
+**After RACE** (source material supplied):
 ```
+SOURCE MATERIAL:
+[Paste the proposed database migration plan here]
+The material above is what the task below applies to.
+
 ROLE: You are a software architect with experience in distributed systems and
 enterprise migrations.
 
-ACTION: Identify the top risks in the proposed database migration plan described below.
+ACTION: Identify the top risks in the database migration plan above.
 
 CONTEXT: We are migrating from a monolithic PostgreSQL database to a microservices
 architecture with separate databases per service. Timeline is 6 months. Team has
@@ -145,20 +193,25 @@ violate the SLA or create data integrity issues as critical.
 **Before RACE:**
 "Document this module."
 
-**After RACE:**
+**After RACE** (source material supplied):
 ```
+SOURCE MATERIAL:
+[Paste the authentication module source here]
+The material above is what the task below applies to.
+
 ROLE: You are a technical writer who writes developer documentation for open-source
 libraries.
 
-ACTION: Write documentation for the authentication module described below.
+ACTION: Write documentation for the authentication module above.
 
 CONTEXT: This is an open-source library used by developers integrating our platform.
 Readers are competent developers but unfamiliar with our specific auth flow. The
 docs will live on our developer portal alongside API reference docs.
 
-EXPECTATION: Include: overview paragraph, when-to-use section, installation snippet,
-quickstart code example, and a table of configuration options. Should be completable
-in one reading session (under 500 words). Use clear headings and real code examples.
+EXPECTATION: Include an overview paragraph, a when-to-use section, an installation
+snippet, a quickstart code example, and a table of configuration options. It should be
+completable in one reading session (under 500 words), with clear headings and real
+code examples.
 ```
 
 ## Best Use Cases

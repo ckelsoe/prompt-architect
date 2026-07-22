@@ -1,5 +1,16 @@
-ACTION: [What to do — one clear verb-driven instruction]
+SOURCE MATERIAL:
+[Optional — paste the artifact the task operates on here, named concretely (the meeting
+transcript, the function). If the task creates something from scratch, delete this
+bracketed block along with the sentence directly below it.]
+Use the material above as the input for the task described below.
 
-PURPOSE: [Why it's needed — one sentence on how it will be used or who needs it]
+ACTION:
+[One complete imperative sentence naming what to produce, e.g. "Summarize the decisions in
+the transcript above." Never a bare noun phrase like "meeting summary" — nothing else here
+states the task. The two fields below may be fragments.]
 
-EXPECTATION: [What a good result looks like — format, length, quality bar, or tone]
+PURPOSE:
+Calibrate the result to this purpose: [who needs it and what they will do with it].
+
+EXPECTATION:
+A good result meets this standard: [the success bar — length, format, tone, or quality].

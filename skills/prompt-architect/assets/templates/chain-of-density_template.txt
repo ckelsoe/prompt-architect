@@ -1,33 +1,39 @@
 === CHAIN OF DENSITY (CoD) TEMPLATE ===
 
+Everything down to the first divider rule is guidance for whoever assembles this
+prompt and never belongs in the finished prompt. The prompt itself runs from that
+divider to the end of the file: fill in every bracketed field there, and drop the
+section headers and divider rules when emitting it. 'Step 1.', 'Step 2.' and
+'Guidelines:' are literal labels in this protocol, not headings — keep them exactly
+as written. [TARGET] is the fixed word budget and [N] the number of summaries, both
+as bare numerals; substitute the same numeral at every occurrence of each.
+
 Use when: summarizing a document and you want maximum information in a fixed
           length — articles, papers, reports, executive summaries, abstracts.
 
 NOT for: general rewriting (use Self-Refine), or progressive shortening to a
          target word count (use Iterative Compression). CoD holds length FIXED
-         and raises density. If your text is getting shorter, this is the
+         and raises density — if your text is getting shorter, this is the
          wrong template.
 
 Based on Adams et al., "From Sparse to Dense: GPT-4 Summarization with Chain of
-Density Prompting" (arXiv 2309.04269, NewSum @ EMNLP 2023).
+Density Prompting" (arXiv 2309.04269, NewSum @ EMNLP 2023). The paper's settings are
+[TARGET] = 80 and [N] = 5; fewer summaries works, more gives diminishing returns. Use
+those if the user gave no numbers of their own.
+
+The padded first summary is intentional, not a mistake — the filler is the slack that
+later iterations convert into entities. A dense first summary leaves no room and the
+chain stalls.
 
 ─────────────────────────────────────────────
-SOURCE ARTICLE:
-[Paste the full document to be summarized here]
+SOURCE MATERIAL:
+[Paste the full document to be summarized here.]
+Use the material above as the article to be summarized for the work described below.
 
 ─────────────────────────────────────────────
-TARGET LENGTH:
-[The fixed word budget every summary must hit. Paper uses ~80 words.]
-
-─────────────────────────────────────────────
-NUMBER OF ITERATIONS:
-[Paper uses 5. Fewer works; more gives diminishing returns.]
-
-─────────────────────────────────────────────
-THE PROMPT — copy from here down, with the fields above filled in:
-
-You will generate increasingly concise, entity-dense summaries of the above
-article.
+You will generate increasingly concise, entity-dense summaries of the article above.
+Produce [N] summaries in total, each denser than the last, all in a single response.
+Every summary must be exactly [TARGET] words long.
 
 Repeat the following 2 steps [N] times.
 
@@ -45,9 +51,9 @@ A missing entity is:
 
 Guidelines:
 - The first summary should be long (4-5 sentences, ~[TARGET] words) yet highly
-  non-specific, containing little information beyond the entities marked as
-  missing. Use overly verbose language and fillers (e.g., "this article
-  discusses") to reach ~[TARGET] words.
+  non-specific, containing little information beyond the entities marked as missing.
+  Use overly verbose language and fillers (e.g., "this article discusses") to reach
+  ~[TARGET] words.
 - Make every word count: re-write the previous summary to improve flow and make
   space for additional entities.
 - Make space with fusion, compression, and removal of uninformative phrases like
@@ -60,17 +66,10 @@ Guidelines:
 
 Remember, use the exact same number of words for each summary.
 
-Answer in JSON. The JSON should be a list (length [N]) of dictionaries whose keys
-are "Missing_Entities" and "Denser_Summary".
+Answer in JSON. The JSON should be a list (length [N]) of dictionaries whose keys are
+"Missing_Entities" and "Denser_Summary".
 
-─────────────────────────────────────────────
-CHOOSING THE OUTPUT:
-Do not automatically take the last summary. In the paper's human evaluation,
-step 2 (30.8% of first-place votes) and step 3 (23.0%) were preferred over the
-sparse step 1 (8.3%). Past a point, density costs readability. Compare the steps
-and pick deliberately.
-
-─────────────────────────────────────────────
-NOTE: The deliberately padded first summary is intentional, not a mistake. The
-filler is the slack that later iterations convert into entities. A dense first
-summary leaves no room and the chain stalls.
+After the JSON, and outside it, add one short paragraph naming which summary you
+recommend and why. Do not default to the last one: in the paper's human evaluation,
+summary 2 (30.8% of first-place votes) and summary 3 (23.0%) were preferred over the
+sparse summary 1 (8.3%), because past a point density costs readability.

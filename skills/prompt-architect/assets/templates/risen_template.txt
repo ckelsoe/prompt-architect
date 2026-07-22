@@ -1,3 +1,10 @@
+SOURCE MATERIAL:
+[OPTIONAL — include only if the procedure below operates on something the user already has.
+If so, emit a literal paste instruction naming the specific artifact, e.g. "[Paste the authentication module source here]"
+or "[Paste the Q3 sales dataset here]" — then one line of prose tying it to what follows,
+e.g. "The material above is what the steps below are applied to."
+If the task generates entirely from scratch, omit this section — do not emit an empty placeholder.]
+
 ROLE:
 [Define the expertise level, persona, or perspective to adopt. What knowledge should be demonstrated?]
 

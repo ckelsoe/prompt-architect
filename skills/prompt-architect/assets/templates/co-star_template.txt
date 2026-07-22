@@ -1,3 +1,11 @@
+SOURCE MATERIAL:
+[OPTIONAL — include only if the content is built from material the user already has.
+If so, emit a literal paste instruction naming the specific artifact, e.g. "[Paste the Q3 revenue report here]"
+or "[Paste the blog post whose voice should be matched here]" — never a generic word like "content" —
+then one line of prose tying it to what follows, e.g. "Use the material above as the factual and stylistic
+basis for what you produce; do not invent details it does not support."
+If the content is written entirely from scratch, omit this section — do not emit an empty placeholder.]
+
 CONTEXT:
 [Provide background information, situation, and any relevant constraints. What's the setting? What's happened before? What limitations exist?]
 

@@ -9,6 +9,14 @@ PROBLEM / QUESTION:
 or constraints — everything needed to reason from.]
 
 ─────────────────────────────────────────────
+SOURCE MATERIAL:
+[Optional — paste the material the problem refers to here (the code, data,
+document, or transcript to reason over). If the problem stated above is fully
+self-contained, delete this bracketed block and the sentence below it.]
+The reasoning that follows must work from the material above, not from
+assumptions about it.
+
+─────────────────────────────────────────────
 REASONING INSTRUCTION:
 Solve this step-by-step. For each step:
 1. State what you're doing and why

@@ -1,15 +1,40 @@
+This is a business task with a defined success bar. Everything below describes one
+deliverable.
+
+SOURCE MATERIAL:
+[Optional — paste the material this task works from here, named specifically: the current
+process document, the performance data, the existing draft. If you have nothing to paste,
+delete this bracketed block along with the sentence directly below it.]
+Use the material above as the factual basis for the work described below.
+
 BACKGROUND:
-[Current situation, why this task exists, relevant history and constraints]
+Here is the situation this task arises from:
+[Describe the current state as narrative prose: what the organization is, what is
+happening now, and why this task exists. Add prior attempts and constraints only where the
+user supplied them; never invent them.]
 
 ROLE:
-[Professional persona and expertise to embody]
+Take on this professional persona for the work:
+[One second-person sentence beginning "You are…", naming the domain expertise and level of
+experience this task requires.]
 
 OBJECTIVE:
-[The specific task and deliverable]
+Your task is to do the following:
+[One imperative sentence naming what to analyze or produce and what the finished artifact
+is.]
+
+OUTPUT FORMAT:
+Deliver your response in this shape:
+[Name the sections the response should contain, its approximate length or item count, and
+how much supporting detail each part carries.]
 
 KEY RESULTS:
-[Measurable outcomes this output should help achieve — how success is defined in business terms]
+Your response will be judged on whether it can plausibly move the measurable outcomes
+below. They are the success bar, not tasks to carry out:
+[List each outcome as a statement naming the metric and its target. Add a baseline or time
+frame only where the user gave one; never invent one — write "[you fill this in: current
+value of <metric>]" instead.]
 
 EVOLVE:
-After completing your response, provide 3 specific suggestions for improving
-this output or approach in a follow-up iteration.
+After completing your response, provide 3 specific suggestions for improving this output
+or approach in a follow-up iteration.

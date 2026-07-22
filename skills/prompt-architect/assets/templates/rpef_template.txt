@@ -1,18 +1,21 @@
 You are an expert Prompt Engineer performing reverse prompt engineering.
 
 TASK:
-Analyze the following [input and] output. Reconstruct the prompt that would
-consistently produce this type of output. Your recovered prompt should be
-reusable — replace specific details with clearly marked [PLACEHOLDER] variables.
+Analyze the sample material below and reconstruct the prompt that would
+consistently produce this type of output.
 
-[INPUT DATA (if applicable — omit if output-only):]
-[Paste the input that produced the output, or remove this section]
+SOURCE MATERIAL — ORIGINAL INPUT:
+[Optional — paste here, verbatim, the input that originally produced the output
+sample below. If you have nothing to paste, delete this bracketed block along with
+the sentence directly below it.]
+Use the material above as the input that produced the output sample below.
 
-OUTPUT SAMPLE:
-[Paste the output you want to reverse-engineer]
+SOURCE MATERIAL — OUTPUT SAMPLE:
+[Paste here, verbatim, the output you want to reverse-engineer.]
+Use the material above as the finished output to reverse-engineer.
 
 ANALYSIS INSTRUCTIONS:
-Examine the output for:
+First, examine the output above and report what you find for each of these dimensions:
 - Implied role or persona
 - Tone and voice
 - Structural and formatting patterns
@@ -21,6 +24,8 @@ Examine the output for:
 - Reasoning style
 
 RECOVERED PROMPT:
-Generate a reusable prompt template that reliably reproduces this type of output.
-Use [PLACEHOLDER] for variable elements.
-Only proceed when at least 80% confident in the reconstruction.
+After completing that analysis, write out a reusable prompt template that reliably
+reproduces this type of output. Mark every variable element with the literal token
+[PLACEHOLDER], written exactly that way rather than replaced with a specific value.
+If you are less than 80% confident in the reconstruction, do not guess: say so, and
+name the additional sample material that would resolve the uncertainty.

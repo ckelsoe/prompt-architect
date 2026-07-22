@@ -2,14 +2,14 @@
 
 ## Overview
 
-CO-STAR is a comprehensive prompting framework that emphasizes context, audience, and communication style. It's particularly effective for content creation, writing tasks, and scenarios where tone and audience considerations significantly impact output quality.
+CO-STAR is a comprehensive prompting framework that emphasizes context, audience, and communication style. It's particularly effective for content creation, writing tasks, and scenarios where tone and audience considerations significantly impact output quality. Section headers are stripped at emission, so a CO-STAR prompt lands as a flat block of prose — a paragraph of context, a stated objective, and self-standing sentences for style, tone, audience, and response format — preceded by an optional source-material block whenever the content is built from an artifact the user already has. Because the `STYLE`, `TONE`, and `AUDIENCE` labels do not survive, those slots have to be written as complete sentences rather than the bare descriptors ("professional yet friendly," "senior executives") they would otherwise collapse to.
 
 **Origin:** Developed by the Data Science & AI team at GovTech (Government Technology Agency of Singapore), and popularized by Sheila Teo, who won GovTech's "Prompt Royale" — Singapore's first GPT-4 prompt engineering competition, 400+ participants, finale 8 November 2023. Teo credits the framework to GovTech rather than to herself: "The CO-STAR framework, a brainchild of GovTech Singapore's Data Science & AI team, is a handy template for structuring prompts." Practitioner framework — no controlled evaluation of CO-STAR has been published.
 
 ## Components
 
 ### C - Context
-**Purpose:** Provide background information, situational details, and constraints.
+**Purpose:** Provide background information, situational details, and constraints. It fills as a self-contained paragraph and survives header stripping on its own, so long as it reads as description of a situation rather than a bare label.
 
 **Questions to Ask:**
 - What's the background situation?
@@ -19,12 +19,12 @@ CO-STAR is a comprehensive prompting framework that emphasizes context, audience
 - Are there any limitations or restrictions?
 
 **Examples:**
-- "You're working with a startup that has limited resources..."
-- "This is for a formal government report..."
-- "The user base is primarily non-technical..."
+- "You're working with a startup that has limited resources."
+- "This is for a formal government report."
+- "The user base is primarily non-technical."
 
 ### O - Objective
-**Purpose:** Define the clear, specific goal to be achieved.
+**Purpose:** Define the clear, specific goal to be achieved, as one complete imperative sentence. Nothing else in the prompt states the task, so once the `OBJECTIVE` header is gone a bare goal fragment leaves the emitted prompt without an instruction.
 
 **Questions to Ask:**
 - What exactly do you want accomplished?
@@ -33,12 +33,12 @@ CO-STAR is a comprehensive prompting framework that emphasizes context, audience
 - Are there secondary goals?
 
 **Examples:**
-- "Create a comprehensive product comparison..."
-- "Generate ideas for reducing customer churn..."
-- "Explain the concept in simple terms..."
+- "Create a comprehensive product comparison of the three tools above."
+- "Generate ideas for reducing customer churn."
+- "Explain the concept in simple terms."
 
 ### S - Style
-**Purpose:** Specify the writing style, format, and structural preferences.
+**Purpose:** Specify the writing style, format, and structural preferences. Phrase it as an instruction ("Write in…", "Follow…"), not a bare descriptor, because the `STYLE` header is stripped and a fragment like "journalistic, short paragraphs" no longer reads as a directive on its own.
 
 **Questions to Ask:**
 - What writing style is appropriate?
@@ -48,12 +48,12 @@ CO-STAR is a comprehensive prompting framework that emphasizes context, audience
 - Any style guides to follow?
 
 **Examples:**
-- "Use a journalistic style with short paragraphs..."
-- "Follow AP style guidelines..."
-- "Write in a conversational, blog-post style..."
+- "Use a journalistic style with short paragraphs."
+- "Follow AP style guidelines."
+- "Write in a conversational, blog-post style."
 
 ### T - Tone
-**Purpose:** Set the emotional quality and attitude of the response.
+**Purpose:** Set the emotional quality and attitude of the response. Because the `TONE` header does not survive emission, write the slot as a complete sentence ("Keep the tone…", "Sound…") — a bare adjective phrase like "professional yet friendly" dangles once the label is deleted.
 
 **Questions to Ask:**
 - What emotional quality should it have?
@@ -62,13 +62,13 @@ CO-STAR is a comprehensive prompting framework that emphasizes context, audience
 - Urgent or measured?
 
 **Examples:**
-- "Professional yet friendly..."
-- "Urgent and action-oriented..."
-- "Empathetic and supportive..."
-- "Confident and authoritative..."
+- "Keep the tone professional yet friendly."
+- "Make it urgent and action-oriented."
+- "Keep it empathetic and supportive."
+- "Sound confident and authoritative."
 
 ### A - Audience
-**Purpose:** Identify who will consume the output and their characteristics.
+**Purpose:** Identify who will consume the output and their characteristics. Name the audience in a complete sentence ("The audience is…"), because the `AUDIENCE` header is stripped and a bare noun phrase like "senior executives" would otherwise sit in the flat block with nothing marking it as the reader.
 
 **Questions to Ask:**
 - Who is the target audience?
@@ -78,12 +78,12 @@ CO-STAR is a comprehensive prompting framework that emphasizes context, audience
 - What's their context?
 
 **Examples:**
-- "Senior executives with limited technical knowledge..."
-- "Junior developers learning the framework..."
-- "Parents of elementary school children..."
+- "The audience is senior executives with limited technical knowledge."
+- "The audience is junior developers learning the framework."
+- "The audience is parents of elementary school children."
 
 ### R - Response
-**Purpose:** Define the expected output format and structure.
+**Purpose:** Define the expected output format and structure. Phrase it as an instruction about the output ("Provide…", "Format the result as…") so it still reads as a directive once the `RESPONSE FORMAT` header is removed.
 
 **Questions to Ask:**
 - What format should the output take?
@@ -93,61 +93,117 @@ CO-STAR is a comprehensive prompting framework that emphasizes context, audience
 - What level of detail is needed?
 
 **Examples:**
-- "Provide a 500-word article with 3 main sections..."
-- "Create a bulleted list of 10 items..."
-- "Generate a table comparing features..."
+- "Provide a 500-word article with 3 main sections."
+- "Format the result as a bulleted list of 10 items."
+- "Generate a table comparing features."
 
 ## Template Structure
 
+Section headers are stripped at emission, so every slot's meaning is carried by the prose
+around and inside it rather than by the header above it. Context is a self-contained
+paragraph and survives on its own; Objective must be a complete imperative sentence; and
+Style, Tone, Audience, and Response Format each have to be phrased as a full sentence,
+because the labels that would otherwise mark them as style, tone, audience, or format are
+the first thing deleted.
+
 ```
+SOURCE MATERIAL:
+[OPTIONAL — include only if the content is built from material the user already has.
+If so, emit a literal paste instruction naming the specific artifact, e.g. "[Paste the Q3 revenue report here]"
+or "[Paste the blog post whose voice should be matched here]" — never a generic word like "content" —
+then one line of prose tying it to what follows, e.g. "Use the material above as the factual and stylistic
+basis for what you produce; do not invent details it does not support."
+If the content is written entirely from scratch, omit this section — do not emit an empty placeholder.]
+
 CONTEXT:
-[Background information, situation, constraints]
+[Provide background information, situation, and any relevant constraints. What's the setting? What's happened before? What limitations exist?]
 
 OBJECTIVE:
-[Clear, specific goal to achieve]
+[State the clear, specific goal you want to achieve. What exactly do you want accomplished? What does success look like?]
 
 STYLE:
-[Writing style, format preferences]
+[Specify the writing style, format preferences, and structural approach. Should it follow a particular style guide? What format is needed?]
 
 TONE:
-[Emotional quality, formality level]
+[Define the emotional quality and attitude. Should it be professional, casual, urgent, friendly, authoritative, empathetic, etc.?]
 
 AUDIENCE:
-[Target audience characteristics]
+[Identify who will consume this output. What's their expertise level? What do they care about? What are their characteristics?]
 
 RESPONSE FORMAT:
-[Expected output structure and format]
+[Specify the expected output structure. How long? What sections? What level of detail? Any specific format requirements?]
 ```
 
-## Complete Example
+`SOURCE MATERIAL` is a seventh block in a six-letter acronym, and it carries no letter
+because it is optional. Much CO-STAR work rewrites, repurposes, or matches the voice of
+something that already exists — a report to summarize, a press release to adapt, a post
+whose style should be echoed — and that artifact is pasted here, named concretely (never
+the generic word "content"), and referred to as "the … above" from inside the Objective.
+Delete the block whenever the content is written entirely from scratch; do not leave an
+empty placeholder.
 
-### Before CO-STAR:
+## Complete Examples
+
+Every example below is shown in emitted form: each slot carries its own role in prose.
+Read the headers as scaffolding that will be deleted — the examples are written so that
+nothing is lost when it is, which is why Style, Tone, Audience, and Response Format each
+read as a complete sentence.
+
+### Example 1: Health Blog Article
+
+**Before CO-STAR:**
 "Write about the benefits of exercise."
 
-### After CO-STAR:
+**After CO-STAR** (no source material — the article is written from scratch, so the
+`SOURCE MATERIAL` block is omitted):
 ```
 CONTEXT:
 I'm creating content for a health blog aimed at busy professionals who struggle to find time for fitness. Previous articles have focused on nutrition, and this is part of a series on lifestyle improvements.
 
 OBJECTIVE:
-Create an engaging article that convinces time-pressed professionals that exercise is worth prioritizing, focusing on benefits beyond just physical health.
+Write an engaging article that convinces time-pressed professionals that exercise is worth prioritizing, focusing on benefits beyond just physical health.
 
 STYLE:
 Use a conversational blog style with short paragraphs (2-3 sentences), subheadings every 150-200 words, and occasional bullet points for key takeaways. Include specific examples and avoid medical jargon.
 
 TONE:
-Encouraging and motivating without being preachy. Acknowledge their time constraints and show empathy for their challenges. Be practical and realistic rather than idealistic.
+Keep the tone encouraging and motivating without being preachy. Acknowledge their time constraints and show empathy for their challenges, and stay practical and realistic rather than idealistic.
 
 AUDIENCE:
-Professionals aged 30-50 who work 50+ hour weeks, have limited free time, may have families, and currently don't exercise regularly. They're skeptical of fitness advice that seems unrealistic for their lifestyle.
+The audience is professionals aged 30-50 who work 50+ hour weeks, have limited free time, may have families, and currently don't exercise regularly. They're skeptical of fitness advice that seems unrealistic for their lifestyle.
 
 RESPONSE FORMAT:
-800-word article with:
-- Engaging headline
-- Brief introduction (2-3 sentences)
-- 4-5 main sections with subheadings
-- Bullet points highlighting key benefits
-- Practical conclusion with next steps
+Produce an 800-word article with an engaging headline, a brief 2-3 sentence introduction, 4-5 main sections with subheadings, bullet points highlighting key benefits, and a practical conclusion with next steps.
+```
+
+### Example 2: Executive Summary from a Report
+
+**Before CO-STAR:**
+"Summarize this report for the board."
+
+**After CO-STAR** (source material supplied):
+```
+SOURCE MATERIAL:
+[Paste the Q3 revenue report here]
+Use the material above as the factual and stylistic basis for what you produce; do not invent details it does not support.
+
+CONTEXT:
+I'm the head of finance at a mid-size SaaS company, preparing a summary of our Q3 performance for the board's quarterly meeting. The full report above is 20 pages of financial detail, and the board sees dozens of documents per meeting.
+
+OBJECTIVE:
+Distill the Q3 revenue report above into a one-page summary the board can absorb in two minutes, surfacing the numbers and trends that bear on strategic decisions.
+
+STYLE:
+Write in a crisp executive-brief style: lead with the conclusion, use short declarative sentences, and support each claim with a figure drawn from the report above rather than a general statement.
+
+TONE:
+Keep the tone measured and factual — neither alarmist about the misses nor promotional about the wins.
+
+AUDIENCE:
+The audience is board members who are financially literate but not close to day-to-day operations; they care about growth, runway, and risk, not implementation detail.
+
+RESPONSE FORMAT:
+Produce a single page: three sentences of headline takeaways, then a short table of the key metrics with quarter-over-quarter change, then a four-item bulleted list of the decisions or risks that need the board's attention.
 ```
 
 ## Best Use Cases

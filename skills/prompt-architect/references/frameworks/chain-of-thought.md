@@ -4,6 +4,8 @@
 
 Chain of Thought is a prompting technique that encourages step-by-step reasoning and makes the thinking process explicit. Instead of jumping to answers, it guides Claude to break down complex problems, show intermediate steps, and verify logic along the way.
 
+When prompt-architect emits a Chain-of-Thought prompt, its framework section headers — `PROBLEM / QUESTION`, `SOURCE MATERIAL`, `REASONING INSTRUCTION` — are stripped and the model receives a flat block. The reasoning instruction is written as a complete sentence so it survives on its own, while the numbered step labels the prompt requests (`Step 1:`, `STEP 1 - REQUIREMENTS:`) are literal labels inside the reasoning protocol and stay in place. An optional `SOURCE MATERIAL` block holds the code, data, or document being reasoned over and is deleted when the problem is self-contained.
+
 **Research basis:** "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models" (Wei et al., Google Research, arXiv 2201.11903, NeurIPS 2022). Prompting PaLM 540B with eight chain-of-thought exemplars raised GSM8K accuracy from 17.9% with standard prompting to 56.9%, beating the prior fine-tuned state of the art of 55% (GPT-3 plus a verifier, Cobbe et al. 2021).
 
 ## Core Concept
@@ -168,6 +170,16 @@ Poor:
 
 ## Complete Examples
 
+Every example below is shown in emitted form. Two kinds of label appear, and they behave
+differently at emission. The framework's own section headers — `SOURCE MATERIAL:`,
+`PROBLEM / QUESTION:`, `REASONING INSTRUCTION:` — are scaffolding and are stripped, so each
+is written so its instruction still reads once the header is gone. The numbered
+reasoning-step labels the prompt asks for (`Step 1:`, `STEP 1 - REQUIREMENTS:`) are literal
+labels inside the reasoning protocol, not section headers, and they survive into the emitted
+prompt exactly as written — they are what the model is being told to produce. Where the
+reasoning runs over an existing artifact, the `SOURCE MATERIAL` block carries it; where the
+task starts from a blank page, that block is deleted.
+
 ### Example 1: Debugging
 
 **Without CoT:**
@@ -176,14 +188,19 @@ Why isn't this code working?
 [code snippet]
 ```
 
-**With CoT:**
+**With CoT** (source material supplied):
 ```
-Debug this code by thinking through it step-by-step:
+SOURCE MATERIAL:
+[Paste the code you want debugged here]
+The reasoning that follows must work from the material above, not from
+assumptions about it.
 
-[code snippet]
+PROBLEM / QUESTION:
+Debug the code above by thinking through it step-by-step.
 
+REASONING INSTRUCTION:
 Use this process:
-1. Read the code and state what it's supposed to do
+1. Read the code and state what it is supposed to do
 2. Identify the input and expected output
 3. Trace through execution line by line
 4. Note any suspicious patterns or red flags
@@ -201,7 +218,9 @@ Use this process:
 Design a URL shortener.
 ```
 
-**With CoT:**
+**With CoT** (no source material — the design is worked out from scratch, so no
+`SOURCE MATERIAL` block is needed; the `STEP N -` labels are literal protocol labels and
+survive header stripping):
 ```
 Design a URL shortener by working through these steps:
 
@@ -244,7 +263,9 @@ For each step, explain your reasoning.
 Should we use MongoDB or PostgreSQL?
 ```
 
-**With CoT:**
+**With CoT** (no source material — the decision is reasoned out from scratch, so no
+`SOURCE MATERIAL` block is needed; the `STEP N -` labels are literal protocol labels and
+survive header stripping):
 ```
 Decide between MongoDB and PostgreSQL by reasoning through:
 
@@ -306,7 +327,7 @@ STEPS:
 ...
 ```
 
-### CoT + RISE
+### CoT + RISE-IE
 ```
 ROLE: [Analyst]
 INPUT: [Data]

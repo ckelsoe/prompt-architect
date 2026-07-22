@@ -2,7 +2,7 @@
 
 ## Overview
 
-Devil's Advocate Prompting instructs the AI to generate the strongest possible case *against* a position, plan, decision, or idea — not a balanced view, not a straw man, but the most forceful and substantive opposing argument possible. Named after the historical role in Catholic canonization proceedings where someone was appointed specifically to argue against sainthood, it is the framework for deliberately attacking your own thinking to find weaknesses before others do.
+Devil's Advocate Prompting instructs the AI to generate the strongest possible case *against* a position, plan, decision, or idea — not a balanced view, not a straw man, but the most forceful and substantive opposing argument possible. Named after the historical role in Catholic canonization proceedings where someone was appointed specifically to argue against sainthood, it is the framework for deliberately attacking your own thinking to find weaknesses before others do. A complete Devil's Advocate prompt emits as an opening instruction paragraph that establishes the adversarial frame, followed by the position under attack, an optional supporting document, and the attack directives — the section headers are stripped at emission, so each block is written to carry its own meaning in prose rather than lean on the header above it.
 
 **Research basis:** "Enhancing AI-Assisted Group Decision Making through LLM-Powered Devil's Advocate" (ACM IUI 2024, peer-reviewed). Key finding: AI devil's advocates arguing against AI recommendations (not just the user's position) produced more appropriate human reliance on AI. Related: Steelman (steelman.dylanamartin.com) implements a four-round structured adversarial argumentation framework.
 
@@ -17,13 +17,16 @@ Devil's Advocate Prompting instructs the AI to generate the strongest possible c
 ## Components
 
 ### Position Statement
-**Purpose:** The argument, plan, or decision to attack. State it clearly — the stronger the devil's advocate, the clearer the target must be.
+**Purpose:** The argument, plan, or decision to attack. State it clearly — the stronger the devil's advocate, the clearer the target must be. Write it as complete sentences: the opening instruction promises a case "against the following position," and once the `POSITION TO ATTACK` header is stripped, nothing else names what that position is, so the statement itself has to read as the thing being attacked.
+
+### Supporting Material (optional)
+**Purpose:** The proposal, design doc, or strategy memo that sets the position out in full. Supplying it lets the attack engage the position's actual claims and reasoning rather than the model's assumptions about a position of that description. The template's slot is optional and self-deleting: if there is nothing to paste, the bracketed block and the carrier sentence directly below it both come out. That carrier sentence — "Treat the document above as the detailed source of the position's claims, assumptions, and reasoning" — lets the pasted document stay a bare artifact by naming, in prose, what to do with it once its header is gone.
 
 ### Adversarial Instruction
-**Purpose:** Explicit instruction to be adversarial, not balanced. This is what makes it devil's advocate rather than a pros/cons analysis.
+**Purpose:** Explicit instruction to be adversarial, not balanced. This is what makes it devil's advocate rather than a pros/cons analysis. It ships as a list of standing imperatives, and the prohibition among them — "Do not acknowledge positives or offer a balanced view" — must survive into the emitted prompt as that explicit "Do not…" text. Per SKILL.md step 5, a restriction the user relies on cannot be left to a section header, because headers are stripped at emission; phrased as a standing imperative, the instruction carries with or without its header.
 
 ### Attack Dimensions
-**Purpose:** The specific dimensions to attack. Without these, critique stays superficial.
+**Purpose:** The specific dimensions to attack. Without these, critique stays superficial. They ship under a "Focus on:" carrier line as an enumerated list, so the dimensions read as directives once `ATTACK DIMENSIONS` is removed rather than as a bare heading over a list of nouns.
 
 **Common dimensions:**
 - **Assumptions**: What must be true for this to work? Attack each assumption.
@@ -34,71 +37,101 @@ Devil's Advocate Prompting instructs the AI to generate the strongest possible c
 - **Falsification criteria**: What evidence would prove this wrong?
 
 ### Severity Ranking (optional)
-**Purpose:** Rank identified weaknesses by how fatal they are. Separates show-stoppers from minor issues.
+**Purpose:** Rank identified weaknesses by how fatal they are. Separates show-stoppers from minor issues. When included it ships as a closing instruction — "After the full attack, list the THREE MOST FATAL flaws…" — phrased as a sequenced directive so the "do this last" ordering survives the header being stripped.
 
 ## Template Structure
 
+Section headers are stripped at emission, so every slot's meaning is carried by the prose around and inside it rather than by the header above it. The opening paragraph is not a title — it is the instruction that sets the adversarial frame, and it ships with the prompt. `POSITION TO ATTACK` comes first so the document that follows reads as backing an already-stated claim; the `SUPPORTING MATERIAL` block is optional and self-deleting, and its bracketed contents and the carrier sentence beneath them both come out whenever the position is stated inline with no document behind it.
+
 ```
-You are a rigorous devil's advocate. Your task is NOT to give a balanced
-view — your task is to generate the strongest possible case against the
-following [position / plan / decision / proposal].
+You are a rigorous devil's advocate. Your task is NOT to give a balanced view —
+your task is to generate the strongest possible case against the following position.
 
 POSITION TO ATTACK:
-[State the position, plan, or decision clearly]
+[State the position, plan, decision, or proposal clearly]
+
+SUPPORTING MATERIAL (optional):
+[Optional — paste the proposal, design doc, strategy memo, or other document
+that sets out this position here. If you have nothing to paste, delete this
+bracketed block and the sentence below it.]
+Treat the document above as the detailed source of the position's claims,
+assumptions, and reasoning.
 
 ATTACK INSTRUCTIONS:
-- Do not offer a balanced view or acknowledge positives
+- Do not acknowledge positives or offer a balanced view
 - Attack every assumption the position depends on
 - Identify every logical gap or unsupported claim
 - Surface every significant risk or failure mode
 - Point out what better alternatives are being ignored
-- Be as forceful and specific as possible — no vague objections
+- Be as forceful and specific as possible
 
 ATTACK DIMENSIONS:
-Focus your attack on: [select relevant dimensions]
-- Core assumptions (what must be true for this to work?)
-- Internal logic (where does the reasoning break down?)
-- Execution risks (what makes this fail in practice?)
-- Overlooked alternatives (what better options exist?)
-- [Add domain-specific dimensions as needed]
+Focus on:
+1. Core assumptions (what must be true for this to work?)
+2. Internal logic (where does the reasoning break down?)
+3. Execution risks (what makes this fail in practice?)
+4. Overlooked alternatives (what better options exist?)
+5. [Add domain-specific dimensions as needed]
 
 SEVERITY RANKING:
-After the attack, list the THREE MOST FATAL flaws — the ones that, if
-unaddressed, would cause this to fail regardless of execution quality.
+After the full attack, list the THREE MOST FATAL flaws — the ones that,
+if unaddressed, would cause this to fail regardless of execution quality.
 ```
 
 ## Complete Examples
 
+Every example below keeps the headers on the page for readability, but is written in emitted form beneath them: the opening instruction paragraph first, then each slot carrying its own role in prose. Read the headers as scaffolding that will be deleted — the examples are written so that nothing is lost when it is.
+
 ### Example 1: Architecture Decision
 
+**Before Devil's Advocate:**
+"Should we move to microservices?"
+
+**After Devil's Advocate** (supporting material supplied):
 ```
-You are a rigorous devil's advocate.
+You are a rigorous devil's advocate. Your task is NOT to give a balanced view —
+your task is to generate the strongest possible case against the following position.
 
 POSITION TO ATTACK:
-We should rewrite our monolithic Python backend as microservices.
-The motivation: our deployment pipeline is slow, different teams want
-to deploy independently, and we're seeing performance issues in the
-payments module.
+We should rewrite our monolithic Python backend as microservices. The motivation:
+our deployment pipeline is slow, different teams want to deploy independently, and
+we're seeing performance issues in the payments module.
+
+SUPPORTING MATERIAL:
+[Paste the migration RFC and the current deployment-pipeline metrics here]
+Treat the document above as the detailed source of the position's claims,
+assumptions, and reasoning.
 
 ATTACK INSTRUCTIONS:
-Generate the strongest possible case against this decision. Do not
-acknowledge any benefits. Attack the reasoning, assumptions, and plan.
+- Do not acknowledge positives or offer a balanced view
+- Attack every assumption the position depends on
+- Identify every logical gap or unsupported claim
+- Surface every significant risk or failure mode
+- Point out what better alternatives are being ignored
+- Be as forceful and specific as possible
 
 ATTACK DIMENSIONS:
-- Core assumptions about what microservices solve
-- Organizational and team readiness
-- Technical complexity being introduced
-- Whether the stated problems actually require microservices
-- Migration risks and the transition period
+Focus on:
+1. Core assumptions about what microservices actually solve
+2. Organizational and team readiness
+3. The technical complexity being introduced
+4. Whether the stated problems actually require microservices
+5. Migration risks and the transition period
 
 SEVERITY RANKING:
-End with the 3 most fatal flaws that would cause this to fail.
+After the full attack, list the THREE MOST FATAL flaws — the ones that,
+if unaddressed, would cause this to fail regardless of execution quality.
 ```
 
 ### Example 2: Business Strategy
 
+**Before Devil's Advocate:**
+"Is expanding to Europe a good idea?"
+
+**After Devil's Advocate** (no supporting material — the position is stated inline, so the optional block and its carrier sentence are both deleted):
 ```
-You are a rigorous devil's advocate.
+You are a rigorous devil's advocate. Your task is NOT to give a balanced view —
+your task is to generate the strongest possible case against the following position.
 
 POSITION TO ATTACK:
 We should expand to the European market in Q3. We have strong US NPS (72),
@@ -106,48 +139,61 @@ product-market fit with SMBs, and three European companies have expressed
 interest. We'll hire a country manager in the UK and use them as a beachhead.
 
 ATTACK INSTRUCTIONS:
-Argue forcefully against this expansion strategy. Be specific — use
-facts, numbers, and logic. No acknowledgment of positives.
+- Do not acknowledge positives or offer a balanced view
+- Attack every assumption the position depends on
+- Identify every logical gap or unsupported claim
+- Surface every significant risk or failure mode
+- Point out what better alternatives are being ignored
+- Be as forceful and specific as possible
 
 ATTACK DIMENSIONS:
-- Whether inbound interest indicates real market demand
-- Resource/runway requirements vs. what's being allocated
-- UK-as-beachhead strategy for EU expansion
-- Timing relative to our current US growth trajectory
-- GDPR, data residency, and regulatory readiness
+Focus on:
+1. Whether inbound interest indicates real market demand
+2. Resource and runway requirements versus what's being allocated
+3. The UK-as-beachhead strategy for EU expansion
+4. Timing relative to the current US growth trajectory
+5. GDPR, data residency, and regulatory readiness
 
 SEVERITY RANKING:
-The 3 most fatal flaws, in order.
+After the full attack, list the THREE MOST FATAL flaws — the ones that,
+if unaddressed, would cause this to fail regardless of execution quality.
 ```
 
 ### Example 3: Product Decision
 
+**Before Devil's Advocate:**
+"Should we build a mobile app?"
+
+**After Devil's Advocate** (supporting material supplied; severity ranking omitted — the opening paragraph already carries the adversarial frame, so a leaner variant still stands):
 ```
-You are a rigorous devil's advocate.
+You are a rigorous devil's advocate. Your task is NOT to give a balanced view —
+your task is to generate the strongest possible case against the following position.
 
 POSITION TO ATTACK:
-We should add a native mobile app to our web SaaS product. Our top users
-are asking for it, mobile usage of similar tools is growing, and a
-competitor just launched one.
+We should add a native mobile app to our web SaaS product. Our top users are asking
+for it, mobile usage of similar tools is growing, and a competitor just launched one.
+
+SUPPORTING MATERIAL:
+[Paste the product one-pager and the top-user feature requests here]
+Treat the document above as the detailed source of the position's claims,
+assumptions, and reasoning.
 
 ATTACK DIMENSIONS:
-- Whether "top users asking" is representative demand
-- Resource cost vs. ROI for a 4-person engineering team
-- Whether mobile actually expands our TAM or just cannibalizes web
-- Competitor's mobile launch as a signal vs. noise
-- What we're giving up by doing this instead of something else
-
-SEVERITY RANKING:
-3 most fatal flaws.
+Focus on:
+1. Whether "top users asking" is representative demand
+2. Resource cost versus ROI for a 4-person engineering team
+3. Whether mobile actually expands the TAM or just cannibalizes web
+4. The competitor's mobile launch as a signal versus noise
+5. What is given up by doing this instead of something else
 ```
 
 ### Example 4: Self-Attack (Devil's Advocate on AI Output)
 
-After receiving any AI recommendation:
+This one needs no template. It is a follow-up turn pasted after any AI recommendation, and "your own recommendation above" points at that prior output — which is the source material, already in place:
 ```
-Now argue forcefully against your own recommendation above. What are
-the strongest reasons it's wrong? What did you overlook? What
-assumptions did you make that may not hold? Be as critical as possible.
+Now argue forcefully against your own recommendation above. What are the
+strongest reasons it's wrong? What did you overlook? What assumptions did
+you make that may not hold? Be as critical as possible.
 ```
 
 ## Best Use Cases
@@ -200,7 +246,8 @@ assumptions did you make that may not hold? Be as critical as possible.
 
 | Component | Purpose |
 |-----------|---------|
-| Position Statement | What to attack |
+| Position Statement | What to attack, stated as complete sentences |
+| Supporting Material | Optional document behind the position; self-deleting |
 | Adversarial Instruction | Be forceful, not balanced |
 | Attack Dimensions | What aspects to critique |
 | Severity Ranking | The 3 most fatal flaws |

@@ -4,7 +4,9 @@
 
 Self-Refine is an iterative output improvement framework where a single model acts as its own generator, critic, and refiner — with no external training, no additional models, and no labeled data required. The core loop: generate an initial output → produce specific, actionable feedback → refine using that feedback → repeat until a stopping criterion is met.
 
-**Research basis:** "Self-Refine: Iterative Refinement with Self-Feedback" (Madaan et al., arXiv 2303.17651, NeurIPS 2023). Tested across 7 task types — improvement of 5-40% over single-pass generation from GPT-3.5 and GPT-4. Humans preferred Self-Refined outputs in blind evaluation. Project site: selfrefine.info.
+**Research basis:** "Self-Refine: Iterative Refinement with Self-Feedback" (Madaan et al., arXiv 2303.17651, NeurIPS 2023). Evaluated across 7 diverse tasks using GPT-3.5, ChatGPT, and GPT-4. The abstract reports that Self-Refine outputs are "preferred by humans and automatic metrics over those generated with the same LLM using conventional one-step generation, improving by ~20% absolute on average in task performance." That ~20% is an *average across the 7 tasks* — per-task gains vary substantially, and the abstract gives no range. Project site: selfrefine.info.
+
+*Correction:* an earlier version of this file reported "improvement of 5-40% over single-pass generation from GPT-3.5 and GPT-4." Neither bound appears in the paper, and ChatGPT was omitted from the model list. Verified against the arXiv abstract.
 
 ## The Core Loop
 
@@ -190,7 +192,7 @@ biggest single point of failure identified.
 
 | | Self-Refine | CAI Critique-Revise | BAB | Chain of Density |
 |---|---|---|---|---|
-| Direction | Any output → improvement | Output vs. explicit principle | Before state → after state | Content → denser compression |
+| Direction | Any output → improvement | Output vs. explicit principle | Before state → after state | Same length → higher entity density |
 | Critique type | Multi-dimensional quality | Principle-aligned alignment | Transformation rules | Density/information |
 | Iterations | Configurable loop | One cycle (or more) | Single transform | N passes |
 | Best for | General quality improvement | Alignment/compliance | Rewriting existing content | Summarization |

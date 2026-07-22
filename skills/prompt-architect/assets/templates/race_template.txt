@@ -1,3 +1,12 @@
+SOURCE MATERIAL:
+[OPTIONAL — include only if this task operates on something the user already has.
+If so, emit a literal paste instruction naming the specific artifact, e.g. "[Paste the REST API design here]"
+or "[Paste the migration plan here]" — then one line of prose tying it to what follows,
+e.g. "The material above is what the task below applies to."
+When this section is used, word ACTION to refer to the material ABOVE ("the migration plan above"),
+never "described below" — the artifact precedes it and a downward reference would dangle.
+If the task generates entirely from scratch, omit this section — do not emit an empty placeholder.]
+
 ROLE:
 [Define the expertise or persona needed — who should do this task and at what level]
 

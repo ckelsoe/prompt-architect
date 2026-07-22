@@ -1,45 +1,68 @@
+SOURCE MATERIAL:
+[Optional — paste the artifact this task operates on here, naming it concretely, e.g. "Paste
+the customer's message here" or "Paste the draft to translate here". If this task generates
+from scratch, delete this bracketed block along with the sentence directly below it.]
+Use the material above as the content for the work described below.
+
 TASK TYPE:
-[Clear indication of the activity type - e.g., Data Analysis, Customer Support Response, Technical Documentation, Content Translation]
+The category of task you are performing is: [name the activity category only — e.g. "Customer
+Support Response", "Data Analysis and Summarization", "Content Translation with Context
+Preservation". Specifics of this particular case belong in the background at the end.]
 
 INSTRUCTIONS:
-[Specific steps and guidelines to accomplish the task]
-1. [First step or action]
-2. [Second step or action]
-3. [Continue with methodology and sequence]
-4. [Add more steps as needed...]
+Carry out the task as follows.
+1. [First step, as a complete imperative sentence beginning with a verb — e.g. "Read the
+customer's message and identify the specific problem they report."]
+2. [Continue in the same form, one step per line, for as many steps as the methodology needs.
+If standing guidelines govern this task rather than an ordered procedure, delete the numbered
+list and keep only the standards below.]
+
+Observe these standards throughout:
+[Optional — one per line, each a complete imperative sentence, e.g. "Follow the company style
+guide.", "Use a three-paragraph structure: problem, solution, next steps." If the numbered
+steps are the whole methodology, delete this bracketed block along with the sentence above it.]
 
 DO:
-[Specify actions, language, structures, and information that MUST be included]
-- [Required action or element #1]
-- [Language or tone to use]
-- [Structure or format to follow]
-- [Information that must be present]
-- [Add more as needed...]
+The output must satisfy every requirement below:
+- [Always <required action, element, or information>]
+- [Use <required language, tone, or terminology>]
+- [Follow <required structure or format>]
+- [Add more as needed, each led by "Always" or an imperative verb so it reads as a
+requirement on its own line.]
 
 DON'T:
-[Highlight actions, elements, or approaches to AVOID]
-- [Error or mistake to prevent #1]
-- [Inappropriate language or approach to avoid]
-- [Common pitfall to prevent]
-- [Limitation or boundary not to cross]
-- [Add more as needed...]
+The output must respect every prohibition below:
+- [Do not <error or mistake to prevent>]
+- [Never <inappropriate language or approach>]
+- [Do not <common pitfall to prevent>]
+- [Do not <exceed a stated limit or cross a boundary>]
+- [Add more as needed, each led by "Do not" or "Never". The negation must live in the item
+itself — a bare noun phrase reads as an instruction to DO the very thing being forbidden.]
 
 EXAMPLES:
-[Provide concrete examples of desired outcomes]
+[Optional — if no reference sample is needed, delete everything from this line through the
+counter-example below.]
+The examples below set the standard your output must meet. Match their format, tone,
+structure, and level of detail.
 
-Example 1 (Good):
-[Detailed example showing desired output, format, tone, and structure]
+Example 1 — produce output like this:
+[Write the desired output in full — the actual text, not a description of it. If the user
+supplied an approved sample or boilerplate, reproduce it here.]
 
-Example 2 (Optional - Additional Good Example):
-[Another example demonstrating quality and approach]
+Example 2 — also produce output like this:
+[Optional — a second full example at the same quality bar. If one is enough, delete this
+bracketed block along with the label line above it.]
 
-[Optional] Example 3 (What to Avoid):
-[Counter-example showing what NOT to do, if helpful]
+Counter-example — do NOT produce output like this:
+[Optional — a full counter-example of the failure mode, opening with a sentence naming it
+unacceptable, e.g. "The following response would be unacceptable because it deflects blame:",
+so the warning survives without its label. If not useful, delete this bracketed block along
+with the label line above it.]
 
 CONTEXT:
-[Background information and user-provided content that affects the task]
-- [Relevant background information]
-- [Business or domain constraints]
-- [User-provided data or content to reference]
-- [Situational factors affecting the task]
-- [Standards or guidelines that apply]
+The background below describes the situation this task takes place in.
+- [Optional — state each supplied background fact, constraint, situational factor, or
+applicable standard as a complete sentence, one per line. Include only what the user supplied;
+never invent one — if a needed fact is missing, leave a visible [you fill this in: <what is
+needed>] placeholder instead of a guess. If the task needs no background, delete this
+bracketed block along with the sentence above it.]

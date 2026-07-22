@@ -4,6 +4,13 @@ your task is to generate the strongest possible case against the following posit
 POSITION TO ATTACK:
 [State the position, plan, decision, or proposal clearly]
 
+SUPPORTING MATERIAL (optional):
+[Optional — paste the proposal, design doc, strategy memo, or other document
+that sets out this position here. If you have nothing to paste, delete this
+bracketed block and the sentence below it.]
+Treat the document above as the detailed source of the position's claims,
+assumptions, and reasoning.
+
 ATTACK INSTRUCTIONS:
 - Do not acknowledge positives or offer a balanced view
 - Attack every assumption the position depends on

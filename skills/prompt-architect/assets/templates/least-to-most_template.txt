@@ -1,6 +1,10 @@
 PROBLEM:
 [The full, complex problem to solve]
 
+SOURCE MATERIAL:
+[Optional — paste the source material this problem depends on here (the dataset, figures, code, or document the subproblems must reason over). Delete this line and the one below it if the problem above is self-contained.]
+Every subproblem below must be answered against the material above, not from assumption.
+
 DECOMPOSE:
 Break this problem into ordered subproblems, from simplest prerequisite to most complex.
 Each later subproblem should build on the answer to the previous.
