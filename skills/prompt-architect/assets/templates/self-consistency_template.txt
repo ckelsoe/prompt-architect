@@ -1,0 +1,12 @@
+PROBLEM:
+[Your question, calculation, or reasoning problem]
+
+SOURCE MATERIAL:
+[Optional — paste the problem data the solution runs on here (the word problem, dataset, table, figures, or constraint list). Delete this line and the one below it if the problem above already states every value needed.]
+The figures and constraints in the material above are authoritative — extract from them rather than from assumed or recalled values.
+
+Solve the problem above. Work through it step by step, showing your reasoning
+at each stage. When you reach an answer, state it on its own line, in exactly
+this form and with nothing else on that line:
+
+FINAL ANSWER: [answer]

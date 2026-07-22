@@ -36,7 +36,9 @@ Score the prompt *as written*, not as you charitably interpret it — the gap be
 
 ### 2. Intent-Based Framework Selection
 
-With 29 frameworks, identify the user's **primary intent** first, then use the discriminating questions within that category.
+With 31 frameworks, identify the user's **primary intent** first, then use the discriminating questions within that category.
+
+**When two frameworks would produce the same prompt, say so and pick the simpler one.** Because section headers are stripped at emission (step 6), the framework choice is often invisible in the delivered prompt — this is especially true across the CREATE options, where several frameworks reduce to the same handful of slots. When you cannot point to a concrete difference the *emitted* prompt would show, do not manufacture one: name the tie plainly, choose the simpler framework, and move on. A confident rationale for an unobservable choice is exactly the overstatement this skill exists to remove.
 
 ---
 
@@ -94,6 +96,7 @@ With 29 frameworks, identify the user's **primary intent** first, then use the d
 | Multiple distinct approaches to compare | **Tree of Thought** |
 | Verify reasoning didn't overlook conditions | **RCoT** |
 | Linear step-by-step reasoning | **Chain of Thought** |
+| Answer must be robust; sample many paths and majority-vote | **Self-Consistency** |
 
 ---
 
@@ -106,8 +109,9 @@ With 29 frameworks, identify the user's **primary intent** first, then use the d
 | Find the strongest opposing argument | **Devil's Advocate** |
 | Identify failure modes before they happen | **Pre-Mortem** |
 | Verify reasoning didn't miss conditions | **RCoT** |
+| Draft may contain hallucinated facts; verify each claim | **Chain-of-Verification** |
 
-*Self-Refine = any quality. CAI = principle compliance. Devil's Advocate = opposing arguments. Pre-Mortem = failure analysis. RCoT = condition verification.*
+*Self-Refine = any quality. CAI = compliance with an **explicitly stated** standard or requirement set (and aligning the artifact to it — e.g. auditing a plan against a brief's constraints). Devil's Advocate = opposing arguments. Pre-Mortem = failure analysis. RCoT = an answer or plan overlooked a condition **implicit in the problem** (units, edge cases, unstated dependencies). Chain-of-Verification = independent fact-checking of a draft's factual claims.*
 
 ---
 
@@ -129,6 +133,12 @@ Most prompts need exactly one framework. Combine only when the task genuinely ha
 
 When you combine, state plainly in your analysis which framework owns which phase. Never stack more than two — beyond that the frameworks' instructions start to overlap and contradict, and no single framework clearly owns any phase.
 
+#### Composable Techniques
+
+Some techniques are not frameworks you choose *between* — they are layers you add *on top of* whichever framework you picked, so they never appear in the routing tables above.
+
+- **Few-shot / in-context examples** — showing 2–5 worked input→output examples inside the emitted prompt. This is the highest-leverage technique in prompting and applies to almost any framework, not just the two with a dedicated examples slot (CARE, RISE-IX). After you draft the framework prompt, decide whether examples earn their place; if they do, insert them before the final instruction, in the exact target output format, and end with the actual task. Keep examples to a handful, put the most representative one last (models weight the most recent example most heavily), keep every example in the exact format you want back, and balance the label set. Never invent examples the user or their material did not supply — fall back to a precise instruction instead.
+
 ---
 
 ### 3. Framework Quick Reference
@@ -137,11 +147,13 @@ When you combine, state plainly in your analysis which framework owns which phas
 **Medium:** RACE | CARE | BAB | BROKE | CRISPE
 **Comprehensive:** CO-STAR | RISEN | TIDD-EC
 **Data:** RISE-IE | RISE-IX
-**Reasoning:** Plan-and-Solve | Chain of Thought | Least-to-Most | Step-Back | Tree of Thought | RCoT
+**Reasoning:** Plan-and-Solve | Chain of Thought | Least-to-Most | Step-Back | Tree of Thought | RCoT | Self-Consistency
 **Structure/Iteration:** Skeleton of Thought | Chain of Density | Iterative Compression
-**Critique/Quality:** Self-Refine | CAI Critique-Revise | Devil's Advocate | Pre-Mortem
+**Critique/Quality:** Self-Refine | CAI Critique-Revise | Devil's Advocate | Pre-Mortem | Chain-of-Verification
 **Meta/Reverse:** RPEF | Reverse Role Prompting
 **Agentic:** ReAct
+
+**Composable technique (layered onto any framework, not selected between):** Few-shot / in-context examples
 
 ### 4. Clarification Questions
 
@@ -167,6 +179,7 @@ Ask targeted questions (3-5 at a time) based on identified gaps:
 **For Least-to-Most**: The full problem in one statement, paste the material the subproblems must reason over, what is the simplest thing that must be answered first, what does the final answer depend on?
 **For Plan-and-Solve**: The problem with every number, unit, and constraint written out, paste the dataset or figures the calculation runs on if any, which values are given and which must be derived?
 **For Chain of Thought**: The problem with all its conditions stated, paste the code, data, or document to reason over if any, what the reasoning steps should be?
+**For Self-Consistency**: The problem with all its conditions stated, paste the data or figures it runs on if any, what the single final answer should look like so every sampled run ends in a comparable `FINAL ANSWER:` line, how many samples to run and majority-vote over (the paper uses 40; 5-10 is usually enough)?
 **For Chain of Density**: Paste the full document to summarize, the fixed word budget every summary must hit, how many densification passes (the paper uses 5)?
 **For Iterative Compression**: Paste the content to compress, where it should end up (word count, reading level, single paragraph), what should improve on each pass, how many passes and when to stop?
 **For Self-Refine**: Paste the actual draft to improve, which dimensions the critique should cover (clarity, completeness, tone), what would make this output wrong or unusable?
@@ -174,6 +187,7 @@ Ask targeted questions (3-5 at a time) based on identified gaps:
 **For Devil's Advocate**: The position, plan, or decision to attack, paste the proposal or memo that sets it out if you have one, which dimensions the attack should cover?
 **For Pre-Mortem**: The project or decision being analyzed with its team, timeline, and goals, paste the plan or proposal document if you have one, how far in the future the imagined failure should be dated?
 **For RCoT**: The question with every condition and constraint written out, paste the document those conditions come from if any, any implicit requirement not yet written into the question (units, deadlines, exclusions, edge cases) that a correct answer must still satisfy?
+**For Chain-of-Verification**: Paste the draft answer to fact-check if you have one, or the factual question to answer carefully, which specific claims are most at risk of being wrong, what a correct final answer must not get wrong?
 **For RPEF**: Paste the actual output sample to reverse-engineer, paste the input that produced it or confirm it is output-only, which details are one-off specifics that should become [PLACEHOLDER] variables?
 **For Reverse Role**: What you want to achieve in one or two sentences, the domain of expertise to consult, questions one at a time or all at once, should it then do the task or synthesize a structured prompt for you to approve?
 
@@ -191,6 +205,7 @@ Using gathered information:
 2. Map user's information to framework components
 3. Fill missing elements with reasonable defaults — **with two exceptions, below**
 4. Structure according to framework format
+5. **Decide whether worked examples would materially improve the output**; if so, layer in few-shot examples as described in Composable Techniques above — this applies to any framework, not only the two with a built-in examples slot. Reach for it especially on classification, extraction, strict-format, and style-matching tasks, and only when the user or their material supplies real examples.
 
 **Never default a fact about the user's world.** Their business, metrics, history, policies, staff, customers, data, or constraints are things only they know. A plausible-sounding default here is a fabrication the user may not notice before sending — asserting "our first price increase in three years" in an email to paying customers, or inventing a phone number in a published review reply. Where such a slot is unanswered, emit a visible `[you fill this in: <what is needed>]` placeholder and list every placeholder in your analysis section.
 

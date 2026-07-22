@@ -198,6 +198,12 @@ test('Adapter has not drifted from SKILL.md', () => {
     'Never stack more than two',
     'Never default a fact about the user',
     'Never soften or drop a prohibition',
+    // The anti-false-narration guardrail: the model must not invent a rationale
+    // for a framework choice the stripped output cannot show. Lives in both files.
+    'A confident rationale for an unobservable choice',
+    // The few-shot hook must live in the Apply-Framework step of BOTH files, or
+    // the composable technique is documented but never reached at build time.
+    'Decide whether worked examples would materially improve the output',
     // The worked example must demonstrate the emission rules, not violate them.
     // The adapter previously shipped a BAB example with BEFORE:/AFTER:/BRIDGE: headers.
     'Now rewrite the job posting above.',

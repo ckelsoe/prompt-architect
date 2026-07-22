@@ -5,6 +5,21 @@ All notable changes to the Prompt Architect Claude Code skill will be documented
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-07-22
+
+Adds two research-backed frameworks, one composable technique, and a guardrail against unfalsifiable framework-selection rationale. Framework count is now 31.
+
+### Added
+- **Self-Consistency** (REASON) — sample the same reasoning prompt N times at non-zero temperature and take a plain majority vote over the final answers, aggregated *outside* the model. Cited to Wang et al., "Self-Consistency Improves Chain of Thought Reasoning in Language Models" (arXiv 2203.11171, ICLR 2023). The doc is explicit that this is *not* self-assessment (asking one model to judge its own paths) and that the emitted prompt is a single solve-prompt ending in a parseable `FINAL ANSWER:` line — the N-sample vote is an operational step the analysis section instructs, not something one pasted prompt can do. Absolute figures (56.5% → 74.4%, PaLM 540B / GSM8K) are labeled Table 1 body figures; the +17.9% is the abstract's relative delta.
+- **Chain-of-Verification** (CRITIQUE) — draft an answer, plan verification questions, answer them **independently of the draft**, then revise. That independence is the mechanism: it stops the verification from inheriting the draft's errors. Cited to Dhuliawala et al. (arXiv 2309.11495, Findings of ACL 2024). Distinct from RCoT, which reconstructs the question to catch missed *conditions*; CoVe fact-checks *claims*.
+- **Few-shot / in-context learning** as a **composable technique**, not a routed framework. It lives in `references/techniques/few-shot.md` and layers onto whichever framework was chosen — covering when examples help, how many (2–5), ordering and recency effects (Lu et al., ACL 2022), what examples actually teach (format and label space over per-example correctness — Min et al., EMNLP 2022), and calibration/bias balancing (Zhao et al., ICML 2021). Brown et al. (arXiv 2005.14165) is cited only for the term, never for a number. A new "Composable Techniques" section in `SKILL.md` and the adapter routes to it.
+
+### Changed
+- **Anti-false-narration guardrail.** Because section headers are stripped at emission, the framework choice is often invisible in the delivered prompt — so `SKILL.md` and the adapter now instruct: when two frameworks would produce the same prompt, say so, pick the simpler one, and do not manufacture a distinction the output won't show. A new drift-test invariant keeps the rule present in both files.
+- Framework count 29 → 31 across all advertised sites (`package.json` description and `claudeCode.frameworks`, `plugin.json`, `marketplace.json`, `README.md`, `SKILL.md`, adapter).
+
+---
+
 ## [3.4.0] - 2026-07-22
 
 This release makes the **emission contract** explicit and consistent across the whole skill. When Prompt Architect delivers the final prompt, framework section headers (`CONTEXT:`, `ROLE:`, `BEFORE:`, …) are stripped — the user pastes a flat block of prose with no labels. Previously the framework docs and templates were written as if those headers would survive, so slots that were bare fragments ("meeting summary", "busy professionals") lost their meaning once the header was removed. Every framework now carries its own meaning in prose.

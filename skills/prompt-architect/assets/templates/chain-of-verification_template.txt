@@ -1,0 +1,26 @@
+SOURCE MATERIAL:
+[Optional — paste the draft answer you want fact-checked here, OR the factual
+question you want answered with verification built in. If you are asking a fresh
+question rather than checking an existing draft, delete this bracketed block and
+the sentence directly below it.]
+Treat the material above as the subject to be verified in the steps below.
+
+Work through the following four steps in order, in a single response.
+
+First, write a baseline answer to the question. Do not polish it — this draft is
+what you will fact-check. (If a draft was supplied above, treat that draft as your
+baseline answer instead of writing a new one.)
+
+Second, list the specific factual claims your draft makes — every name, date,
+quantity, entity, and list member — and write one short verification question for
+each claim. Each question must target one claim and be answerable on its own; do
+not write a single broad question that re-asks the whole task.
+
+Third, answer each verification question independently. Do not look back at your
+draft while answering these questions — answer each one on its own, as if seeing
+it fresh, so your checks are not biased into agreeing with whatever the draft
+already says.
+
+Fourth, write a final verified answer. Keep every claim your independent answers
+confirmed, correct every claim they contradicted, and drop any claim you could
+not verify. Note briefly what changed from the draft.

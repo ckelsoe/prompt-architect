@@ -1,6 +1,6 @@
 # Prompt Architect
 
-Transform vague prompts into expert-level, structured prompts using 29 frameworks across 7 intent categories.
+Transform vague prompts into expert-level, structured prompts using 31 frameworks across 7 intent categories.
 
 Works with **Claude Code, ChatGPT, Gemini CLI, Cursor, GitHub Copilot, Windsurf, OpenAI Codex**, and [30+ Agent Skills compatible tools](https://agentskills.io).
 
@@ -60,7 +60,7 @@ Prompt Architect is an [Agent Skills](https://agentskills.io) compatible skill t
 
 ## Key Features
 
-### 29 Frameworks Across 7 Intent Categories
+### 31 Frameworks Across 7 Intent Categories
 
 | Framework | Best For | Complexity |
 |-----------|----------|------------|
@@ -84,6 +84,7 @@ Prompt Architect is an [Agent Skills](https://agentskills.io) compatible skill t
 | **Least-to-Most** | Compositional multi-hop problems (simplest first) | Medium |
 | **Plan-and-Solve (PS+)** | Zero-shot numerical/calculation reasoning | Low |
 | **Chain of Thought** | Reasoning, problem-solving | Medium |
+| **Self-Consistency** | Robust answers: sample many reasoning paths, majority-vote | Medium |
 | **Chain of Density** | Summarization at fixed length, maximum information density | Medium |
 | **Iterative Compression** | Shortening text toward a target length | Low |
 | **Self-Refine** | Iterative output quality improvement (any task) | Medium |
@@ -91,8 +92,11 @@ Prompt Architect is an [Agent Skills](https://agentskills.io) compatible skill t
 | **Devil's Advocate** | Strongest opposing argument against a position | Low |
 | **Pre-Mortem** | Assume failure, identify specific causes | Low |
 | **RCoT** | Verify reasoning by reconstructing the question | Medium |
+| **Chain-of-Verification** | Fact-check a draft by verifying each claim independently | Medium |
 | **RPEF** | Recover/reconstruct a prompt from an existing output | Low |
 | **Reverse Role Prompting** | AI interviews you before executing | Low |
+
+**Composable technique** (layered onto any framework, not one of the 31): **Few-shot / in-context examples** — the discipline of adding well-chosen, well-ordered worked examples to a prompt.
 
 ### Quality Scoring System
 
@@ -908,7 +912,7 @@ prompt-architect/
 
 **Core Components:**
 - **SKILL.md** - Main skill logic and instructions (intent-based selection system)
-- **Framework Reference Docs** - 28 files covering all 29 frameworks, with examples (RISE documents two variants)
+- **Framework Reference Docs** - 30 files covering all 31 frameworks, with examples (RISE documents two variants)
 - **Templates** - 30 ready-to-use structures: one per framework, plus `hybrid_template.txt` for combinations
 
 ---
